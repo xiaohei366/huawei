@@ -8,10 +8,10 @@
 7. 然后你的代码会被review，没通过就本地改，改完之后继续`push`到`remote`（两头都在feature xxx分支），然后负责人继续review你这个PR或者MR，通过之后会将`feature xxx`分支**区别于master的改动**合并入`master`，删除remote的`feature xxx`分支，代表这个功能开发完毕
 
 # 相应的commit格式头
-feat：添加新功能或功能改进
-fix：修复错误或缺陷
-refactor：重构代码而不更改功能
-docs：仅更新文档
-style：对代码样式进行更改，如缩进或格式化
-test：添加或更改测试
-chore：更新构建或其他辅助工具的配置
+1. feat：添加新功能或功能改进
+2. fix：修复错误或缺陷
+3. refactor：重构代码而不更改功能
+4. docs：仅更新文档
+5. style：对代码样式进行更改，如缩进或格式化
+6. test：添加或更改测试
+7. chore：更新构建或其他辅助工具的配置
