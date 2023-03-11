@@ -3,9 +3,9 @@
 
 
 
-void Robot::Update(int workstation_id, int carried_item_type, float time_value_coefficient, float collision_value_coefficient, 
-        float angular_velocity, float linear_velocity_x, float linear_velocity_y, float direction,
-        float location_x, float location_y) {
+void Robot::Update(int workstation_id, int carried_item_type, double time_value_coefficient, double collision_value_coefficient, 
+        double angular_velocity, double linear_velocity_x, double linear_velocity_y, double direction,
+        double location_x, double location_y) {
     this->workstation_id = workstation_id;
     this->carried_item_type = carried_item_type;
     this->time_value_coefficient = time_value_coefficient;

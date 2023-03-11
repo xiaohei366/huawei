@@ -49,29 +49,24 @@ class hw_compet {
 public:
 	//4个机器人
 	vector<Robot> robot_cluster;
-	WorkBench work_bench_cluster_1;
-	WorkBench work_bench_cluster_2;
-	WorkBench work_bench_cluster_3;
-	WorkBench work_bench_cluster_4;
-	WorkBench work_bench_cluster_5;
-	
-	WorkBench work_bench_cluster_6;
-	WorkBench work_bench_cluster_7;
-	WorkBench work_bench_cluster_8;
-	WorkBench work_bench_cluster_9;
+	vector<WorkBench> work_bench_cluster;
 
 	hw_compet()
 	{
 		//初始化pid参数
 		pid_init(control_ptr);
 		distance_wb.resize(10);
+		//初始化工作台集群
+		for(int i = 0; i < 9; ++i) {
+			work_bench_cluster.push_back(WorkBench(i));
+		}
 	}
 	//存放机器人数据
-	vector<array<float, 10>> robot;
+	vector<array<double, 10>> robot;
 	//存放工作台数据
-	unordered_map<char, vector<array<float, 5>>> um_workbench;
+	unordered_map<char, vector<array<double, 5>>> um_workbench;
 	//存放距离
-	vector<vector<float>> distance_wb;
+	vector<vector<double>> distance_wb;
 	//yaw是机器人朝向，angle_x是向量与x轴正方向夹角
 	double yaw, angle_x;
 	//帧序号
@@ -83,9 +78,9 @@ public:
 	//与判题器进行交互的函数
 	bool readUntilOK();
 	//得到pid调节参数yaw,angle_x
-	void get_yaw_angle(double& yaw, double& angle_x, int robot_id, const vector<array<float, 10>>& robot, double wb_minX, double wb_minY);
+	void get_yaw_angle(double& yaw, double& angle_x, int robot_id, const vector<array<double, 10>>& robot, double wb_minX, double wb_minY);
 	//更新每一个小车与所有工作台的距离
-	void update_distance(const vector<array<float, 10>>& robot, const unordered_map<char, vector<array<float, 5>>>& um_wb, vector<vector<float>>& distance, int robot_id);
+	void update_distance(const vector<array<double, 10>>& robot, const unordered_map<char, vector<array<double, 5>>>& um_wb, vector<vector<double>>& distance, int robot_id);
 
 	//pid初始化和计算
 	void pid_init(pid_controller *pid);
@@ -93,7 +88,6 @@ public:
 	
 private:
 	pid_controller* control_ptr = new pid_controller();
-	int flag_event = 1;
 	int loop_num = 0;
 };
 
@@ -101,8 +95,6 @@ int main()
 {
 	hw_compet obj;
 	obj.init();
-	cout << (obj.work_bench_cluster_1.Find(3, 3))->x << " " << (obj.work_bench_cluster_1.Find(3, 3))->y << endl;
-	cout << (obj.work_bench_cluster_1.Find(50, 37))->x << " " << (obj.work_bench_cluster_1.Find(50, 37))->y << endl;
 	puts("OK");
 	while (1)
 	{
@@ -111,14 +103,13 @@ int main()
 		cout << obj.robot_cluster[1].workstation_id << endl;
 		cout << obj.robot_cluster[2].workstation_id << endl;
 		cout << obj.robot_cluster[3].workstation_id << endl;
-		//for (int i = 0; i < 4; i++)
-			//obj.update_distance(obj.robot, obj.um_workbench, obj.distance_wb, i);
+		
 	}
 	return 0;
 }
 
 
-void hw_compet::get_yaw_angle(double& yaw, double& angle_x, int robot_id, const vector<array<float, 10>>& robot, double wb_minX, double wb_minY)
+void hw_compet::get_yaw_angle(double& yaw, double& angle_x, int robot_id, const vector<array<double, 10>>& robot, double wb_minX, double wb_minY)
 {
 	//机器人朝向
 	yaw = robot[robot_id][7];
@@ -153,7 +144,7 @@ void hw_compet::get_yaw_angle(double& yaw, double& angle_x, int robot_id, const 
 
 //更新单独一个机器人到各个工作台的距离(为了便于多线程)
 //也可以修改成直接求解四个机器到工作台的距离
-void hw_compet::update_distance(const vector<array<float,10>>& robot, const unordered_map<char, vector<array<float, 5>>>& um_wb,vector<vector<float>>& distance_wb,int robot_id)
+void hw_compet::update_distance(const vector<array<double,10>>& robot, const unordered_map<char, vector<array<double, 5>>>& um_wb,vector<vector<double>>& distance_wb,int robot_id)
 {
 	distance_wb.clear();
 	distance_wb.resize(10);
@@ -162,10 +153,10 @@ void hw_compet::update_distance(const vector<array<float,10>>& robot, const unor
 		//工作台的编号
 		int key = kv.first-'0';
 		//同一ID工作台对应的不同参数
-		vector<array<float, 5>> value = kv.second;
+		vector<array<double, 5>> value = kv.second;
 		for (int j = 0; j < value.size(); j++)
 		{
-			float num=pow(value[j][0] - robot[robot_id][8], 2) + pow(value[j][1] - robot[robot_id][9], 2);
+			double num=pow(value[j][0] - robot[robot_id][8], 2) + pow(value[j][1] - robot[robot_id][9], 2);
 			distance_wb[key].push_back(num);
 		}
 	}
@@ -265,23 +256,20 @@ double hw_compet::pid_update(pid_controller *pid, double setpoint, double measur
 
 bool hw_compet::readUntilOK() {
 	char line[1024];
-	int workbench_flag=1;
-	int robot_flag=0;
-
+	int workbench_flag = 1;
+	int robot_flag = 0;
+	int flag_event = 1;
 	while (fgets(line, sizeof line, stdin))
 	{
 		if (line[0] == 'O' && line[1] == 'K') {
-			flag_event = 1;
 			return true;
 		}
 		else
 		{
 			vector<string> data_each_frame;
-			std::string input(line);
-			std::istringstream iss(input);
+			std::stringstream ss(line);
 			string one_str;
-			while (iss >> one_str)
-				data_each_frame.push_back(one_str);
+			while (std::getline(ss, one_str, ' ')) data_each_frame.push_back(one_str);
 			switch (flag_event) {
 			case 1:
 				{
@@ -304,42 +292,42 @@ bool hw_compet::readUntilOK() {
 					break;
 				}
 					//根据横纵坐标，得到行与列数
-							int workbench_row=int((stof(data_each_frame[1])+0.25)/0.5);
-							int workbench_col=int((stof(data_each_frame[2])+0.25)/0.5);
-							switch(workbench_flag){
-									case 1:
-											work_bench_cluster_1.Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5]));
-											break;
-											/*
-									case 2:
-											work_bench_cluster_2.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-											break;
-									case 3:
-											work_bench_cluster_3.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-											break;
-									case 4:
-											work_bench_cluster_4.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-											break;
-									case 5:
-											work_bench_cluster_5.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-											break;
-									case 6:
-											work_bench_cluster_6.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-											break;
-									case 7:
-											work_bench_cluster_7.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-											break;
-									case 8:
-											work_bench_cluster_8.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-											break;
-											*/
-									case 9:
-											work_bench_cluster_9.Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5]));
-											break;
-									default:
-											break;
-							}
-							workbench_flag++;
+				int workbench_row=int((stod(data_each_frame[1])+0.25)/0.5);
+				int workbench_col=int((stod(data_each_frame[2])+0.25)/0.5);
+				switch(workbench_flag){
+						case 1:
+								work_bench_cluster_1.Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5]));
+								break;
+								/*
+						case 2:
+								work_bench_cluster_2.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
+								break;
+						case 3:
+								work_bench_cluster_3.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
+								break;
+						case 4:
+								work_bench_cluster_4.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
+								break;
+						case 5:
+								work_bench_cluster_5.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
+								break;
+						case 6:
+								work_bench_cluster_6.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
+								break;
+						case 7:
+								work_bench_cluster_7.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
+								break;
+						case 8:
+								work_bench_cluster_8.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
+								break;
+								*/
+						case 9:
+								work_bench_cluster_9.Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5]));
+								break;
+						default:
+								break;
+				}
+				workbench_flag++;
 				break;
 				}
 			case 4:
@@ -361,10 +349,10 @@ bool hw_compet::readUntilOK() {
 //读取地图
 bool hw_compet::init() {
 	char line[1024];
-	//地图行 表示坐标y
+	//地图行 i表示坐标y
 	//循环中j表示坐标x
-	int i = 1;
-	//double *robot_ptr = &robot_info;
+	int i = 0;
+
 	struct workbench *wb;
 	struct workbench *wb_tmp;
 	FILE *file;
@@ -378,50 +366,29 @@ bool hw_compet::init() {
 		printf("open err\n");
 		return 1;
   }
-
 	while (fgets(line, sizeof line, file)) {
 		if (line[0] == 'O' && line[1] == 'K') {
-
 			printf("reading done\n");
-
 			return true;
 		}
 		else
 		{
 			std::string input(line);
-
-			for (int j = 0; j <= 99; j++)
+			for(int j = 0; j < 100; j++)
 			{
 				if (input[j] == 'A')
 				{
 					//更新机器人位置
-					Robot robot_tmp(j*0.5-0.25, i*0.5-0.25);
+					Robot robot_tmp(j*0.5+0.25, i*0.5+0.25);
 					robot_cluster.push_back(robot_tmp);
-
-			//			cout << j << " "<< i << endl;
 				}
-				else if (input[j] >= '1'&& input[j] <= '9')
+				else if (input[j] >= '1' && input[j] <= '9')
 				{
+					int type = input[j] - '0';
 					//更新工作台位置
-					switch(input[j])
-					{
-						case '1':
-							work_bench_cluster_1.Add(j+1, i);
-//							cout << j+1 << i << endl;
-							work_bench_cluster_1.InitWorkBenchPostion(work_bench_cluster_1.Find(j+1, i), j+1, i);
-							break;
-
-						case '9':
-							work_bench_cluster_9.Add(j+1, i);
-							work_bench_cluster_9.InitWorkBenchPostion(work_bench_cluster_9.Find(j+1, i), j+1, i);
-							break;
-
-						default:
-							break;
-					}
+					work_bench_cluster[type].Add(j*0.5+0.25, i*0.5+0.25);
 				}
 			}
-
 			i++;
 		}
 	}
