@@ -96,17 +96,16 @@ int main()
 	obj.init();
 	puts("OK");
 	fflush(stdout);
-	int frameID;
-	while (scanf("%d", &frameID) != EOF) {
+	while (scanf("%d", &obj.frame_num) != EOF) {
 		obj.readUntilOK();
-		printf("%d\n", frameID);
+		printf("%d\n", obj.frame_num);
 		int lineSpeed = 3;
 		double angleSpeed = 1.5;
 		for (int robotId = 0; robotId < 4; robotId++) {
 			printf("forward %d %d\n", robotId, lineSpeed);
 			printf("rotate %d %f\n", robotId, angleSpeed);
 		}
-		printf("OK\n", frameID);
+		printf("OK\n", obj.frame_num);
 		fflush(stdout);
 	}
 	return 0;
@@ -263,7 +262,7 @@ bool hw_compet::readUntilOK() {
 	int workbench_flag = 1;
 	int robot_flag = 0;
 	int flag_event = 1;
-	while (fgets(line, sizeof line, stdin))
+	while (fgets(line, sizeof(line), stdin))
 	{
 		if (line[0] == 'O' && line[1] == 'K') {
 			return true;
@@ -271,13 +270,16 @@ bool hw_compet::readUntilOK() {
 		else
 		{
 			vector<string> data_each_frame;
-			std::stringstream ss(line);
+			string input(line);
+			std::stringstream ss(input);
 			string one_str;
-			while (std::getline(ss, one_str, ' ')) data_each_frame.push_back(one_str);
+			while (std::getline(ss, one_str, ' ')) 
+			{
+				data_each_frame.push_back(one_str);
+			}
 			switch (flag_event) {
 				case 1:
                 {
-                    frame_num = stoi(data_each_frame[0]);
                     initial_money = stoi(data_each_frame[1]);
                     break;
                 }
@@ -328,8 +330,8 @@ bool hw_compet::init() {
 	struct workbench *wb_tmp;
 	FILE *file;
 
-	file = fopen("/home/songyj/huawei/maps/1.txt", "r");
-
+//	file = fopen("/home/songyj/huawei/maps/1.txt", "r");
+/*
 	if (file == NULL)
  	{
 		// 文件打开失败
@@ -337,9 +339,9 @@ bool hw_compet::init() {
 		printf("open err\n");
 		return 1;
   }
-	while (fgets(line, sizeof line, file)) {
+	*/
+	while (fgets(line, sizeof line, stdin)) {
 		if (line[0] == 'O' && line[1] == 'K') {
-			printf("reading done\n");
 			return true;
 		}
 		else
