@@ -57,7 +57,7 @@ public:
 		pid_init(control_ptr);
 		distance_wb.resize(10);
 		//初始化工作台集群
-		for(int i = 0; i < 9; ++i) {
+		for(int i = 0; i <= 9; ++i) {
 			work_bench_cluster.push_back(WorkBench(i));
 		}
 	}
@@ -88,7 +88,6 @@ public:
 	
 private:
 	pid_controller* control_ptr = new pid_controller();
-	int loop_num = 0;
 };
 
 int main()
@@ -96,14 +95,19 @@ int main()
 	hw_compet obj;
 	obj.init();
 	puts("OK");
-	while (1)
-	{
-		bool res = obj.readUntilOK();
-		cout << obj.robot_cluster[0].workstation_id << endl;
-		cout << obj.robot_cluster[1].workstation_id << endl;
-		cout << obj.robot_cluster[2].workstation_id << endl;
-		cout << obj.robot_cluster[3].workstation_id << endl;
-		
+	fflush(stdout);
+	int frameID;
+	while (scanf("%d", &frameID) != EOF) {
+		obj.readUntilOK();
+		printf("%d\n", frameID);
+		int lineSpeed = 3;
+		double angleSpeed = 1.5;
+		for (int robotId = 0; robotId < 4; robotId++) {
+			printf("forward %d %d\n", robotId, lineSpeed);
+			printf("rotate %d %f\n", robotId, angleSpeed);
+		}
+		printf("OK\n", frameID);
+		fflush(stdout);
 	}
 	return 0;
 }
@@ -271,76 +275,43 @@ bool hw_compet::readUntilOK() {
 			string one_str;
 			while (std::getline(ss, one_str, ' ')) data_each_frame.push_back(one_str);
 			switch (flag_event) {
-			case 1:
-				{
-					frame_num = stoi(data_each_frame[0]);
-					initial_money = stoi(data_each_frame[1]);
-					break;
-				}
-			case 2:
-				{
-					workbench_num = stoi(data_each_frame[0]);
-					loop_num = workbench_num;
-					break;
-				}
-			case 3:
-				{
-				while (loop_num != 1)
-				{
-					loop_num--;
-					flag_event--;
-					break;
-				}
-					//根据横纵坐标，得到行与列数
-				int workbench_row=int((stod(data_each_frame[1])+0.25)/0.5);
-				int workbench_col=int((stod(data_each_frame[2])+0.25)/0.5);
-				switch(workbench_flag){
-						case 1:
-								work_bench_cluster_1.Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5]));
-								break;
-								/*
-						case 2:
-								work_bench_cluster_2.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-								break;
-						case 3:
-								work_bench_cluster_3.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-								break;
-						case 4:
-								work_bench_cluster_4.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-								break;
-						case 5:
-								work_bench_cluster_5.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-								break;
-						case 6:
-								work_bench_cluster_6.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-								break;
-						case 7:
-								work_bench_cluster_7.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-								break;
-						case 8:
-								work_bench_cluster_8.Update(workbench_row,workbench_col,data_each_frame[3],data_each_frame[4],data_each_frame[5]);
-								break;
-								*/
-						case 9:
-								work_bench_cluster_9.Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5]));
-								break;
-						default:
-								break;
-				}
-				workbench_flag++;
-				break;
-				}
-			case 4:
-				{
-					flag_event--;
-					robot_cluster[robot_flag].Update(stoi(data_each_frame[0]),stoi(data_each_frame[1]),stof(data_each_frame[2]),stof(data_each_frame[3]),stof(data_each_frame[4]),stof(data_each_frame[5]),stof(data_each_frame[6]),stof(data_each_frame[7]),stof(data_each_frame[8]),stof(data_each_frame[9]));
-					robot_flag++;
-					break;
-				}
-			default:
-				break;
-			}
-			flag_event++;
+				case 1:
+                {
+                    frame_num = stoi(data_each_frame[0]);
+                    initial_money = stoi(data_each_frame[1]);
+                    break;
+                }
+                case 2:
+                {
+                    workbench_num = stoi(data_each_frame[0]);
+                    break;
+                }
+                case 3:
+                {
+                    while (workbench_flag != workbench_num)
+                    {
+                        flag_event--;
+                        break;
+                    }
+                    //根据横纵坐标，得到行与列数
+                    double workbench_row=(stod(data_each_frame[1])+0.25)/0.5;
+                    double workbench_col=(stod(data_each_frame[2])+0.25)/0.5;
+                    //工作台的编号1--9
+                    work_bench_cluster[stoi(data_each_frame[0])].Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5])); 
+                    workbench_flag++;
+                    break;
+                }
+                case 4:
+                {
+                    flag_event--;
+                    robot_cluster[robot_flag].Update(stoi(data_each_frame[0]),stoi(data_each_frame[1]),stod(data_each_frame[2]),stod(data_each_frame[3]),stod(data_each_frame[4]),stod(data_each_frame[5]),stod(data_each_frame[6]),stod(data_each_frame[7]),stod(data_each_frame[8]),stod(data_each_frame[9]));
+                    robot_flag++;
+                    break;
+                }
+                default:
+                    break;
+            }
+            flag_event++;
 		}
 	}
 	return false;
