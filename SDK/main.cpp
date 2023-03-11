@@ -102,7 +102,7 @@ int main()
 	hw_compet obj;
 	obj.init();
 	cout << (obj.work_bench_cluster_1.Find(3, 3))->x << " " << (obj.work_bench_cluster_1.Find(3, 3))->y << endl;
-	cout << (obj.work_bench_cluster_9.Find(50, 50))->x << " " << (obj.work_bench_cluster_9.Find(50, 50))->y << endl;
+	cout << (obj.work_bench_cluster_1.Find(50, 37))->x << " " << (obj.work_bench_cluster_1.Find(50, 37))->y << endl;
 	puts("OK");
 	while (1)
 	{
