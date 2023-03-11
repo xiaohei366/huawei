@@ -6,7 +6,39 @@
 
 #IncludeRegexTransform: 
 
-/home/angryhei/code/huawei/LinuxRelease/SDK/main.cpp
+/home/songyj/huawei/SDK/main.cpp
 iostream
+-
+fstream
+-
+sstream
+-
+cmath
+-
+string
+-
+vector
+-
+array
+-
+unordered_map
+-
+unordered_set
+-
+cstdio
+-
+type_traits
+-
+robot.h
+/home/songyj/huawei/SDK/robot.h
+workbench.h
+/home/songyj/huawei/SDK/workbench.h
+
+/home/songyj/huawei/SDK/robot.h
+
+/home/songyj/huawei/SDK/workbench.h
+unordered_map
+-
+vector
 -
 

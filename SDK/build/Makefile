@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/angryhei/code/huawei/LinuxRelease/SDK
+CMAKE_SOURCE_DIR = /home/songyj/huawei/SDK
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/angryhei/code/huawei/LinuxRelease/SDK/build
+CMAKE_BINARY_DIR = /home/songyj/huawei/SDK/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles /home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/songyj/huawei/SDK/build/CMakeFiles /home/songyj/huawei/SDK/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/songyj/huawei/SDK/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -150,6 +150,87 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+pid.o: pid.cpp.o
+
+.PHONY : pid.o
+
+# target to build an object file
+pid.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/pid.cpp.o
+.PHONY : pid.cpp.o
+
+pid.i: pid.cpp.i
+
+.PHONY : pid.i
+
+# target to preprocess a source file
+pid.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/pid.cpp.i
+.PHONY : pid.cpp.i
+
+pid.s: pid.cpp.s
+
+.PHONY : pid.s
+
+# target to generate assembly for a file
+pid.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/pid.cpp.s
+.PHONY : pid.cpp.s
+
+robot.o: robot.cc.o
+
+.PHONY : robot.o
+
+# target to build an object file
+robot.cc.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/robot.cc.o
+.PHONY : robot.cc.o
+
+robot.i: robot.cc.i
+
+.PHONY : robot.i
+
+# target to preprocess a source file
+robot.cc.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/robot.cc.i
+.PHONY : robot.cc.i
+
+robot.s: robot.cc.s
+
+.PHONY : robot.s
+
+# target to generate assembly for a file
+robot.cc.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/robot.cc.s
+.PHONY : robot.cc.s
+
+workbench.o: workbench.cc.o
+
+.PHONY : workbench.o
+
+# target to build an object file
+workbench.cc.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/workbench.cc.o
+.PHONY : workbench.cc.o
+
+workbench.i: workbench.cc.i
+
+.PHONY : workbench.i
+
+# target to preprocess a source file
+workbench.cc.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/workbench.cc.i
+.PHONY : workbench.cc.i
+
+workbench.s: workbench.cc.s
+
+.PHONY : workbench.s
+
+# target to generate assembly for a file
+workbench.cc.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/workbench.cc.s
+.PHONY : workbench.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -162,6 +243,15 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... pid.o"
+	@echo "... pid.i"
+	@echo "... pid.s"
+	@echo "... robot.o"
+	@echo "... robot.i"
+	@echo "... robot.s"
+	@echo "... workbench.o"
+	@echo "... workbench.i"
+	@echo "... workbench.s"
 .PHONY : help
 
 
