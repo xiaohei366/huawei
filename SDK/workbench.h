@@ -18,12 +18,13 @@ struct WorkBenchNode {
 
 class WorkBench {
 public:
-    explicit WorkBench(int tp):type_(tp) {}
+    explicit WorkBench(){}
     ~WorkBench() = default;
     std::vector<WorkBenchNode*> WorkBenchVec;
     //初始化时加入工作台
     void Add(int x, int y);
     void Update(int x, int y, int remain_production_time, int ori_material_status, int product_status);
+		void InitWorkBenchPostion(WorkBenchNode * WB_ptr, int x_val, int y_val);
     WorkBenchNode* Find(int x, int y);
 
     int GetSize() {return WorkBenchVec.size();};

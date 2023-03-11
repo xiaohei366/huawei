@@ -22,3 +22,9 @@ void WorkBench::Update(int x, int y, int remain_production_time, int ori_materia
     node->ori_material_status = ori_material_status;
     node->product_status = product_status;
 }
+
+void WorkBench::InitWorkBenchPostion(WorkBenchNode * WB_ptr, int x_val, int y_val)
+{
+	WB_ptr->x = (float)x_val*0.5-0.25;
+	WB_ptr->y = (float)y_val*0.5-0.25;
+}
