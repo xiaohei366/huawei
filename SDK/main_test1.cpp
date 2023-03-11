@@ -8,7 +8,8 @@
 #include <unordered_set>
 #include <cstdio>
 #include <type_traits>
-
+#include "robot.h"
+#include "workbench.h"
 using namespace std;
 
 struct workbench {
@@ -19,15 +20,22 @@ struct workbench {
 
 
 
+
 class hw_compet {
 public:
-	//unordered_map<char, vector<array<float, 11>>> um_robot;
-	vector<array<float, 10>> robot;
-	unordered_map<char, vector<array<float, 5>>> um_workbench;
+	//4个机器人
+	vector<Robot> robot_cluster;
+	WorkBench work_bench_cluster_1;
+	WorkBench work_bench_cluster_2;
+	WorkBench work_bench_cluster_3;
+	WorkBench work_bench_cluster_4;
 	//帧序号
 	int frame_num = 0;
 	int initial_money = 0;
 	int workbench_num = 0;
+
+
+	
 	bool init();
 	bool readUntilOK();
 
@@ -37,13 +45,7 @@ private:
 	int loop_num = 0;
 };
 
-int main()
-{
-	hw_compet obj;
-	if (obj.readUntilOK())
-		puts("OK");
-	return 0;
-}
+
 
 //更新机器人到各个工作台的距离
 void update_distance(const vector<array<float,5>>& robot, const unordered_map<char, vector<array<float, 5>>>& um_wb,vector<int>& distance,int robot_id)
@@ -212,6 +214,14 @@ bool hw_compet::init() {
 	return false;
 }
 
+
+int main()
+{
+	hw_compet obj;
+	if (obj.readUntilOK())
+		puts("OK");
+	return 0;
+}
 
 
 /*int main() {
