@@ -1,3 +1,6 @@
+#ifndef HW_Compet_H
+#define HW_Compet_H
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -14,7 +17,7 @@
 using namespace std;
 
 //pid控制
-typedef struct
+struct pid_controller
 {
 	double Kp;
 	double Ki;
@@ -35,7 +38,7 @@ typedef struct
 	double pre_measure;
 
 	double out;
-}pid_controller;
+};
 
 
 
@@ -92,3 +95,10 @@ private:
     pid_controller controller[4];
 	//yaw是机器人朝向，angle_x是向量与x轴正方向夹角
 };
+
+
+
+
+
+
+#endif

@@ -4,10 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/songyj/huawei/SDK/main.cpp" "/home/songyj/huawei/SDK/build/CMakeFiles/main.dir/main.cpp.o"
-  "/home/songyj/huawei/SDK/pid.cpp" "/home/songyj/huawei/SDK/build/CMakeFiles/main.dir/pid.cpp.o"
-  "/home/songyj/huawei/SDK/robot.cc" "/home/songyj/huawei/SDK/build/CMakeFiles/main.dir/robot.cc.o"
-  "/home/songyj/huawei/SDK/workbench.cc" "/home/songyj/huawei/SDK/build/CMakeFiles/main.dir/workbench.cc.o"
+  "/home/angryhei/code/huawei/LinuxRelease/SDK/hwcompet.cc" "/home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/main.dir/hwcompet.cc.o"
+  "/home/angryhei/code/huawei/LinuxRelease/SDK/main.cpp" "/home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/main.dir/main.cpp.o"
+  "/home/angryhei/code/huawei/LinuxRelease/SDK/pid.cpp" "/home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/main.dir/pid.cpp.o"
+  "/home/angryhei/code/huawei/LinuxRelease/SDK/robot.cc" "/home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/main.dir/robot.cc.o"
+  "/home/angryhei/code/huawei/LinuxRelease/SDK/workbench.cc" "/home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/main.dir/workbench.cc.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
