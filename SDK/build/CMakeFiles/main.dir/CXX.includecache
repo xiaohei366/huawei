@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/angryhei/code/huawei/LinuxRelease/SDK/hwcompet.cc
+/home/songyj/new_proj/huawei/SDK/hwcompet.cc
 hwcompet.h
-/home/angryhei/code/huawei/LinuxRelease/SDK/hwcompet.h
+/home/songyj/new_proj/huawei/SDK/hwcompet.h
 
-/home/angryhei/code/huawei/LinuxRelease/SDK/hwcompet.h
+/home/songyj/new_proj/huawei/SDK/hwcompet.h
 iostream
 -
 fstream
@@ -34,19 +34,11 @@ cstdio
 type_traits
 -
 robot.h
-/home/angryhei/code/huawei/LinuxRelease/SDK/robot.h
+/home/songyj/new_proj/huawei/SDK/robot.h
 workbench.h
-/home/angryhei/code/huawei/LinuxRelease/SDK/workbench.h
+/home/songyj/new_proj/huawei/SDK/workbench.h
 
-/home/angryhei/code/huawei/LinuxRelease/SDK/main.cpp
-hwcompet.h
-/home/angryhei/code/huawei/LinuxRelease/SDK/hwcompet.h
-
-/home/angryhei/code/huawei/LinuxRelease/SDK/robot.cc
-robot.h
-/home/angryhei/code/huawei/LinuxRelease/SDK/robot.h
-
-/home/angryhei/code/huawei/LinuxRelease/SDK/robot.h
+/home/songyj/new_proj/huawei/SDK/robot.h
 vector
 -
 algorithm
@@ -62,7 +54,7 @@ fstream
 string
 -
 
-/home/angryhei/code/huawei/LinuxRelease/SDK/workbench.h
+/home/songyj/new_proj/huawei/SDK/workbench.h
 unordered_map
 -
 vector

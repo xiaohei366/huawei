@@ -50,8 +50,20 @@ double hw_compet::update_distance(const WorkBenchNode* workbench,const Robot rob
 //速度计算
 void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance)
 {
-		aS=(pid_update(*pid, 0.0f, yaw - angle));
-		lS=(abs(1.5/(yaw - angle))+ 0.5);
+		double a = yaw - angle;
+		aS = (pid_update(*pid, 0.0f, yaw - angle));
+		if(abs(a) < 0.2)
+		{
+			lS = (abs(100/a));
+			if(distance<1)
+			{
+				lS = 3;
+			}
+		}
+		else
+			lS = 0.5;
+		//lS = 1/abs(aS)+0.3;
+		//lS = 0;
 }
 //pid初始化
 void hw_compet::pid_init(pid_controller *pid)
@@ -64,8 +76,8 @@ void hw_compet::pid_init(pid_controller *pid)
 	pid->T = 0.020;
 	pid->lim_min = -3.1415926;
 	pid->lim_max = 3.1415926;
-	pid->Kp = 1.2;
-	pid->Ki = 0.002;
+	pid->Kp = 10;
+	pid->Ki = 0;
 	pid->Kd = 0.0000;
 	pid->tau = 0;
 }
@@ -212,7 +224,7 @@ bool hw_compet::init() {
 	char line[1024];
 	//地图行 i表示坐标y
 	//循环中j表示坐标x
-	int i = 0;
+	int i = 99;
 
 	struct workbench *wb;
 	struct workbench *wb_tmp;
@@ -224,7 +236,7 @@ bool hw_compet::init() {
 		else
 		{
 			std::string input(line);
-			for(int j = 0; j < 100; j++)
+			for(int j = 99; j >= 0; j--)
 			{
 				if (input[j] == 'A')
 				{
@@ -239,7 +251,7 @@ bool hw_compet::init() {
 					work_bench_cluster[type].Add(j*0.5+0.25, i*0.5+0.25);
 				}
 			}
-			i++;
+			i--;
 		}
 	}
 	return false;

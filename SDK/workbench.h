@@ -11,7 +11,7 @@ struct WorkBenchNode {
     int remain_production_time;
     int ori_material_status;
     int product_status;
-    WorkBenchNode(int Id, int Type, int X, int Y):id(Id), type(Type), x(X), y(Y){};
+    WorkBenchNode(int Id, int Type, double X, double Y):id(Id), type(Type), x(X), y(Y){};
 };
 
 

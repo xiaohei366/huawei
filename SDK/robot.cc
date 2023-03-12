@@ -27,14 +27,14 @@ WorkBenchNodeForRobot* Robot::GetTarget() {
     std::priority_queue<WorkBenchNodeForRobot*>pq;
     //默认的点--默认工作台类型为1
     // 打日志debug
-    // std::ofstream logfile;
-    // logfile.open("./log.txt", std::ios::app); // 打开日志文件，追加写入
-    // if (logfile.is_open()) { // 判断文件是否打开成功
-    //         for(auto t: target_set){
-    //             logfile << t->x <<"&&&"<< t->y << std::endl; // 写入日志
-    //         }
-    //         logfile.close(); // 关闭文件
-    // }
+    //std::ofstream logfile;
+    //logfile.open("./log.txt", std::ios::app); // 打开日志文件，追加写入
+    //if (logfile.is_open()) { // 判断文件是否打开成功
+    //for(auto &t: target_set){
+    //logfile << t  << std::endl; // 写入日志
+    //}
+    //logfile.close(); // 关闭文件
+    //}
     WorkBenchNodeForRobot* default_node =  new WorkBenchNodeForRobot(1, this->location_x, this->location_y, 0.5);
     //如果是买--买前三个里面离着最近的
     if(this->carried_item_type == 0) {
