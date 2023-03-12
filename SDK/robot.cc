@@ -17,3 +17,30 @@ void Robot::Update(int workstation_id, int carried_item_type, double time_value_
     this->location_x = location_x;
     this->location_y = location_y;
 }
+
+
+
+
+
+
+WorkBenchNodeForRobot* Robot::GetTarget() {
+    for(int i = 0; i < workbench_for_robot.size(); ++i) {
+        //先排序
+        auto &vec = workbench_for_robot[i];
+        std::sort(vec.begin(), vec.end(),[](const WorkBenchNodeForRobot a, const WorkBenchNodeForRobot b)  {
+            return a.dis < b.dis;
+        });
+    }
+    if(workbench_for_robot[1].size() != 0) return &workbench_for_robot[1][0];
+    else if (workbench_for_robot[2].size() != 0) return &workbench_for_robot[2][0];
+    else return &workbench_for_robot[3][0];
+}
+
+void Robot::Clear_vec() {
+        for(int i = 0; i < 10; ++i) {
+        workbench_for_robot[i].clear();
+    }
+}
+
+
+
