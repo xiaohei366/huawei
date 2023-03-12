@@ -50,11 +50,15 @@ public:
 	//4个机器人
 	vector<Robot> robot_cluster;
 	vector<WorkBench> work_bench_cluster;
-
+    pid_controller* control_ptr[4];
 	hw_compet()
 	{
 		//初始化pid参数
-		pid_init(control_ptr);
+        for(int n=0; n<4; n++)
+		{
+			control_ptr[n] = &controller[n];
+			pid_init(control_ptr[n]);
+		}
 		distance_wb.resize(10);
 		//初始化工作台集群
 		for(int i = 0; i <= 9; ++i) {
@@ -67,57 +71,100 @@ public:
 	unordered_map<char, vector<array<double, 5>>> um_workbench;
 	//存放距离
 	vector<vector<double>> distance_wb;
-	//yaw是机器人朝向，angle_x是向量与x轴正方向夹角
-	double yaw, angle_x;
-	//帧序号
-	int frame_num = 0;
+    //帧序号
+    int frame_num=0;
 	int initial_money = 0;
 	int workbench_num = 0;
+    double angular_speed = 0;
+    double linear_speed = 0;
+    double yaw=0;
+    double vector_angle=0;
 	//初始化函数 读取地图
 	bool init();
 	//与判题器进行交互的函数
 	bool readUntilOK();
 	//得到pid调节参数yaw,angle_x
-	void get_yaw_angle(double& yaw, double& angle_x, int robot_id, const vector<array<double, 10>>& robot, double wb_minX, double wb_minY);
+    void get_yaw_angle(double& yaw ,double& vector_angle ,double workbench_x ,double workbench_y ,const Robot& robot_cluster_get_angle);
 	//更新每一个小车与所有工作台的距离
-	void update_distance(const vector<array<double, 10>>& robot, const unordered_map<char, vector<array<double, 5>>>& um_wb, vector<vector<double>>& distance, int robot_id);
-
+    double update_distance(const WorkBenchNode* workbench,const Robot robot);
+    //初始化一个机器人的工作台位置数组
+	WorkBenchNodeForRobot* GetRobotTarget(Robot& robot);
 	//pid初始化和计算
+    void vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance);
 	void pid_init(pid_controller *pid);
 	double pid_update(pid_controller *pid, double setpoint, double measure);
 	
 private:
-	pid_controller* control_ptr = new pid_controller();
+    pid_controller controller[4];
+	//yaw是机器人朝向，angle_x是向量与x轴正方向夹角
 };
+
+
+
 
 int main()
 {
+	int flag = 0;
+
+
 	hw_compet obj;
+    pid_controller **ptr;
 	obj.init();
 	puts("OK");
 	fflush(stdout);
 	while (scanf("%d", &obj.frame_num) != EOF) {
 		obj.readUntilOK();
 		printf("%d\n", obj.frame_num);
-		int lineSpeed = 3;
-		double angleSpeed = 1.5;
-		for (int robotId = 0; robotId < 4; robotId++) {
-			printf("forward %d %d\n", robotId, lineSpeed);
-			printf("rotate %d %f\n", robotId, angleSpeed);
-		}
-		printf("OK\n", obj.frame_num);
+        for(int i=0;i<1;i++)
+        {
+            WorkBenchNodeForRobot* target = obj.GetRobotTarget(obj.robot_cluster[i]);
+							double workbench_x = target->x;
+							double workbench_y = target->y;
+							double distance_target = target->dis;
+							
+							if(flag)
+							{
+								workbench_x = obj.work_bench_cluster[9].WorkBenchVec[0]->x;
+								workbench_y = obj.work_bench_cluster[9].WorkBenchVec[0]->y;
+								distance_target = obj.update_distance(obj.work_bench_cluster[9].WorkBenchVec[0], obj.robot_cluster[0]);
+							}
+            obj.get_yaw_angle(obj.yaw,obj.vector_angle,workbench_x,workbench_y,obj.robot_cluster[i]);
+            ptr = obj.control_ptr;
+            obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,distance_target);
+            ptr++;
+            printf("forward %d %f\n", i, obj.linear_speed);
+            printf("rotate %d %f\n", i, obj.angular_speed);
+        }
+
+        for(int robotId = 0; robotId < 1; robotId++)
+        {
+            if(obj.robot_cluster[robotId].carried_item_type != 0)
+            {
+                printf("sell %d\n", robotId);
+								flag = 1;
+            }
+            else
+            {
+                printf("buy %d\n", robotId);
+								flag = 0;
+            }
+        }
+		printf("OK\n");
 		fflush(stdout);
 	}
 	return 0;
 }
 
-
-void hw_compet::get_yaw_angle(double& yaw, double& angle_x, int robot_id, const vector<array<double, 10>>& robot, double wb_minX, double wb_minY)
+                             
+void hw_compet::get_yaw_angle(double& yaw ,double& vector_angle ,double workbench_x ,double workbench_y ,const Robot& robot_cluster_get_angle)
 {
-	//机器人朝向
-	yaw = robot[robot_id][7];
-	double delta_x = wb_minX - robot[robot_id][8];
-	double delta_y = wb_minY - robot[robot_id][9];
+    //得到小车的朝向
+    yaw = robot_cluster_get_angle.direction;
+    double car_x = robot_cluster_get_angle.location_x;
+    double car_y = robot_cluster_get_angle.location_y;
+
+	double delta_x = workbench_x - car_x;
+	double delta_y = workbench_y - car_y;
 	vector<double> vec1 = { delta_x,delta_y };
 	vector<double> vec2 = { 1,0 };
 
@@ -137,34 +184,31 @@ void hw_compet::get_yaw_angle(double& yaw, double& angle_x, int robot_id, const 
 	vec2_length = sqrt(vec2_length);
 
 	// 计算两个向量之间的夹角
-	angle_x = acos(dot_product / (vec1_length * vec2_length));
+	vector_angle = acos(dot_product / (vec1_length * vec2_length));
 	if (delta_y < 0)
-		angle_x = -angle_x;
-
+		vector_angle = -vector_angle;
 }
-
-
 
 //更新单独一个机器人到各个工作台的距离(为了便于多线程)
 //也可以修改成直接求解四个机器到工作台的距离
-void hw_compet::update_distance(const vector<array<double,10>>& robot, const unordered_map<char, vector<array<double, 5>>>& um_wb,vector<vector<double>>& distance_wb,int robot_id)
+double hw_compet::update_distance(const WorkBenchNode* workbench,const Robot robot)
 {
-	distance_wb.clear();
-	distance_wb.resize(10);
-	for (auto &kv : um_wb)
-	{
-		//工作台的编号
-		int key = kv.first-'0';
-		//同一ID工作台对应的不同参数
-		vector<array<double, 5>> value = kv.second;
-		for (int j = 0; j < value.size(); j++)
-		{
-			double num=pow(value[j][0] - robot[robot_id][8], 2) + pow(value[j][1] - robot[robot_id][9], 2);
-			distance_wb[key].push_back(num);
-		}
-	}
+
+    double car_location_x = robot.location_x;
+    double car_location_y = robot.location_y;
+    double workbench_location_x = workbench->x;
+    double workbench_location_y = workbench->y;
+    double distance=sqrt(pow(car_location_x-workbench_location_x,2)+pow(car_location_y-workbench_location_y,2));
+	return distance;
 }
 
+
+//速度计算
+void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance)
+{
+		aS=(pid_update(*pid, 0.0f, yaw - angle));
+		lS=(abs(1.5/(yaw - angle))+ 0.5);
+}
 //pid初始化
 void hw_compet::pid_init(pid_controller *pid)
 {
@@ -173,12 +217,12 @@ void hw_compet::pid_init(pid_controller *pid)
 	pid->pre_err = 0.0f;
 	pid->pre_measure = 0.0f;
 	pid->out = 0.0f;
-	pid->T = 0.02;
-	pid->lim_min = -3.0f;
-	pid->lim_max = 3.0f;
-	pid->Kp = 5.5;
-	pid->Ki = 0.008;
-	pid->Kd = 0.00;
+	pid->T = 0.020;
+	pid->lim_min = -3.1415926;
+	pid->lim_max = 3.1415926;
+	pid->Kp = 1.2;
+	pid->Ki = 0.002;
+	pid->Kd = 0.0000;
 	pid->tau = 0;
 }
 
@@ -368,7 +412,20 @@ bool hw_compet::init() {
 	return false;
 }
 
-
+//初始化一个机器人的工作台位置数组并获得机器人的目标
+WorkBenchNodeForRobot* hw_compet::GetRobotTarget(Robot& robot) {
+	//先清空机器人的工作台数组
+	robot.Clear_vec();
+	//先来给它初始化---注意工作台从1开始重新加
+	for(int i = 1; i < work_bench_cluster.size(); ++i) {
+		for(auto wb: work_bench_cluster[i].WorkBenchVec) {
+			double dis = update_distance(wb, robot);
+			robot.workbench_for_robot[i].push_back(WorkBenchNodeForRobot(i, wb->x,wb->y, dis));
+		}
+	}
+	//随后得到改机器人的目标
+	return robot.GetTarget();
+}
 
 /*int main() {
 	readUntilOK();
