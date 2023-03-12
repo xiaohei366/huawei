@@ -3,6 +3,11 @@
 
 #include <vector>
 #include <algorithm>
+#include <unordered_set>
+#include <queue>
+#include <iostream>
+#include <fstream>
+#include <string>
 
 
 struct WorkBenchNodeForRobot {
@@ -10,6 +15,9 @@ struct WorkBenchNodeForRobot {
     double x, y;
     double dis;
     WorkBenchNodeForRobot(int T, double X, double Y, double D):type(T), x(X), y(Y), dis(D){};
+    bool operator < (const WorkBenchNodeForRobot &rhs) const {
+            return dis > rhs.dis;
+        }
 };
 
 
@@ -21,7 +29,7 @@ class Robot {
                 std::vector<WorkBenchNodeForRobot> tem;
                 workbench_for_robot.push_back(tem);
             }
-        
+            std::unordered_set<WorkBenchNodeForRobot*> target_set;
         }
         ~Robot() = default;
 
@@ -33,13 +41,15 @@ class Robot {
        
         WorkBenchNodeForRobot* GetTarget();
         void Clear_vec();
-
+        static void Clear_set() {
+            target_set.clear();
+        };
         //机器人面对不同类型工作台的情况
         std::vector<std::vector<WorkBenchNodeForRobot>> workbench_for_robot;
 
 
 
-
+        
         //下面是机器人的属性
         int workstation_id;
         int carried_item_type;
@@ -49,9 +59,9 @@ class Robot {
         double linear_velocity_x, linear_velocity_y;
         double direction;
         double location_x, location_y;
-
+    private:
+        static std::unordered_set<double> target_set;   
 };
-
 
 
 

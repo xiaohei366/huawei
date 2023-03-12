@@ -1,3 +1,3 @@
-/home/songyj/huawei/SDK/build/CMakeFiles/rebuild_cache.dir
-/home/songyj/huawei/SDK/build/CMakeFiles/edit_cache.dir
-/home/songyj/huawei/SDK/build/CMakeFiles/main.dir
+/home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/rebuild_cache.dir
+/home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/edit_cache.dir
+/home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/main.dir

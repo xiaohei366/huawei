@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/songyj/huawei/SDK
+CMAKE_SOURCE_DIR = /home/angryhei/code/huawei/LinuxRelease/SDK
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/songyj/huawei/SDK/build
+CMAKE_BINARY_DIR = /home/angryhei/code/huawei/LinuxRelease/SDK/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/songyj/huawei/SDK/build/CMakeFiles /home/songyj/huawei/SDK/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles /home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/songyj/huawei/SDK/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -122,6 +122,33 @@ main: cmake_check_build_system
 main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
+
+hwcompet.o: hwcompet.cc.o
+
+.PHONY : hwcompet.o
+
+# target to build an object file
+hwcompet.cc.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/hwcompet.cc.o
+.PHONY : hwcompet.cc.o
+
+hwcompet.i: hwcompet.cc.i
+
+.PHONY : hwcompet.i
+
+# target to preprocess a source file
+hwcompet.cc.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/hwcompet.cc.i
+.PHONY : hwcompet.cc.i
+
+hwcompet.s: hwcompet.cc.s
+
+.PHONY : hwcompet.s
+
+# target to generate assembly for a file
+hwcompet.cc.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/hwcompet.cc.s
+.PHONY : hwcompet.cc.s
 
 main.o: main.cpp.o
 
@@ -240,6 +267,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... main"
+	@echo "... hwcompet.o"
+	@echo "... hwcompet.i"
+	@echo "... hwcompet.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

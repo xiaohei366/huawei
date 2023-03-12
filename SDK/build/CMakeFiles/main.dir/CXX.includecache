@@ -6,7 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/songyj/huawei/SDK/main.cpp
+/home/angryhei/code/huawei/LinuxRelease/SDK/hwcompet.cc
+hwcompet.h
+/home/angryhei/code/huawei/LinuxRelease/SDK/hwcompet.h
+
+/home/angryhei/code/huawei/LinuxRelease/SDK/hwcompet.h
 iostream
 -
 fstream
@@ -30,13 +34,35 @@ cstdio
 type_traits
 -
 robot.h
-/home/songyj/huawei/SDK/robot.h
+/home/angryhei/code/huawei/LinuxRelease/SDK/robot.h
 workbench.h
-/home/songyj/huawei/SDK/workbench.h
+/home/angryhei/code/huawei/LinuxRelease/SDK/workbench.h
 
-/home/songyj/huawei/SDK/robot.h
+/home/angryhei/code/huawei/LinuxRelease/SDK/main.cpp
+hwcompet.h
+/home/angryhei/code/huawei/LinuxRelease/SDK/hwcompet.h
 
-/home/songyj/huawei/SDK/workbench.h
+/home/angryhei/code/huawei/LinuxRelease/SDK/robot.cc
+robot.h
+/home/angryhei/code/huawei/LinuxRelease/SDK/robot.h
+
+/home/angryhei/code/huawei/LinuxRelease/SDK/robot.h
+vector
+-
+algorithm
+-
+unordered_set
+-
+queue
+-
+iostream
+-
+fstream
+-
+string
+-
+
+/home/angryhei/code/huawei/LinuxRelease/SDK/workbench.h
 unordered_map
 -
 vector

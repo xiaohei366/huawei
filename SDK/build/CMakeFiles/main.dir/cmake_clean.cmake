@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/main.dir/hwcompet.cc.o"
   "CMakeFiles/main.dir/main.cpp.o"
   "CMakeFiles/main.dir/pid.cpp.o"
   "CMakeFiles/main.dir/robot.cc.o"
