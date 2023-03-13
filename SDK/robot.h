@@ -8,17 +8,49 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <stack>
+//能够在该类型的工作台上卖何种物品
+const std::vector<std::vector<int>>WorkBenchIdForSell{
+    {},
+    {},
+    {},
+    {},
+    {1, 2},
+    {1, 3},
+    {2, 3},
+    {4, 5, 6},
+    {7},
+    {1, 2, 3, 4, 5, 6, 7}
+};
+//该物品能够卖给那种工作台
+const std::vector<std::vector<int>>ItemIdForSell{
+    {},
+    {4, 5, 9},
+    {4, 6, 9},
+    {5, 6, 9},
+    {7, 9},
+    {7, 9},
+    {7, 9},
+    {8, 9},
+    {},
+    {}
+};
 
 
 struct WorkBenchNodeForRobot {
     int type;
     double x, y;
     double dis;
-    WorkBenchNodeForRobot(int T, double X, double Y, double D):type(T), x(X), y(Y), dis(D){};
+    std::unordered_set<int> bag;
+    WorkBenchNodeForRobot(int T, double X, double Y, double D, int ori_material_status):type(T), x(X), y(Y), dis(D){
+        for(int cnt = 0; (ori_material_status >> cnt) != 0; ++cnt) {
+            if(ori_material_status & 1 == 1) bag.insert(cnt);
+        }
+    };
 };
 
 struct cmp_rule {
-    bool operator() (const WorkBenchNodeForRobot a, const WorkBenchNodeForRobot b) {
+    bool operator() (const WorkBenchNodeForRobot a, const WorkBenchNodeForRobot b) const {
         return a.dis > b.dis; // 按照dis从小到大排序
     }
 };
@@ -63,6 +95,9 @@ class Robot {
         double direction;
         double location_x, location_y;
     private:
+        //存放买目标和卖目标
+        std::stack<WorkBenchNodeForRobot>target_sk;
+        //四个机器人共享目标集合，为了防止重复拿取
         static std::unordered_set<double> target_set;   
 };
 
