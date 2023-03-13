@@ -23,58 +23,45 @@ void Robot::Update(int workstation_id, int carried_item_type, double time_value_
 
 
 
-WorkBenchNodeForRobot* Robot::GetTarget() {
-    std::priority_queue<WorkBenchNodeForRobot*>pq;
+WorkBenchNodeForRobot Robot::GetTarget() {
+    std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>pq;
     //默认的点--默认工作台类型为1
-    // 打日志debug
-    //std::ofstream logfile;
-    //logfile.open("./log.txt", std::ios::app); // 打开日志文件，追加写入
-    //if (logfile.is_open()) { // 判断文件是否打开成功
-    //for(auto &t: target_set){
-    //logfile << t  << std::endl; // 写入日志
-    //}
-    //logfile.close(); // 关闭文件
-    //}
-    WorkBenchNodeForRobot* default_node =  new WorkBenchNodeForRobot(1, this->location_x, this->location_y, 0.5);
+    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(1, this->location_x, this->location_y, 0.5);
     //如果是买--买前三个里面离着最近的
     if(this->carried_item_type == 0) {
         for(int i = 1; i <= 3; ++i) {
             auto &vec = workbench_for_robot[i];
-            for(auto &v: vec) {
-                pq.push(&v);
+            for(auto& v: vec) {
+                pq.push(v);
             }
         }
         //再取出来
         while(!pq.empty()) {
-            if(target_set.count(pq.top()->x*100+pq.top()->y)) pq.pop();
+            if(target_set.count(pq.top().x*100+pq.top().y)) pq.pop();
             else {
-                target_set.insert(pq.top()->x*100+pq.top()->y);
+                target_set.insert(pq.top().x*100+pq.top().y);
                 return pq.top();
             }
+            
         } 
-        return default_node; 
-        // std::sort(vec.begin(), vec.end(),[](const WorkBenchNodeForRobot a, const WorkBenchNodeForRobot b)  {
-        //     return a.dis < b.dis;
-        // });
     }
     else {
         for(int i = 4; i <= 6; ++i) {
             auto &vec = workbench_for_robot[i];
             for(auto &v: vec) {
-                pq.push(&v);
+                pq.push(v);
             }
         }
         //再取出来
         while(!pq.empty()) {
-            if(target_set.count(pq.top()->x*100+pq.top()->y)) pq.pop();
+            if(target_set.count(pq.top().x*100+pq.top().y)) pq.pop();
             else {
-                target_set.insert(pq.top()->x*100+pq.top()->y);
+                target_set.insert(pq.top().x*100+pq.top().y);
                 return pq.top();
             }
         }
-        return default_node; 
-        } 
-    return nullptr;
+    } 
+    return default_node;
 }
 
 void Robot::Clear_vec() {

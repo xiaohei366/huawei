@@ -85,7 +85,7 @@ public:
 	//更新每一个小车与所有工作台的距离
     double update_distance(const WorkBenchNode* workbench,const Robot robot);
     //初始化一个机器人的工作台位置数组
-	WorkBenchNodeForRobot* GetRobotTarget(Robot& robot);
+	WorkBenchNodeForRobot GetRobotTarget(Robot& robot);
 	//pid初始化和计算
     void vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance);
 	void pid_init(pid_controller *pid);

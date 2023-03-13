@@ -15,10 +15,14 @@ struct WorkBenchNodeForRobot {
     double x, y;
     double dis;
     WorkBenchNodeForRobot(int T, double X, double Y, double D):type(T), x(X), y(Y), dis(D){};
-    bool operator < (const WorkBenchNodeForRobot &rhs) const {
-            return dis > rhs.dis;
-        }
 };
+
+struct cmp_rule {
+    bool operator() (const WorkBenchNodeForRobot a, const WorkBenchNodeForRobot b) {
+        return a.dis > b.dis; // 按照dis从小到大排序
+    }
+};
+
 
 
 
@@ -29,7 +33,6 @@ class Robot {
                 std::vector<WorkBenchNodeForRobot> tem;
                 workbench_for_robot.push_back(tem);
             }
-            std::unordered_set<WorkBenchNodeForRobot*> target_set;
         }
         ~Robot() = default;
 
@@ -39,7 +42,7 @@ class Robot {
         double location_x, double location_y);
 
        
-        WorkBenchNodeForRobot* GetTarget();
+        WorkBenchNodeForRobot GetTarget();
         void Clear_vec();
         static void Clear_set() {
             target_set.clear();

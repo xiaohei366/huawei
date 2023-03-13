@@ -258,7 +258,7 @@ bool hw_compet::init() {
 }
 
 //初始化一个机器人的工作台位置数组并获得机器人的目标
-WorkBenchNodeForRobot* hw_compet::GetRobotTarget(Robot& robot) {
+WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot) {
 	//先清空机器人的工作台数组
 	robot.Clear_vec();
 	//先来给它初始化---注意工作台从1开始重新加
