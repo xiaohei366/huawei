@@ -17,12 +17,12 @@ const std::vector<std::vector<int>>WorkBenchIdForSell{
     {},
     {},
     {},
-    {1, 2},
-    {1, 3},
-    {2, 3},
-    {4, 5, 6},
+    {2, 1},
+    {3, 1},
+    {3, 2},
+    {6, 5, 4},
     {7},
-    {1, 2, 3, 4, 5, 6, 7}
+    {7, 6, 5, 4}
 };
 //该物品能够卖给那种工作台
 const std::vector<std::vector<int>>ItemIdForSell{
@@ -45,8 +45,9 @@ struct WorkBenchNodeForRobot {
     int type;
     double x, y;
     double dis;
+    int product_status;
     std::unordered_set<int> bag;
-    WorkBenchNodeForRobot(int ID, int T, double X, double Y, double D, int ori_material_status):global_id(ID), type(T), x(X), y(Y), dis(D){
+    WorkBenchNodeForRobot(int ID, int T, double X, double Y, double D, int ori_material_status, int ProductStatus):global_id(ID), type(T), x(X), y(Y), dis(D), product_status(ProductStatus){
         for(int cnt = 0; (ori_material_status >> cnt) != 0; ++cnt) {
             if(((ori_material_status >> cnt) & 1) == 1){
                 bag.insert(cnt);
@@ -78,15 +79,26 @@ class Robot {
         
         //存放每一个robot的目标点,买和卖
         std::stack<WorkBenchNodeForRobot> robot_goal_point;
-
+        //std::stack<WorkBenchNodeForRobot> greater_level_point;
         //得到robot要跑向的目标点 
         WorkBenchNodeForRobot GetTarget();
+        WorkBenchNodeForRobot Num456(WorkBenchNodeForRobot &default_node, 
+        std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
+        
+        WorkBenchNodeForRobot Num789(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue,std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
+        );
+
+
+
         void Clear_vec();
         static void Clear_set() {
             target_set.clear();
         };
         //机器人面对不同类型工作台的情况
         std::vector<std::vector<WorkBenchNodeForRobot>> workbench_for_robot;
+       
        
 
 

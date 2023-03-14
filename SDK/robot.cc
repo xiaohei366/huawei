@@ -23,20 +23,119 @@ void Robot::Update(int workstation_id, int carried_item_type, double time_value_
 
 WorkBenchNodeForRobot Robot::GetTarget() {
     //默认的点--默认工作台类型为1,全局ID为-2---就是原地打圈
-    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, this->location_x, this->location_y, 0.5, 0);
-    //初始化该机器人所有工作台的候补队列
+    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, this->location_x, this->location_y, 0.5, 0, 0);
+    //初始化该机器人所有工作台的候补队列 以及 高优先度生产好的点
+    int cnt = 0; //高优先度点的个数
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>robot_target_queue;
+    std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>greater_level_queue;
     for(int i = 0; i <= 9; ++i) {
         auto &vec = workbench_for_robot[i];
         std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule> pq;
+        std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule> pq2; //分别对应上面两个有限队列数组的临时队列
         for(auto &v: vec) {
             pq.push(v);
+            if(i >= 4 && v.product_status == 1) {
+                pq2.push(v);
+                ++cnt;
+            }
         }
         robot_target_queue.push_back(pq);
+        greater_level_queue.push_back(pq2);
+    }
+    WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0);
+    if(cnt != 0) ans =  Num789(default_node, robot_target_queue, greater_level_queue);
+    if(robot_goal_point.empty()) ans =  Num456(default_node, robot_target_queue);
+    
+    return ans;
+}
+
+
+void Robot::Clear_vec() {
+    for(int i = 0; i < 10; ++i) {
+        workbench_for_robot[i].clear();
+    }
+}
+
+
+WorkBenchNodeForRobot Robot::Num789(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
+) {
+    for(int i=7;i<=9;i++)
+    {
+        //创建一个二级优先队列，存放堆栈内
+        while(!robot_target_queue[i].empty() && robot_goal_point.size() != 2)
+        {
+            auto m = robot_target_queue[i].top();
+            int type = m.type;
+            double coordinate_x = m.x;
+            double coordinate_y = m.y;
+            std::unordered_set<int> us = m.bag;
+
+            if(target_set.count(coordinate_x*100+coordinate_y) != 0)
+            {
+                robot_target_queue[i].pop();
+                continue;
+            }
+
+            //当其为0的时候，表示，工作台缺少原材料
+            for(int j=0;j<WorkBenchIdForSell[type].size();j++)
+            {
+                int raw_material_type = WorkBenchIdForSell[type][j];
+                //如果当前装原材料的格子是空的，然后需要去判断有没有别的robot在执行该任务
+                //double date_tmp=coordinate_x*100+coordinate_y;
+                //std::cerr<<"data tmp = "<<date_tmp<<std::endl;
+                if(us.count(raw_material_type) == 0)
+                {
+                    robot_goal_point.push(m);
+                    //下面开始在最近的1--3号工作台
+                    double new_idential = coordinate_x*100+coordinate_y;
+                    target_set.insert(new_idential);
+
+
+                    auto que = greater_level_queue[raw_material_type];
+                    while(!que.empty() && robot_goal_point.size() == 1)
+                    {
+                        
+                        double unique_idential = que.top().x*100+que.top().y;
+                        if(target_set.count(unique_idential))
+                        {
+                            que.pop();
+                        }
+                        else
+                        {
+                            target_set.insert(unique_idential);
+                            robot_goal_point.push(que.top());
+                        }
+                    }
+                    break;
+                }
+            }
+            //当robot没有找到了新的目标点，说明上面的这个工作台是满的
+            if(robot_goal_point.size() == 1)
+            {
+                //将该工作台从优先队列删除
+                robot_target_queue[i].pop();
+                target_set.erase(robot_goal_point.top().x*100+robot_goal_point.top().y);
+                robot_goal_point.pop();
+            }
+            else if(robot_goal_point.size() == 0)
+            {
+                robot_target_queue[i].pop();
+            }
+        }
         
     }
+    return default_node;
+}
+
+
+
+
+
+WorkBenchNodeForRobot Robot::Num456(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue) { 
     //具体的策略
-    for(int i=4;i<=9;i++)
+    for(int i=4;i<=6;i++)
     {
         while(!robot_target_queue[i].empty() && robot_goal_point.size() != 2)
         {
@@ -53,11 +152,6 @@ WorkBenchNodeForRobot Robot::GetTarget() {
                 continue;
             }
 
-            /*if(i == 7)
-            {
-                std::cerr<<<<std::endl;
-            } */
-
             //当其为0的时候，表示，工作台缺少原材料
             for(int j=0;j<WorkBenchIdForSell[type].size();j++)
             {
@@ -67,9 +161,6 @@ WorkBenchNodeForRobot Robot::GetTarget() {
                 //std::cerr<<"data tmp = "<<date_tmp<<std::endl;
                 if(us.count(raw_material_type) == 0)
                 {
-                    
-                    //std::cerr<<coordinate_x*100+coordinate_y<<std::endl;
-                    //robot_goal_point.push({coordinate_x,coordinate_y});
                     robot_goal_point.push(m);
                     //下面开始在最近的1--3号工作台
                     double new_idential = coordinate_x*100+coordinate_y;
@@ -88,13 +179,6 @@ WorkBenchNodeForRobot Robot::GetTarget() {
                         else
                         {
                             target_set.insert(unique_idential);
-                            /*double raw_material_coordinate_x = que.top().x;
-                            double raw_material_coordinate_y = que.top().y;
-                            WorkBenchNodeForRobot raw_material_workbench;
-                            raw_material_workbench.type = raw_material_type;
-                            raw_material_workbench.x = raw_material_coordinate_x;
-                            raw_material_workbench.y = raw_material_coordinate_y;
-                            raw_material_workbench.dis = */
                             robot_goal_point.push(que.top());
                         }
                     }
@@ -116,18 +200,5 @@ WorkBenchNodeForRobot Robot::GetTarget() {
         }
           
     }
-    //robot_goal_point.push({default_node.x,default_node.y});
     return default_node;
-
-
 }
-
-
-void Robot::Clear_vec() {
-    for(int i = 0; i < 10; ++i) {
-        workbench_for_robot[i].clear();
-    }
-}
-
-
-

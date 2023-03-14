@@ -24,8 +24,8 @@ int main()
                 WorkBenchNodeForRobot target = obj.GetRobotTarget(obj.robot_cluster[i]);
                 
                 if(obj.robot_cluster[i].robot_goal_point.size() == 0) {
-                    workbench_x = 1;//target.x;
-                    workbench_y = 1;//target.y;
+                    workbench_x = 50;//target.x;
+                    workbench_y = 50;//target.y;
                 }
                 else {
                     workbench_x = obj.robot_cluster[i].robot_goal_point.top().x;
