@@ -9,6 +9,8 @@
 #include <fstream>
 #include <string>
 #include <stack>
+#include <array>
+
 //能够在该类型的工作台上卖何种物品
 const std::vector<std::vector<int>>WorkBenchIdForSell{
     {},
@@ -37,26 +39,28 @@ const std::vector<std::vector<int>>ItemIdForSell{
 };
 
 
+
 struct WorkBenchNodeForRobot {
+    int global_id;
     int type;
     double x, y;
     double dis;
     std::unordered_set<int> bag;
-    WorkBenchNodeForRobot(int T, double X, double Y, double D, int ori_material_status):type(T), x(X), y(Y), dis(D){
+    WorkBenchNodeForRobot(int ID, int T, double X, double Y, double D, int ori_material_status):global_id(ID), type(T), x(X), y(Y), dis(D){
         for(int cnt = 0; (ori_material_status >> cnt) != 0; ++cnt) {
-            if(ori_material_status & 1 == 1) bag.insert(cnt);
+            if(((ori_material_status >> cnt) & 1) == 1){
+                bag.insert(cnt);
+            }
         }
+        //std::cerr<<ori_material_status<<std::endl;
     };
 };
 
 struct cmp_rule {
-    bool operator() (const WorkBenchNodeForRobot a, const WorkBenchNodeForRobot b) const {
+    bool operator() (const WorkBenchNodeForRobot a, const WorkBenchNodeForRobot b) {
         return a.dis > b.dis; // 按照dis从小到大排序
     }
 };
-
-
-
 
 class Robot {
     public:
@@ -67,13 +71,15 @@ class Robot {
             }
         }
         ~Robot() = default;
-
-
+           
         void Update(int workstation_id, int carried_item_type, double time_value_coefficient, double collision_value_coefficient, 
         double angular_velocity, double linear_velocity_x, double linear_velocity_y, double direction,
         double location_x, double location_y);
+        
+        //存放每一个robot的目标点,买和卖
+        std::stack<WorkBenchNodeForRobot> robot_goal_point;
 
-       
+        //得到robot要跑向的目标点 
         WorkBenchNodeForRobot GetTarget();
         void Clear_vec();
         static void Clear_set() {
@@ -81,7 +87,7 @@ class Robot {
         };
         //机器人面对不同类型工作台的情况
         std::vector<std::vector<WorkBenchNodeForRobot>> workbench_for_robot;
-
+       
 
 
         
@@ -94,11 +100,8 @@ class Robot {
         double linear_velocity_x, linear_velocity_y;
         double direction;
         double location_x, location_y;
-    private:
-        //存放买目标和卖目标
-        std::stack<WorkBenchNodeForRobot>target_sk;
-        //四个机器人共享目标集合，为了防止重复拿取
         static std::unordered_set<double> target_set;   
+    private:
 };
 
 

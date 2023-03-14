@@ -1,6 +1,6 @@
 #include "hwcompet.h"
 
-void hw_compet::get_yaw_angle(double& yaw ,double& vector_angle ,double workbench_x ,double workbench_y ,const Robot& robot_cluster_get_angle)
+void hw_compet::get_yaw_angle(double& distance_target,double& yaw ,double& vector_angle ,double workbench_x ,double workbench_y ,const Robot& robot_cluster_get_angle)
 {
     //得到小车的朝向
     yaw = robot_cluster_get_angle.direction;
@@ -9,6 +9,7 @@ void hw_compet::get_yaw_angle(double& yaw ,double& vector_angle ,double workbenc
 
 	double delta_x = workbench_x - car_x;
 	double delta_y = workbench_y - car_y;
+    distance_target = sqrt(pow(delta_x,2)+pow(delta_y,2)); 
 	vector<double> vec1 = { delta_x,delta_y };
 	vector<double> vec2 = { 1,0 };
 
@@ -35,13 +36,13 @@ void hw_compet::get_yaw_angle(double& yaw ,double& vector_angle ,double workbenc
 
 //更新单独一个机器人到各个工作台的距离(为了便于多线程)
 //也可以修改成直接求解四个机器到工作台的距离
-double hw_compet::update_distance(const WorkBenchNode* workbench,const Robot robot)
+double hw_compet::update_distance(const WorkBenchNode& workbench,const Robot robot)
 {
 
     double car_location_x = robot.location_x;
     double car_location_y = robot.location_y;
-    double workbench_location_x = workbench->x;
-    double workbench_location_y = workbench->y;
+    double workbench_location_x = workbench.x;
+    double workbench_location_y = workbench.y;
     double distance=sqrt(pow(car_location_x-workbench_location_x,2)+pow(car_location_y-workbench_location_y,2));
 	return distance;
 }
@@ -196,9 +197,12 @@ bool hw_compet::readUntilOK() {
                         break;
                     }
                     //根据横纵坐标，得到行与列数
-                    double workbench_row=(stod(data_each_frame[1])+0.25)/0.5;
-                    double workbench_col=(stod(data_each_frame[2])+0.25)/0.5;
+                    //double workbench_row=(stod(data_each_frame[1])+0.25)/0.5;
+                    //double workbench_col=(stod(data_each_frame[2])+0.25)/0.5;
+                    double workbench_row = stod(data_each_frame[1]);
+                    double workbench_col = stod(data_each_frame[2]);
                     //工作台的编号1--9
+					
                     work_bench_cluster[stoi(data_each_frame[0])].Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5])); 
                     workbench_flag++;
                     break;
@@ -225,7 +229,7 @@ bool hw_compet::init() {
 	//地图行 i表示坐标y
 	//循环中j表示坐标x
 	int i = 99;
-
+    int cnt = 0;
 	struct workbench *wb;
 	struct workbench *wb_tmp;
 
@@ -236,7 +240,7 @@ bool hw_compet::init() {
 		else
 		{
 			std::string input(line);
-			for(int j = 99; j >= 0; j--)
+			for(int j = 0; j <= 99; ++j)
 			{
 				if (input[j] == 'A')
 				{
@@ -248,7 +252,7 @@ bool hw_compet::init() {
 				{
 					int type = input[j] - '0';
 					//更新工作台位置
-					work_bench_cluster[type].Add(j*0.5+0.25, i*0.5+0.25);
+					work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
 				}
 			}
 			i--;
@@ -265,9 +269,10 @@ WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot) {
 	for(int i = 1; i < work_bench_cluster.size(); ++i) {
 		for(auto wb: work_bench_cluster[i].WorkBenchVec) {
 			double dis = update_distance(wb, robot);
-			robot.workbench_for_robot[i].push_back(WorkBenchNodeForRobot(i, wb->x,wb->y, dis, wb->ori_material_status));
+			robot.workbench_for_robot[i].push_back(WorkBenchNodeForRobot(wb.global_id, i, wb.x,wb.y, dis,wb.ori_material_status));
 		}
 	}
 	//随后得到改机器人的目标
-	return robot.GetTarget();
+    WorkBenchNodeForRobot target = robot.GetTarget();
+	return target;
 }

@@ -14,6 +14,7 @@
 #include <type_traits>
 #include "robot.h"
 #include "workbench.h"
+#include <stack>
 using namespace std;
 
 //pid控制
@@ -68,6 +69,10 @@ public:
 	unordered_map<char, vector<array<double, 5>>> um_workbench;
 	//存放距离
 	vector<vector<double>> distance_wb;
+
+
+
+
     //帧序号
     int frame_num=0;
 	int initial_money = 0;
@@ -76,14 +81,15 @@ public:
     double linear_speed = 0;
     double yaw = 0;
     double vector_angle = 0;
+    double distance_target = 0;
 	//初始化函数 读取地图
 	bool init();
 	//与判题器进行交互的函数
 	bool readUntilOK();
 	//得到pid调节参数yaw,angle_x
-    void get_yaw_angle(double& yaw ,double& vector_angle ,double workbench_x ,double workbench_y ,const Robot& robot_cluster_get_angle);
+    void get_yaw_angle(double& distance_target,double& yaw ,double& vector_angle ,double workbench_x ,double workbench_y ,const Robot& robot_cluster_get_angle);
 	//更新每一个小车与所有工作台的距离
-    double update_distance(const WorkBenchNode* workbench,const Robot robot);
+    double update_distance(const WorkBenchNode& workbench,const Robot robot);
     //初始化一个机器人的工作台位置数组
 	WorkBenchNodeForRobot GetRobotTarget(Robot& robot);
 	//pid初始化和计算
