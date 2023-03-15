@@ -99,7 +99,17 @@ class Robot {
         //机器人面对不同类型工作台的情况
         std::vector<std::vector<WorkBenchNodeForRobot>> workbench_for_robot;
        
-       
+        //定义能够存储pair类型的set
+        struct PairHash {
+            std::size_t operator()(const std::pair<double, int>& p) const {
+                return std::hash<double>()(p.first) ^ std::hash<int>()(p.second);
+            }
+        };
+        struct PairEqual {
+            bool operator()(const std::pair<double, int>& a, const std::pair<double, int>& b) const {
+                return a.first == b.first && a.second == b.second;
+            }
+        };
 
 
         
@@ -112,8 +122,9 @@ class Robot {
         double linear_velocity_x, linear_velocity_y;
         double direction;
         double location_x, location_y;
-        static std::unordered_set<double> target_set;   
+        static std::unordered_set<std::pair<double, int>, PairHash, PairEqual> target_set;   
     private:
+        
 };
 
 

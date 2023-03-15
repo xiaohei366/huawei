@@ -1,6 +1,8 @@
 #include "robot.h"
 
-std::unordered_set<double> Robot::target_set;
+
+
+std::unordered_set<std::pair<double, int>, Robot::PairHash, Robot::PairEqual> Robot::target_set;
 
 
 void Robot::Update(int workstation_id, int carried_item_type, double time_value_coefficient, double collision_value_coefficient, 
@@ -71,12 +73,12 @@ WorkBenchNodeForRobot Robot::Num789(WorkBenchNodeForRobot &default_node, std::ve
             double coordinate_x = m.x;
             double coordinate_y = m.y;
             std::unordered_set<int> us = m.bag;
-
-            if(target_set.count(coordinate_x*100+coordinate_y) != 0)
-            {
-                robot_target_queue[i].pop();
-                continue;
-            }
+            
+            // if(target_set.count({coordinate_x*100+coordinate_y, type}) != 0)
+            // {
+            //     robot_target_queue[i].pop();
+            //     continue;
+            // }
 
             //当其为0的时候，表示，工作台缺少原材料
             for(int j=0;j<WorkBenchIdForSell[type].size();j++)
@@ -85,12 +87,12 @@ WorkBenchNodeForRobot Robot::Num789(WorkBenchNodeForRobot &default_node, std::ve
                 //如果当前装原材料的格子是空的，然后需要去判断有没有别的robot在执行该任务
                 //double date_tmp=coordinate_x*100+coordinate_y;
                 //std::cerr<<"data tmp = "<<date_tmp<<std::endl;
-                if(us.count(raw_material_type) == 0)
+                if(us.count(raw_material_type) == 0 && target_set.count({coordinate_x*100+coordinate_y, raw_material_type}) == 0)
                 {
                     robot_goal_point.push(m);
                     //下面开始在最近的1--3号工作台
                     double new_idential = coordinate_x*100+coordinate_y;
-                    target_set.insert(new_idential);
+                    target_set.insert({new_idential, raw_material_type});
 
 
                     auto que = greater_level_queue[raw_material_type];
@@ -98,19 +100,19 @@ WorkBenchNodeForRobot Robot::Num789(WorkBenchNodeForRobot &default_node, std::ve
                     {
                         
                         double unique_idential = que.top().x*100+que.top().y;
-                        if(target_set.count(unique_idential))
+                        if(target_set.count({unique_idential,raw_material_type}))
                         {
                             que.pop();
                         }
                         else
                         {
-                            target_set.insert(unique_idential);
+                            target_set.insert({unique_idential,raw_material_type});
                             robot_goal_point.push(que.top());
                         }
                     }
                     if(robot_goal_point.size() == 1)
                     {
-                        target_set.erase(robot_goal_point.top().x*100+robot_goal_point.top().y);
+                        target_set.erase({robot_goal_point.top().x*100+robot_goal_point.top().y, raw_material_type});
                         robot_goal_point.pop();
                     }
                     else break;
@@ -144,25 +146,25 @@ WorkBenchNodeForRobot Robot::Num456(WorkBenchNodeForRobot &default_node, std::ve
             std::unordered_set<int> us = m.bag;
             //for(auto &n : us)
             //    std::cerr<<n<<std::endl;
-            if(target_set.count(coordinate_x*100+coordinate_y) != 0)
-            {
-                robot_target_queue[i].pop();
-                continue;
-            }
+            // if(target_set.count({coordinate_x*100+coordinate_y, type}) != 0)
+            // {
+            //     robot_target_queue[i].pop();
+            //     continue;
+            // }
 
             //当其为0的时候，表示，工作台缺少原材料
             for(int j=0;j<WorkBenchIdForSell[type].size();j++)
             {
                 int raw_material_type = WorkBenchIdForSell[type][j];
-                //如果当前装原材料的格子是空的，然后需要去判断有没有别的robot在执行该任务
-                //double date_tmp=coordinate_x*100+coordinate_y;
-                //std::cerr<<"data tmp = "<<date_tmp<<std::endl;
-                if(us.count(raw_material_type) == 0)
+                
+                //这个材料为空并且这个材料没有有机器人处理才能去判断找合适的购买工作台
+                if(us.count(raw_material_type) == 0 && target_set.count({coordinate_x*100+coordinate_y, raw_material_type}) == 0)
                 {
+                    
                     robot_goal_point.push(m);
                     //由于4-6里面有工作台缺少材料，
                     double new_idential = coordinate_x*100+coordinate_y;
-                    target_set.insert(new_idential);
+                    target_set.insert({new_idential, raw_material_type});
 
                     //下面开始找4-6相应队列里最近的1--3号工作台
                     auto que = robot_target_queue[raw_material_type];
@@ -170,19 +172,21 @@ WorkBenchNodeForRobot Robot::Num456(WorkBenchNodeForRobot &default_node, std::ve
                     {
                         
                         double unique_idential = que.top().x*100+que.top().y;
-                        if(target_set.count(unique_idential))
+                        if(target_set.count({unique_idential, raw_material_type}))
                         {
                             que.pop();
                         }
                         else
                         {
-                            target_set.insert(unique_idential);
+                            //若寻找成功，则将售卖工作台的类型改为缺少的原材料再返回
+                            robot_goal_point.top().type = raw_material_type;
+                            target_set.insert({unique_idential, raw_material_type});
                             robot_goal_point.push(que.top());
                         }
                     }
                     if(robot_goal_point.size() == 1)
                     {
-                        target_set.erase(robot_goal_point.top().x*100+robot_goal_point.top().y);
+                        target_set.erase({robot_goal_point.top().x*100+robot_goal_point.top().y, raw_material_type});
                         robot_goal_point.pop();
                     }
                     else break;

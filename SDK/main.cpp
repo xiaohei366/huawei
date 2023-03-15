@@ -24,8 +24,8 @@ int main()
                 WorkBenchNodeForRobot target = obj.GetRobotTarget(obj.robot_cluster[i]);
                 
                 if(obj.robot_cluster[i].robot_goal_point.size() == 0) {
-                    workbench_x = 50;//target.x;
-                    workbench_y = 50;//target.y;
+                    workbench_x = 25;//target.x;
+                    workbench_y = 25;//target.y;
                 }
                 else {
                     workbench_x = obj.robot_cluster[i].robot_goal_point.top().x;
@@ -57,11 +57,18 @@ int main()
             int robot_workbench_id = obj.robot_cluster[robotId].workstation_id;
             double target_id = obj.robot_cluster[robotId].robot_goal_point.top().global_id;
             double type = obj.robot_cluster[robotId].robot_goal_point.top().type;
+            // //只有购买或者卖成功了才pop掉目标
+            // if((obj.robot_cluster[robotId].carried_item_type != 0 && obj.robot_cluster[robotId].robot_goal_point.size() == 2)
+            // || (obj.robot_cluster[robotId].carried_item_type == 0 && obj.robot_cluster[robotId].robot_goal_point.size() == 1)) {
+
+            // }
+            //随后执行动作
             if(target_id != robot_workbench_id) continue;
             else
             {
                 double erase_num = obj.robot_cluster[robotId].robot_goal_point.top().x*100+obj.robot_cluster[robotId].robot_goal_point.top().y;
-                obj.robot_cluster[robotId].target_set.erase(erase_num);
+                int type = obj.robot_cluster[robotId].robot_goal_point.top().type;
+                obj.robot_cluster[robotId].target_set.erase({erase_num, type});
                 obj.robot_cluster[robotId].robot_goal_point.pop();
                 if(obj.robot_cluster[robotId].carried_item_type != 0)
                 {
@@ -71,6 +78,8 @@ int main()
                 {
                     printf("buy %d\n", robotId);
                 }
+                
+                //cerr << obj.robot_cluster[robotId].target_set.size() << endl;
             }
         }
 		printf("OK\n");
