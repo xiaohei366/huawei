@@ -53,7 +53,7 @@ void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double
 {
 		double a = yaw - angle;
 		aS = (pid_update(*pid, 0.0f, yaw - angle));
-		if(abs(a) < 0.2)
+		if(abs(a) < 0.7)
 		{
 			lS = (abs(100/a));
 			if(distance<1)
@@ -62,7 +62,7 @@ void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double
 			}
 		}
 		else
-			lS = 0.5;
+			lS = 3;
 		//lS = 1/abs(aS)+0.3;
 		//lS = 0;
 }

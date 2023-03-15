@@ -108,19 +108,17 @@ WorkBenchNodeForRobot Robot::Num789(WorkBenchNodeForRobot &default_node, std::ve
                             robot_goal_point.push(que.top());
                         }
                     }
-                    break;
+                    if(robot_goal_point.size() == 1)
+                    {
+                        target_set.erase(robot_goal_point.top().x*100+robot_goal_point.top().y);
+                        robot_goal_point.pop();
+                    }
+                    else break;
                 }
             }
-            //当robot没有找到了新的目标点，说明上面的这个工作台是满的
-            if(robot_goal_point.size() == 1)
+            if(robot_goal_point.size() != 2)
             {
                 //将该工作台从优先队列删除
-                robot_target_queue[i].pop();
-                target_set.erase(robot_goal_point.top().x*100+robot_goal_point.top().y);
-                robot_goal_point.pop();
-            }
-            else if(robot_goal_point.size() == 0)
-            {
                 robot_target_queue[i].pop();
             }
         }
@@ -162,11 +160,11 @@ WorkBenchNodeForRobot Robot::Num456(WorkBenchNodeForRobot &default_node, std::ve
                 if(us.count(raw_material_type) == 0)
                 {
                     robot_goal_point.push(m);
-                    //下面开始在最近的1--3号工作台
+                    //由于4-6里面有工作台缺少材料，
                     double new_idential = coordinate_x*100+coordinate_y;
                     target_set.insert(new_idential);
 
-
+                    //下面开始找4-6相应队列里最近的1--3号工作台
                     auto que = robot_target_queue[raw_material_type];
                     while(!que.empty() && robot_goal_point.size() == 1)
                     {
@@ -182,19 +180,17 @@ WorkBenchNodeForRobot Robot::Num456(WorkBenchNodeForRobot &default_node, std::ve
                             robot_goal_point.push(que.top());
                         }
                     }
-                    break;
+                    if(robot_goal_point.size() == 1)
+                    {
+                        target_set.erase(robot_goal_point.top().x*100+robot_goal_point.top().y);
+                        robot_goal_point.pop();
+                    }
+                    else break;
                 }
             }
-            //当robot没有找到了新的目标点，说明上面的这个工作台是满的
-            if(robot_goal_point.size() == 1)
+            if(robot_goal_point.size() != 2)
             {
                 //将该工作台从优先队列删除
-                robot_target_queue[i].pop();
-                target_set.erase(robot_goal_point.top().x*100+robot_goal_point.top().y);
-                robot_goal_point.pop();
-            }
-            else if(robot_goal_point.size() == 0)
-            {
                 robot_target_queue[i].pop();
             }
         }
