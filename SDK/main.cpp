@@ -55,27 +55,35 @@ int main()
                 continue;
             }
             int robot_workbench_id = obj.robot_cluster[robotId].workstation_id;
-            double target_id = obj.robot_cluster[robotId].robot_goal_point.top().global_id;
-            double type = obj.robot_cluster[robotId].robot_goal_point.top().type;
+            int target_id = obj.robot_cluster[robotId].robot_goal_point.top().global_id;
+            int status = obj.robot_cluster[robotId].robot_goal_point.top().product_status;
             // //只有购买或者卖成功了才pop掉目标
             // if((obj.robot_cluster[robotId].carried_item_type != 0 && obj.robot_cluster[robotId].robot_goal_point.size() == 2)
             // || (obj.robot_cluster[robotId].carried_item_type == 0 && obj.robot_cluster[robotId].robot_goal_point.size() == 1)) {
 
             // }
             //随后执行动作
+            double pos_x = obj.robot_cluster[robotId].robot_goal_point.top().x;
+            double pos_y = obj.robot_cluster[robotId].robot_goal_point.top().y;
+            double erase_num = pos_x * 100 + pos_y;
+            //注意，对于4-9的情况，这个类型里面是并不是4-9本身，而是它里面的产品格类型
+            int type = obj.robot_cluster[robotId].robot_goal_point.top().type;
             if(target_id != robot_workbench_id) continue;
             else
             {
-                double erase_num = obj.robot_cluster[robotId].robot_goal_point.top().x*100+obj.robot_cluster[robotId].robot_goal_point.top().y;
-                int type = obj.robot_cluster[robotId].robot_goal_point.top().type;
-                obj.robot_cluster[robotId].target_set.erase({erase_num, type});
-                obj.robot_cluster[robotId].robot_goal_point.pop();
                 if(obj.robot_cluster[robotId].carried_item_type != 0)
                 {
+                    obj.robot_cluster[robotId].target_set.erase({erase_num, type});
+                    obj.robot_cluster[robotId].robot_goal_point.pop();
                     printf("sell %d\n", robotId);
                 }
-                else if(obj.robot_cluster[robotId].carried_item_type == 0)
+                else if(obj.robot_cluster[robotId].carried_item_type == 0 
+                &&  obj.work_bench_cluster[type].GetProductStatus(pos_x, pos_y) == 1)
                 {
+                    //快结束就别买啦--最后4s
+                    if(obj.frame_num > 8800) continue;
+                    obj.robot_cluster[robotId].target_set.erase({erase_num, type});
+                    obj.robot_cluster[robotId].robot_goal_point.pop();
                     printf("buy %d\n", robotId);
                 }
                 

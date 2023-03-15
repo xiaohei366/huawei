@@ -28,3 +28,8 @@ void WorkBench::Update(double x, double y, int remain_production_time, int ori_m
     WorkBenchVec[finder_[position]].product_status = product_status;
 }
 
+int WorkBench::GetProductStatus(double x, double y) {
+    double position = x*map_shape_+y;
+
+    return WorkBenchVec[finder_[position]].product_status;
+}

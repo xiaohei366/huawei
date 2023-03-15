@@ -33,6 +33,7 @@ public:
 
     int GetSize() {return WorkBenchVec.size();};
 
+    int GetProductStatus(double x, double y);
     
 
 

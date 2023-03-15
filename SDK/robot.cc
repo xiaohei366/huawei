@@ -106,6 +106,8 @@ WorkBenchNodeForRobot Robot::Num789(WorkBenchNodeForRobot &default_node, std::ve
                         }
                         else
                         {
+                            //若寻找成功，则将售卖工作台的类型改为缺少的原材料再返回
+                            robot_goal_point.top().type = raw_material_type;
                             target_set.insert({unique_idential,raw_material_type});
                             robot_goal_point.push(que.top());
                         }
@@ -135,7 +137,7 @@ WorkBenchNodeForRobot Robot::Num789(WorkBenchNodeForRobot &default_node, std::ve
 
 WorkBenchNodeForRobot Robot::Num456(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue) { 
     //具体的策略
-    for(int i=4;i<=6;i++)
+    for(int i=4;i <= 6;++i)
     {
         while(!robot_target_queue[i].empty() && robot_goal_point.size() != 2)
         {
@@ -144,13 +146,6 @@ WorkBenchNodeForRobot Robot::Num456(WorkBenchNodeForRobot &default_node, std::ve
             double coordinate_x = m.x;
             double coordinate_y = m.y;
             std::unordered_set<int> us = m.bag;
-            //for(auto &n : us)
-            //    std::cerr<<n<<std::endl;
-            // if(target_set.count({coordinate_x*100+coordinate_y, type}) != 0)
-            // {
-            //     robot_target_queue[i].pop();
-            //     continue;
-            // }
 
             //当其为0的时候，表示，工作台缺少原材料
             for(int j=0;j<WorkBenchIdForSell[type].size();j++)

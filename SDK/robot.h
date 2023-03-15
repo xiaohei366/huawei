@@ -122,6 +122,8 @@ class Robot {
         double linear_velocity_x, linear_velocity_y;
         double direction;
         double location_x, location_y;
+
+
         static std::unordered_set<std::pair<double, int>, PairHash, PairEqual> target_set;   
     private:
         
