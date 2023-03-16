@@ -52,8 +52,8 @@ double hw_compet::update_distance(const WorkBenchNode& workbench,const Robot rob
 void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance)
 {
 		double a = yaw - angle;
-		aS = (pid_update(*pid, 0.0f, yaw - angle));
-		if(abs(a) < 0.7)
+		aS = (pid_update(*pid, 0.15f, yaw - angle));
+		if(abs(a) < 0.9)
 		{
 			lS = (abs(100/a));
 			if(distance<1)
