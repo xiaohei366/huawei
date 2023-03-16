@@ -90,7 +90,7 @@ class Robot {
         std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
         );
 
-
+        
 
         void Clear_vec();
         static void Clear_set() {
@@ -123,10 +123,11 @@ class Robot {
         double direction;
         double location_x, location_y;
 
+        static std::unordered_set<std::pair<double, int>, PairHash, PairEqual> target_set;
 
-        static std::unordered_set<std::pair<double, int>, PairHash, PairEqual> target_set;   
-    private:
-        
+        const std::vector<int> CircularArray{4, 5, 6};  
+        static int CircularArrayPtr;
+              
 };
 
 

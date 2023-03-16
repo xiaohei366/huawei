@@ -3,6 +3,7 @@
 
 
 std::unordered_set<std::pair<double, int>, Robot::PairHash, Robot::PairEqual> Robot::target_set;
+int Robot::CircularArrayPtr = 0;
 
 
 void Robot::Update(int workstation_id, int carried_item_type, double time_value_coefficient, double collision_value_coefficient, 
@@ -137,8 +138,10 @@ WorkBenchNodeForRobot Robot::Num789(WorkBenchNodeForRobot &default_node, std::ve
 
 WorkBenchNodeForRobot Robot::Num456(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue) { 
     //具体的策略
-    for(int i=4;i <= 6;++i)
+    for(int k=0 ;k <= 2;++k)
     {
+        int num_circular_array = CircularArray.size();
+        int i = CircularArray[(k + CircularArrayPtr + num_circular_array) % num_circular_array];
         while(!robot_target_queue[i].empty() && robot_goal_point.size() != 2)
         {
             auto m = robot_target_queue[i].top();
@@ -177,6 +180,9 @@ WorkBenchNodeForRobot Robot::Num456(WorkBenchNodeForRobot &default_node, std::ve
                             robot_goal_point.top().type = raw_material_type;
                             target_set.insert({unique_idential, raw_material_type});
                             robot_goal_point.push(que.top());
+                            //同时修改循环数组的指针
+                            CircularArrayPtr++;
+                            if(CircularArrayPtr >= CircularArray.size()) CircularArrayPtr = 0;
                         }
                     }
                     if(robot_goal_point.size() == 1)
