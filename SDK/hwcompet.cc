@@ -49,25 +49,25 @@ double hw_compet::update_distance(const WorkBenchNode& workbench,const Robot rob
 
 
 //速度计算
-void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance)
+void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance, int map_id)
 {
 		double a = yaw - angle;
-		aS = (pid_update(*pid, 0.15f, yaw - angle));
-		if(abs(a) < 0.9)
+		aS = (pid_update(*pid, pid_param[map_id][0], yaw - angle));
+		if(abs(a) < pid_param[map_id][1])
 		{
-			lS = (abs(100/a));
-			if(distance<1)
+			lS = (abs(pid_param[map_id][2]/a));
+			if(distance<pid_param[map_id][3])
 			{
-				lS = 3;
+				lS = pid_param[map_id][4];
 			}
 		}
 		else
-			lS = 3;
+			lS = pid_param[map_id][5];
 		//lS = 1/abs(aS)+0.3;
 		//lS = 0;
 }
 //pid初始化
-void hw_compet::pid_init(pid_controller *pid)
+void hw_compet::pid_init(pid_controller *pid, int map_id)
 {
 	pid->integrator = 0.0f;
 	pid->differentiator = 0.0f;
@@ -77,10 +77,10 @@ void hw_compet::pid_init(pid_controller *pid)
 	pid->T = 0.020;
 	pid->lim_min = -3.1415926;
 	pid->lim_max = 3.1415926;
-	pid->Kp = 10;
-	pid->Ki = 0;
-	pid->Kd = 0.0000;
-	pid->tau = 0;
+	pid->Kp = pid_param[map_id][6];
+	pid->Ki = pid_param[map_id][7];
+	pid->Kd = pid_param[map_id][8];
+	pid->tau = pid_param[map_id][9];
 }
 
 double hw_compet::pid_update(pid_controller *pid, double setpoint, double measure)
