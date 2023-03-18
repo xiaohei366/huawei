@@ -15,6 +15,9 @@ WorkBenchNode* WorkBench::Find(double x, double y) {
 }
 
 
+
+
+
 void WorkBench::Update(double x, double y, int remain_production_time, int ori_material_status, int product_status) {
     //WorkBenchNode* node = Find(x, y);
     double position = x*map_shape_+y;

@@ -102,7 +102,7 @@ public:
     void vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance);
 	void pid_init(pid_controller *pid);
 	double pid_update(pid_controller *pid, double setpoint, double measure);
-	
+	void check_map_id(string s, int i, int j, int type);
 private:
     pid_controller controller[4];
 	//yaw是机器人朝向，angle_x是向量与x轴正方向夹角

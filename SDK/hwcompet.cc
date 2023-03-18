@@ -225,11 +225,56 @@ bool hw_compet::readUntilOK() {
 
 //读取地图
 bool hw_compet::init() {
-	
+	char line[1024];
+	//地图行 i表示坐标y
+	//循环中j表示坐标x
+	int i = 99;
+    int cnt = 0;
+	struct workbench *wb;
+	struct workbench *wb_tmp;
+
+	while (fgets(line, sizeof line, stdin)) {
+		if (line[0] == 'O' && line[1] == 'K') {
+			cerr << this->map_id+1 << endl;
+			return true;
+		}
+		else
+		{
+			std::string input(line);
+			for(int j = 0; j <= 99; ++j)
+			{
+				if (input[j] == 'A')
+				{
+					//更新机器人位置
+					Robot robot_tmp(j*0.5+0.25, i*0.5+0.25);
+					robot_cluster.push_back(robot_tmp);
+				}
+				else if (input[j] >= '1' && input[j] <= '9')
+				{
+					int type = input[j] - '0';
+					//判断地图的id
+					check_map_id(input, i, j, type);
+					//更新工作台位置
+					work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
+				}
+			}
+			i--;
+		}
+	}
+	return false;
+}
+ 
+
+void hw_compet::check_map_id(string s, int i, int j, int type) {
+	if(i == 98 && j == 49 && type == 9) this->map_id = 3;
+	if(i == 95 && j == 50 && type == 7) this->map_id = 2;
+	if(i == 97 && j == 2 && type == 1) this->map_id = 0;
+	if(i == 97 && j == 9 && type == 1) this->map_id = 1;
 }
 
+
 bool hw_compet::init_1() {
-		char line[1024];
+	char line[1024];
 	//地图行 i表示坐标y
 	//循环中j表示坐标x
 	int i = 99;
@@ -385,6 +430,10 @@ WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot) {
 		}
 	}
 	//随后得到改机器人的目标
-    WorkBenchNodeForRobot target = robot.GetTarget();
+    WorkBenchNodeForRobot target;
+	if(this->map_id == 0) target = robot.GetTarget1();
+	else if(this->map_id == 1) target = robot.GetTarget2();
+	else if(this->map_id == 2) target = robot.GetTarget3();
+	else target = robot.GetTarget4();
 	return target;
 }

@@ -55,6 +55,7 @@ struct WorkBenchNodeForRobot {
         }
         //std::cerr<<ori_material_status<<std::endl;
     };
+    WorkBenchNodeForRobot(){};
 };
 
 struct cmp_rule {
@@ -81,7 +82,11 @@ class Robot {
         std::stack<WorkBenchNodeForRobot> robot_goal_point;
         //std::stack<WorkBenchNodeForRobot> greater_level_point;
         //得到robot要跑向的目标点 
-        WorkBenchNodeForRobot GetTarget();
+        WorkBenchNodeForRobot GetTarget1();
+        WorkBenchNodeForRobot GetTarget2();
+        WorkBenchNodeForRobot GetTarget3();
+        WorkBenchNodeForRobot GetTarget4();
+
         WorkBenchNodeForRobot Num456(WorkBenchNodeForRobot &default_node, 
         std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
         
