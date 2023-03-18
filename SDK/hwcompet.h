@@ -93,13 +93,19 @@ public:
     //初始化一个机器人的工作台位置数组
 	WorkBenchNodeForRobot GetRobotTarget(Robot& robot);
 	//pid初始化和计算
-    void vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance);
-	void pid_init(pid_controller *pid);
+    void vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance, int map_id);
+	void pid_init(pid_controller *pid, int map_id);
 	double pid_update(pid_controller *pid, double setpoint, double measure);
 	
 private:
     pid_controller controller[4];
 	//yaw是机器人朝向，angle_x是向量与x轴正方向夹角
+		const std::vector<std::vector<double>> pid_param{
+			{0.15, 0.9, 100, 1, 3, 3, 10, 0, 0, 0},
+			{0.15, 0.9, 100, 1, 3, 3, 10, 0, 0, 0},
+			{0.15, 0.9, 100, 1, 3, 3, 10, 0, 0, 0},
+			{0.15, 0.9, 100, 1, 3, 3, 10, 0, 0, 0}
+		};
 };
 
 
