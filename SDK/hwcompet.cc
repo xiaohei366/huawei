@@ -225,7 +225,119 @@ bool hw_compet::readUntilOK() {
 
 //读取地图
 bool hw_compet::init() {
-	char line[1024];
+	
+}
+
+bool hw_compet::init_1() {
+		char line[1024];
+	//地图行 i表示坐标y
+	//循环中j表示坐标x
+	int i = 99;
+    int cnt = 0;
+	struct workbench *wb;
+	struct workbench *wb_tmp;
+
+	while (fgets(line, sizeof line, stdin)) {
+		if (line[0] == 'O' && line[1] == 'K') {
+			return true;
+		}
+		else
+		{
+			std::string input(line);
+			for(int j = 0; j <= 99; ++j)
+			{
+				if (input[j] == 'A')
+				{
+					//更新机器人位置
+					Robot robot_tmp(j*0.5+0.25, i*0.5+0.25);
+					robot_cluster.push_back(robot_tmp);
+				}
+				else if (input[j] >= '1' && input[j] <= '9')
+				{
+					int type = input[j] - '0';
+					//更新工作台位置
+					work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
+				}
+			}
+			i--;
+		}
+	}
+	return false;
+}
+bool hw_compet::init_2() {
+		char line[1024];
+	//地图行 i表示坐标y
+	//循环中j表示坐标x
+	int i = 99;
+    int cnt = 0;
+	struct workbench *wb;
+	struct workbench *wb_tmp;
+
+	while (fgets(line, sizeof line, stdin)) {
+		if (line[0] == 'O' && line[1] == 'K') {
+			return true;
+		}
+		else
+		{
+			std::string input(line);
+			for(int j = 0; j <= 99; ++j)
+			{
+				if (input[j] == 'A')
+				{
+					//更新机器人位置
+					Robot robot_tmp(j*0.5+0.25, i*0.5+0.25);
+					robot_cluster.push_back(robot_tmp);
+				}
+				else if (input[j] >= '1' && input[j] <= '9')
+				{
+					int type = input[j] - '0';
+					//更新工作台位置
+					work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
+				}
+			}
+			i--;
+		}
+	}
+	return false;
+}
+bool hw_compet::init_3() {
+		char line[1024];
+	//地图行 i表示坐标y
+	//循环中j表示坐标x
+	int i = 99;
+    int cnt = 0;
+	struct workbench *wb;
+	struct workbench *wb_tmp;
+
+	while (fgets(line, sizeof line, stdin)) {
+		if (line[0] == 'O' && line[1] == 'K') {
+			return true;
+		}
+		else
+		{
+			std::string input(line);
+			for(int j = 0; j <= 99; ++j)
+			{
+				if (input[j] == 'A')
+				{
+					//更新机器人位置
+					Robot robot_tmp(j*0.5+0.25, i*0.5+0.25);
+					robot_cluster.push_back(robot_tmp);
+				}
+				else if (input[j] >= '1' && input[j] <= '9')
+				{
+					int type = input[j] - '0';
+					//更新工作台位置
+					work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
+				}
+			}
+			i--;
+		}
+	}
+	return false;
+}
+bool hw_compet::init_4() {
+		char line[1024];
 	//地图行 i表示坐标y
 	//循环中j表示坐标x
 	int i = 99;

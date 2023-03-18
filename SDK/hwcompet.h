@@ -84,6 +84,12 @@ public:
     double distance_target = 0;
 	//初始化函数 读取地图
 	bool init();
+	bool init_1();
+	bool init_2();
+	bool init_3();
+	bool init_4();
+
+
 	//与判题器进行交互的函数
 	bool readUntilOK();
 	//得到pid调节参数yaw,angle_x
@@ -100,6 +106,7 @@ public:
 private:
     pid_controller controller[4];
 	//yaw是机器人朝向，angle_x是向量与x轴正方向夹角
+	int map_id;
 };
 
 
