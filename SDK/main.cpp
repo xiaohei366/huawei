@@ -40,9 +40,10 @@ int main()
 
 			//double workbench_x = obj.robot_cluster[i].robot_goal_point.top()[0];
 			//double workbench_y = obj.robot_cluster[i].robot_goal_point.top()[1];
+            
             obj.get_yaw_angle(obj.distance_target,obj.yaw,obj.vector_angle,workbench_x,workbench_y,obj.robot_cluster[i]);
             ptr = obj.control_ptr;
-            obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target);	
+            obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);	
             ptr++;
             printf("forward %d %f\n", i, obj.linear_speed);
             printf("rotate %d %f\n", i, obj.angular_speed);

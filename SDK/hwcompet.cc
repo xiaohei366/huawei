@@ -69,6 +69,7 @@ void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double
 //pid初始化
 void hw_compet::pid_init(pid_controller *pid, int map_id)
 {
+
 	pid->integrator = 0.0f;
 	pid->differentiator = 0.0f;
 	pid->pre_err = 0.0f;
@@ -232,10 +233,15 @@ bool hw_compet::init() {
     int cnt = 0;
 	struct workbench *wb;
 	struct workbench *wb_tmp;
-
+	//先读取地图
 	while (fgets(line, sizeof line, stdin)) {
 		if (line[0] == 'O' && line[1] == 'K') {
-			cerr << this->map_id+1 << endl;
+			//同时进行pid的初始化
+			for(int n=0; n<4; n++)
+			{
+				control_ptr[n] = &controller[n];
+				pid_init(control_ptr[n], map_id);
+			}
 			return true;
 		}
 		else

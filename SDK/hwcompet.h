@@ -51,12 +51,9 @@ public:
     pid_controller* control_ptr[4];
 	hw_compet()
 	{
+		//初始化地图编号
+		map_id = 0;
 		//初始化pid参数
-        for(int n=0; n<4; n++)
-		{
-			control_ptr[n] = &controller[n];
-			pid_init(control_ptr[n], map_id);
-		}
 		distance_wb.resize(10);
 		//初始化工作台集群
 		for(int i = 0; i <= 9; ++i) {
@@ -103,16 +100,32 @@ public:
 	void pid_init(pid_controller *pid, int map_id);
 	double pid_update(pid_controller *pid, double setpoint, double measure);
 	void check_map_id(string s, int i, int j, int type);
+
+
+	int map_id;
 private:
     pid_controller controller[4];
 	//yaw是机器人朝向，angle_x是向量与x轴正方向夹角
-	int map_id;
 	const std::vector<std::vector<double>> pid_param{
-
+		//aS = (pid_update(*pid, pid_param[map_id][0], yaw - angle));
+		// if(abs(a) < pid_param[map_id][1])
+		// {
+		// 	lS = (abs(pid_param[map_id][2]/a));
+		// 	if(distance<pid_param[map_id][3])
+		// 	{
+		// 		lS = pid_param[map_id][4];
+		// 	}
+		// }
+		// else
+		// 	lS = pid_param[map_id][5];
+		// pid->Kp = pid_param[map_id][6];
+		// pid->Ki = pid_param[map_id][7];
+		// pid->Kd = pid_param[map_id][8];
+		// pid->tau = pid_param[map_id][9];
+		{-0.1, 0.9, 100, 1, 3.5, 3, 10, 0, 0, 0},
+		{-0.15, 0.9, 100, 1, 3, 3, 10, 0, 0, 0},
 		{0.15, 0.9, 100, 1, 3, 3, 10, 0, 0, 0},
-		{0.15, 0.9, 100, 1, 3, 3, 10, 0, 0, 0},
-		{0.15, 0.9, 100, 1, 3, 3, 10, 0, 0, 0},
-		{0.15, 0.9, 100, 1, 3, 3, 10, 0, 0, 0}
+		{0.15, 0.9, 100, 1, 3, 3, 11, 12.5, 0, 0}
 	};
 };
 
