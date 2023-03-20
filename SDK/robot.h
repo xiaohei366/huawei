@@ -1,6 +1,8 @@
 #ifndef Robot_H
 #define Robot_H
 
+
+#include <limits.h>
 #include <vector>
 #include <algorithm>
 #include <unordered_set>
@@ -12,6 +14,8 @@
 #include <array>
 #include <cmath>
 #include <cfloat>
+
+
 
 //能够在该类型的工作台上卖何种物品
 const std::vector<std::vector<int>>WorkBenchIdForSell{
@@ -48,8 +52,9 @@ struct WorkBenchNodeForRobot {
     double x, y;
     double dis;
     int product_status;
+    int remain_production_time;
     std::unordered_set<int> bag;
-    WorkBenchNodeForRobot(int ID, int T, double X, double Y, double D, int ori_material_status, int ProductStatus):global_id(ID), type(T), x(X), y(Y), dis(D), product_status(ProductStatus){
+    WorkBenchNodeForRobot(int ID, int T, double X, double Y, double D, int ori_material_status, int ProductStatus, int remain_p_time):global_id(ID), type(T), x(X), y(Y), dis(D), product_status(ProductStatus), remain_production_time(remain_p_time){
         for(int cnt = 0; (ori_material_status >> cnt) != 0; ++cnt) {
             if(((ori_material_status >> cnt) & 1) == 1){
                 bag.insert(cnt);
