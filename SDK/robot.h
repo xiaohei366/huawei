@@ -105,11 +105,18 @@ class Robot {
         WorkBenchNodeForRobot Num456(WorkBenchNodeForRobot &default_node, 
         std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
         
+        WorkBenchNodeForRobot Num456_old(WorkBenchNodeForRobot &default_node, 
+        std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
+        
         WorkBenchNodeForRobot Num789(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
         std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue,std::vector<std::priority_queue<WorkBenchNodeForRobot, 
         std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
         );
 
+        WorkBenchNodeForRobot Num789_old(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue,std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
+        );
         
 
         void Clear_vec();
