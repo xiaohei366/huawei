@@ -10,6 +10,8 @@
 #include <string>
 #include <stack>
 #include <array>
+#include <cmath>
+#include <cfloat>
 
 //能够在该类型的工作台上卖何种物品
 const std::vector<std::vector<int>>WorkBenchIdForSell{
@@ -64,6 +66,8 @@ struct cmp_rule {
     }
 };
 
+
+
 class Robot {
     public:
         explicit Robot(double x, double y):location_x(x), location_y(y) {
@@ -87,6 +91,12 @@ class Robot {
         WorkBenchNodeForRobot GetTarget3();
         WorkBenchNodeForRobot GetTarget4();
 
+        WorkBenchNodeForRobot Num123(WorkBenchNodeForRobot &default_node, 
+        std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
+
+        WorkBenchNodeForRobot Num123WithoutSet(WorkBenchNodeForRobot &default_node, 
+        std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
+        
         WorkBenchNodeForRobot Num456(WorkBenchNodeForRobot &default_node, 
         std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
         
