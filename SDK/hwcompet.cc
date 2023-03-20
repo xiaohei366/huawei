@@ -51,11 +51,21 @@ double hw_compet::update_distance(const WorkBenchNode& workbench,const Robot rob
 //速度计算
 void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance, int map_id)
 {
-		double a = yaw - angle;
+		double err = yaw - angle;
+
 		aS = (pid_update(*pid, pid_param[map_id][0], yaw - angle));
-		if(abs(a) < pid_param[map_id][1])
+        err = yaw - angle;
+        if(err < -3.15)
+        {
+            err = (2*3.1415926+err);
+        }
+        if(err > 3.15)
+        {
+            err =-(2*3.1415926-err);
+        }
+		if(abs(err) < pid_param[map_id][1])
 		{
-			lS = (abs(pid_param[map_id][2]/a));
+			lS = 6;
 			if(distance<pid_param[map_id][3])
 			{
 				lS = pid_param[map_id][4];
@@ -63,13 +73,14 @@ void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double
 		}
 		else
 			lS = pid_param[map_id][5];
+        //std::cerr<<lS<<std::endl;
 		//lS = 1/abs(aS)+0.3;
 		//lS = 0;
 }
 //pid初始化
 void hw_compet::pid_init(pid_controller *pid, int map_id)
 {
-
+    
 	pid->integrator = 0.0f;
 	pid->differentiator = 0.0f;
 	pid->pre_err = 0.0f;
@@ -88,8 +99,7 @@ double hw_compet::pid_update(pid_controller *pid, double setpoint, double measur
 {
 	//Error
 	double err = setpoint - measure;
-
-	if(err < -3.15)
+    if(err < -3.15)
 	{
 		err = (2*3.1415926+err);
 	}
@@ -98,6 +108,7 @@ double hw_compet::pid_update(pid_controller *pid, double setpoint, double measur
 		err =-(2*3.1415926-err);
 	}
 
+	
 	//P
 	double proportional = pid->Kp * err;
 
@@ -158,12 +169,13 @@ double hw_compet::pid_update(pid_controller *pid, double setpoint, double measur
 
 
 
-
+//传进来一个地图的编号
 bool hw_compet::readUntilOK() {
 	char line[1024];
 	int workbench_flag = 1;
 	int robot_flag = 0;
 	int flag_event = 1;
+    std::vector<int> pre_sum(51,0);
 	while (fgets(line, sizeof(line), stdin))
 	{
 		if (line[0] == 'O' && line[1] == 'K') {
@@ -197,21 +209,30 @@ bool hw_compet::readUntilOK() {
                         flag_event--;
                         break;
                     }
-                    //根据横纵坐标，得到行与列数
-                    //double workbench_row=(stod(data_each_frame[1])+0.25)/0.5;
-                    //double workbench_col=(stod(data_each_frame[2])+0.25)/0.5;
-                    double workbench_row = stod(data_each_frame[1]);
-                    double workbench_col = stod(data_each_frame[2]);
-                    //工作台的编号1--9
-					
-                    work_bench_cluster[stoi(data_each_frame[0])].Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5])); 
+                    if(del_workbench_map[map_id].count(workbench_flag) == 0)
+                    {
+                        pre_sum[workbench_flag]=pre_sum[workbench_flag-1];
+                        //得到横纵坐标
+                        double workbench_row = stod(data_each_frame[1]);
+                        double workbench_col = stod(data_each_frame[2]);
+                       // if(workbench_row == 9.25 && workbench_col == 34.25)
+                       //     std::cerr<<"update******************"<<stoi(data_each_frame[5])<<std::endl;
+                        //工作台的编号1--9
+                        work_bench_cluster[stoi(data_each_frame[0])].Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5])); 
+                    }
+                    else
+                    {
+                        pre_sum[workbench_flag]=pre_sum[workbench_flag-1]+1;
+                    }
                     workbench_flag++;
                     break;
                 }
                 case 4:
                 {
                     flag_event--;
-                    robot_cluster[robot_flag].Update(stoi(data_each_frame[0]),stoi(data_each_frame[1]),stod(data_each_frame[2]),stod(data_each_frame[3]),stod(data_each_frame[4]),stod(data_each_frame[5]),stod(data_each_frame[6]),stod(data_each_frame[7]),stod(data_each_frame[8]),stod(data_each_frame[9]));
+                    int workstation_id = stoi(data_each_frame[0]);
+                    if(workstation_id != -1) workstation_id -= pre_sum[workstation_id];
+                    robot_cluster[robot_flag].Update(workstation_id, stoi(data_each_frame[1]), stod(data_each_frame[2]), stod(data_each_frame[3]), stod(data_each_frame[4]), stod(data_each_frame[5]), stod(data_each_frame[6]), stod(data_each_frame[7]), stod(data_each_frame[8]), stod(data_each_frame[9]));
                     robot_flag++;
                     break;
                 }
@@ -231,8 +252,10 @@ bool hw_compet::init() {
 	//循环中j表示坐标x
 	int i = 99;
     int cnt = 0;
+    int wait_del_workbench = 1;
 	struct workbench *wb;
 	struct workbench *wb_tmp;
+    unordered_set<int> us_del_workbench_init;
 	//先读取地图
 	while (fgets(line, sizeof line, stdin)) {
 		if (line[0] == 'O' && line[1] == 'K') {
@@ -260,8 +283,10 @@ bool hw_compet::init() {
 					int type = input[j] - '0';
 					//判断地图的id
 					check_map_id(input, i, j, type);
-					//更新工作台位置
-					work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
+                    if(del_workbench_map[map_id].count(wait_del_workbench++) == 0)
+                    {
+                        work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
+                    }
 				}
 			}
 			i--;
@@ -316,7 +341,7 @@ bool hw_compet::init_1() {
 	return false;
 }
 bool hw_compet::init_2() {
-		char line[1024];
+    char line[1024];
 	//地图行 i表示坐标y
 	//循环中j表示坐标x
 	int i = 99;
@@ -352,7 +377,7 @@ bool hw_compet::init_2() {
 	return false;
 }
 bool hw_compet::init_3() {
-		char line[1024];
+    char line[1024];
 	//地图行 i表示坐标y
 	//循环中j表示坐标x
 	int i = 99;
@@ -388,7 +413,7 @@ bool hw_compet::init_3() {
 	return false;
 }
 bool hw_compet::init_4() {
-		char line[1024];
+    char line[1024];
 	//地图行 i表示坐标y
 	//循环中j表示坐标x
 	int i = 99;
