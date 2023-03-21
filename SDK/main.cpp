@@ -40,6 +40,9 @@ int main()
             {
                 workbench_x = obj.robot_cluster[i].robot_goal_point.top().x;
                 workbench_y = obj.robot_cluster[i].robot_goal_point.top().y;
+                //判断产品状态是否为1
+                //if(i==0)
+                //    std::cerr<<workbench_x<<"  "<<workbench_y<<"   "<<obj.robot_cluster[i].robot_goal_point.top().product_status<<std::endl;
             }
 
 			//double workbench_x = obj.robot_cluster[i].robot_goal_point.top()[0];

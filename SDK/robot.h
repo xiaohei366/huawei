@@ -1,6 +1,8 @@
 #ifndef Robot_H
 #define Robot_H
 
+
+#include <limits.h>
 #include <vector>
 #include <algorithm>
 #include <unordered_set>
@@ -10,6 +12,10 @@
 #include <string>
 #include <stack>
 #include <array>
+#include <cmath>
+#include <cfloat>
+
+
 
 //能够在该类型的工作台上卖何种物品
 const std::vector<std::vector<int>>WorkBenchIdForSell{
@@ -46,8 +52,9 @@ struct WorkBenchNodeForRobot {
     double x, y;
     double dis;
     int product_status;
+    int remain_production_time;
     std::unordered_set<int> bag;
-    WorkBenchNodeForRobot(int ID, int T, double X, double Y, double D, int ori_material_status, int ProductStatus):global_id(ID), type(T), x(X), y(Y), dis(D), product_status(ProductStatus){
+    WorkBenchNodeForRobot(int ID, int T, double X, double Y, double D, int ori_material_status, int ProductStatus, int remain_p_time):global_id(ID), type(T), x(X), y(Y), dis(D), product_status(ProductStatus), remain_production_time(remain_p_time){
         for(int cnt = 0; (ori_material_status >> cnt) != 0; ++cnt) {
             if(((ori_material_status >> cnt) & 1) == 1){
                 bag.insert(cnt);
@@ -63,6 +70,8 @@ struct cmp_rule {
         return a.dis > b.dis; // 按照dis从小到大排序
     }
 };
+
+
 
 class Robot {
     public:
@@ -87,7 +96,16 @@ class Robot {
         WorkBenchNodeForRobot GetTarget3();
         WorkBenchNodeForRobot GetTarget4();
 
+        WorkBenchNodeForRobot Num123(WorkBenchNodeForRobot &default_node, 
+        std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
+
+        WorkBenchNodeForRobot Num123WithoutSet(WorkBenchNodeForRobot &default_node, 
+        std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
+        
         WorkBenchNodeForRobot Num456(WorkBenchNodeForRobot &default_node, 
+        std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
+        
+        WorkBenchNodeForRobot Num456_old(WorkBenchNodeForRobot &default_node, 
         std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
         
         WorkBenchNodeForRobot Num789(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
@@ -95,7 +113,17 @@ class Robot {
         std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
         );
 
+        WorkBenchNodeForRobot Num789_old(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue,std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
+        );
         
+        WorkBenchNodeForRobot Num89(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue,std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
+        );
+
+
 
         void Clear_vec();
         static void Clear_set() {
@@ -132,6 +160,7 @@ class Robot {
 
         const std::vector<int> CircularArray{4, 5, 6};  
         static int CircularArrayPtr;
+        static int CircularArrayPtr_plus;
               
 };
 

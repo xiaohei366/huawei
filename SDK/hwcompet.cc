@@ -462,7 +462,7 @@ WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
 		for(auto wb: work_bench_cluster[robotId][i].WorkBenchVec) {
             double dis = update_distance(wb, robot);
 			//std::cerr<<work_bench_cluster[workbench3d_first].size()<<"  "<<robotId<<"  "<<wb.global_id<<std::endl;
-			robot.workbench_for_robot[i].push_back(WorkBenchNodeForRobot(wb.global_id, i, wb.x,wb.y, dis, wb.ori_material_status, wb.product_status));
+			robot.workbench_for_robot[i].push_back(WorkBenchNodeForRobot(wb.global_id, i, wb.x,wb.y, dis, wb.ori_material_status, wb.product_status, wb.remain_production_time));
 		}
 	}
 	//随后得到改机器人的目标
