@@ -14,15 +14,19 @@ int main()
 	puts("OK");
 	fflush(stdout);
 	while (scanf("%d", &obj.frame_num) != EOF) {
-		obj.readUntilOK();
-		printf("%d\n", obj.frame_num);
+        //std::cerr<<"ok"<<std::endl;
+        obj.readUntilOK();
+        printf("%d\n", obj.frame_num);
         for(int i = 0; i < 4; i++)
         {
             double workbench_x,workbench_y;
             if(obj.robot_cluster[i].robot_goal_point.size() == 0)
             {
-                WorkBenchNodeForRobot target = obj.GetRobotTarget(obj.robot_cluster[i]);
-                
+                WorkBenchNodeForRobot target = obj.GetRobotTarget(obj.robot_cluster[i], i);
+                //if(i == 0)
+                //{
+                //    std::cerr<<obj.robot_cluster[i].robot_goal_point.size()<<std::endl;
+                //}
                 if(obj.robot_cluster[i].robot_goal_point.size() == 0) {
                     workbench_x = 25;//target.x;
                     workbench_y = 25;//target.y;
@@ -48,7 +52,7 @@ int main()
             printf("forward %d %f\n", i, obj.linear_speed);
             printf("rotate %d %f\n", i, obj.angular_speed);
         }
-		//购买和卖的逻辑
+        //购买和卖的逻辑
         for(int robotId = 0; robotId < 4; robotId++)
         {
             if(obj.robot_cluster[robotId].robot_goal_point.size() == 0)  
@@ -72,14 +76,14 @@ int main()
             if(target_id != robot_workbench_id) continue;
             else
             {
+                
                 if(obj.robot_cluster[robotId].carried_item_type != 0)
                 {
                     obj.robot_cluster[robotId].target_set.erase({erase_num, type});
                     obj.robot_cluster[robotId].robot_goal_point.pop();
                     printf("sell %d\n", robotId);
                 }
-                else if(obj.robot_cluster[robotId].carried_item_type == 0 
-                &&  obj.work_bench_cluster[type].GetProductStatus(pos_x, pos_y) == 1)
+                else if(obj.robot_cluster[robotId].carried_item_type == 0 && obj.work_bench_cluster[robotId][type].GetProductStatus(pos_x, pos_y) == 1) 
                 {
                     //快结束就别买啦--最后4s
                     if(obj.frame_num > 8800) continue;
