@@ -47,7 +47,7 @@ class hw_compet {
 public:
 	//4个机器人
 	vector<Robot> robot_cluster;
-	vector<WorkBench> work_bench_cluster;
+	vector<vector<WorkBench>> work_bench_cluster;
     pid_controller* control_ptr[4];
 	hw_compet()
 	{
@@ -56,9 +56,15 @@ public:
 		//初始化pid参数
 		distance_wb.resize(10);
 		//初始化工作台集群
-		for(int i = 0; i <= 9; ++i) {
-			work_bench_cluster.push_back(WorkBench(i));
+		for(int j=0;j<4;j++)
+		{
+			for(int i = 0; i <= 9; ++i) {
+				workbenck_cluster_2d.push_back(WorkBench(i));
+			}
+			work_bench_cluster.push_back(workbenck_cluster_2d);
+			workbenck_cluster_2d.clear();
 		}
+		
 	}
 	//存放机器人数据
 	vector<array<double, 10>> robot;
@@ -94,7 +100,7 @@ public:
 	//更新每一个小车与所有工作台的距离
     double update_distance(const WorkBenchNode& workbench,const Robot robot);
     //初始化一个机器人的工作台位置数组
-	WorkBenchNodeForRobot GetRobotTarget(Robot& robot);
+	WorkBenchNodeForRobot GetRobotTarget(Robot& robot, int robotId);
 	//pid初始化和计算
     void vel_cmd_out(pid_controller **pid, double &aS, double &lS, double yaw, double angle, double distance, int map_id);
 	void pid_init(pid_controller *pid, int map_id);
@@ -105,6 +111,7 @@ public:
 	int map_id;
 private:
     pid_controller controller[4];
+	vector<WorkBench> workbenck_cluster_2d;
 	//yaw是机器人朝向，angle_x是向量与x轴正方向夹角
 	const std::vector<std::vector<double>> pid_param{
 		//aS = (pid_update(*pid, pid_param[map_id][0], yaw - angle));
@@ -130,13 +137,12 @@ private:
 
 
     //需要删除的工作台坐标/序号
-    const std::vector<unordered_set<int>> del_workbench_map{
-        {6,2,13,4,5},
-        {1,2,3,4,5},
-        {1,2,3,4,5},
-        {1,2,3,4,5}
+    const std::vector<std::vector<unordered_set<int>>> del_workbench_map{
+        {{},{},{},{}},
+        {{3,4,5,8,6,7,9},{1,2,5,6,7,8},{1,2,3,4,7,8},{1,2,3,4,5,6}},
+        {{1,2,3,4,5},{},{},{}},
+        {{1,2,3,4,5},{},{},{}}
     };
-
 };
 
 

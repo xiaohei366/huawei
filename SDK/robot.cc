@@ -73,6 +73,7 @@ WorkBenchNodeForRobot Robot::GetTarget2() {
         robot_target_queue.push_back(pq);
         greater_level_queue.push_back(pq2);
     }
+    //std::cerr<<"start gettarget2"<<std::endl;
     WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0);
     if(cnt != 0) ans =  Num789(default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(default_node, robot_target_queue);
