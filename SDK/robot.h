@@ -118,6 +118,12 @@ class Robot {
         std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
         );
         
+        WorkBenchNodeForRobot Num89(WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue,std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
+        );
+
+
 
         void Clear_vec();
         static void Clear_set() {
@@ -154,6 +160,7 @@ class Robot {
 
         const std::vector<int> CircularArray{4, 5, 6};  
         static int CircularArrayPtr;
+        static int CircularArrayPtr_plus;
               
 };
 
