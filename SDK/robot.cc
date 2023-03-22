@@ -49,7 +49,7 @@ WorkBenchNodeForRobot Robot::GetTarget1() {
     WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
     if(cnt != 0) ans =  Num89(default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(default_node, robot_target_queue, greater_level_queue);
-    if(robot_goal_point.empty()) ans =  Num456(default_node, robot_target_queue);
+    if(robot_goal_point.empty()) ans =  Num456_old(default_node, robot_target_queue);
 
     
     return ans;
@@ -78,9 +78,9 @@ WorkBenchNodeForRobot Robot::GetTarget2() {
         greater_level_queue.push_back(pq2);
     }
     WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
-    if(cnt != 0) ans =  Num89(default_node, robot_target_queue, greater_level_queue);
-    if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(default_node, robot_target_queue, greater_level_queue);
-    if(robot_goal_point.empty()) ans =  Num456(default_node, robot_target_queue);
+    //if(cnt != 0) ans =  Num89(default_node, robot_target_queue, greater_level_queue);
+    if(cnt != 0 && robot_goal_point.empty()) ans =  Num789_old(default_node, robot_target_queue, greater_level_queue);
+    if(robot_goal_point.empty()) ans =  Num456_old(default_node, robot_target_queue);
     
     return ans;
 }
@@ -108,8 +108,9 @@ WorkBenchNodeForRobot Robot::GetTarget3() {
         greater_level_queue.push_back(pq2);
     }
     WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
-    if(cnt != 0) ans =  Num789_old(default_node, robot_target_queue, greater_level_queue);
-    if(robot_goal_point.empty()) ans =  Num456(default_node, robot_target_queue);
+    if(cnt != 0) ans =  Num89(default_node, robot_target_queue, greater_level_queue);
+    if(cnt != 0 && robot_goal_point.empty()) ans =  Num789_old(default_node, robot_target_queue, greater_level_queue);
+    if(robot_goal_point.empty()) ans =  Num456_old(default_node, robot_target_queue);
     
     return ans;
 }
@@ -138,7 +139,7 @@ WorkBenchNodeForRobot Robot::GetTarget4() {
     }
     WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
     if(cnt != 0) ans =  Num789(default_node, robot_target_queue, greater_level_queue);
-    if(robot_goal_point.empty()) ans =  Num123(default_node, robot_target_queue);
+    if(robot_goal_point.empty()) ans =  Num456_old(default_node, robot_target_queue);
     
     return ans;
 }
@@ -207,9 +208,11 @@ WorkBenchNodeForRobot Robot::Num789(WorkBenchNodeForRobot &default_node, std::ve
         }
         //是否找到能卖并且离着买最近的工作台？
         if(min_dis == DBL_MAX) continue;
-        ans_for_sell.type = type;
+        if(ans_for_sell.type != 9) {
+            ans_for_sell.type = type;
+            target_set.insert({ans_for_sell.x*100+ans_for_sell.y, type});
+        }
         robot_goal_point.push(ans_for_sell);
-        target_set.insert({ans_for_sell.x*100+ans_for_sell.y, type});
         robot_goal_point.push(m);
         target_set.insert({coordinate_x*100+coordinate_y, type});
         //std::cerr << ans_for_sell.type << "&" << m.type << std::endl;
@@ -491,13 +494,18 @@ WorkBenchNodeForRobot Robot::Num456(WorkBenchNodeForRobot &default_node, std::ve
         std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule> target123_queue_tem(target123_queue);
         int num_circular_array = CircularArray.size();
         idx = CircularArray[(k + CircularArrayPtr + num_circular_array) % num_circular_array];
+        //std::cerr<<idx<<std::endl;
         std::vector<std::vector<WorkBenchNodeForRobot>> target_for_sell{{},{},{},{}};
         while(!robot_target_queue[idx].empty()) {
+            if(idx == 4)
+                for(auto &m : robot_target_queue[idx].top().bag)
+                    std::cerr<<m<<std::endl;
             for(auto &&j: WorkBenchIdForSell[idx]) {
                 target_for_sell[j].push_back(robot_target_queue[idx].top());
             }
             robot_target_queue[idx].pop();  
         }
+        //std::cerr<<target123_queue_tem.size()<<std::endl;
         //然后先从大候选队列里面找到一个可以的买和卖的目标点
         while(!target123_queue_tem.empty()) {
             auto &m = target123_queue_tem.top();

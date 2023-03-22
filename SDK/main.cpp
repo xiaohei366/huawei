@@ -23,10 +23,6 @@ int main()
             if(obj.robot_cluster[i].robot_goal_point.size() == 0)
             {
                 WorkBenchNodeForRobot target = obj.GetRobotTarget(obj.robot_cluster[i], i);
-                //if(i == 0)
-                //{
-                //    std::cerr<<obj.robot_cluster[i].robot_goal_point.size()<<std::endl;
-                //}
                 if(obj.robot_cluster[i].robot_goal_point.size() == 0) {
                     workbench_x = 25;//target.x;
                     workbench_y = 25;//target.y;
@@ -94,7 +90,6 @@ int main()
                     obj.robot_cluster[robotId].robot_goal_point.pop();
                     printf("buy %d\n", robotId);
                 }
-                
                 //cerr << obj.robot_cluster[robotId].target_set.size() << endl;
             }
         }
