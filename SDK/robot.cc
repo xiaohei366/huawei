@@ -108,7 +108,7 @@ WorkBenchNodeForRobot Robot::GetTarget3() {
         greater_level_queue.push_back(pq2);
     }
     WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
-    if(cnt != 0) ans =  Num89(default_node, robot_target_queue, greater_level_queue);
+    //if(cnt != 0) ans =  Num89(default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789_old(default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456_old(default_node, robot_target_queue);
     
