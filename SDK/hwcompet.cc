@@ -172,10 +172,11 @@ double hw_compet::pid_update(pid_controller *pid, double setpoint, double measur
 //传进来一个地图的编号
 bool hw_compet::readUntilOK() {
 	char line[1024];
-	int workbench_flag = 1;
-	int robot_flag = 0;
+	int workbenchId = 1;
+	int robotId = 0;
 	int flag_event = 1;
     std::vector<std::vector<int>> pre_sum(4,vector<int>(51,0));
+	std::vector<int> del_sum(4,0);
 	while (fgets(line, sizeof(line), stdin))
 	{
 		if (line[0] == 'O' && line[1] == 'K') {
@@ -204,7 +205,7 @@ bool hw_compet::readUntilOK() {
                 }
                 case 3:
                 {
-                    while (workbench_flag != workbench_num)
+                    while (workbenchId != workbench_num)
                     {
                         flag_event--;
                         break;
@@ -214,28 +215,30 @@ bool hw_compet::readUntilOK() {
                     double workbench_col = stod(data_each_frame[2]);
 					for(int i = 0; i < 4; i++)
 					{
-						if(del_workbench_map[map_id][i].count(workbench_flag) == 0)
+						//不在删除的数组里面
+						if(del_workbench_map[map_id][i].count(workbenchId) == 0)
                     	{
-                        	pre_sum[i][workbench_flag] = pre_sum[i][workbench_flag-1];
+                        	pre_sum[i][workbenchId] = del_sum[i];
                         	//工作台的编号1--9
                         	work_bench_cluster[i][stoi(data_each_frame[0])].Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5])); 
                     	}
                     	else
                     	{
-                        	pre_sum[i][workbench_flag] = pre_sum[i][workbench_flag-1] + 1;
+                        	del_sum[i]++;
+							pre_sum[i][workbenchId] = 53;
                     	}
 					}
-                    workbench_flag++;
+                    workbenchId++;
                     break;
                 }
                 case 4:
                 {
-                    flag_event--;
+				    flag_event--;
                     int workstation_id = stoi(data_each_frame[0]); 
-					//if(del_workbench_map[map_id][robot_flag].count(workstation_id) == 1) workstation_id = -1;
-					if(workstation_id != -1) workstation_id -= pre_sum[robot_flag][workstation_id];
-                    robot_cluster[robot_flag].Update(workstation_id, stoi(data_each_frame[1]), stod(data_each_frame[2]), stod(data_each_frame[3]), stod(data_each_frame[4]), stod(data_each_frame[5]), stod(data_each_frame[6]), stod(data_each_frame[7]), stod(data_each_frame[8]), stod(data_each_frame[9]));
-                    robot_flag++;
+					if(workstation_id != -1) workstation_id -= pre_sum[robotId][workstation_id + 1];	
+					if(workstation_id < -1) workstation_id = -1;					
+                    robot_cluster[robotId].Update(workstation_id, stoi(data_each_frame[1]), stod(data_each_frame[2]), stod(data_each_frame[3]), stod(data_each_frame[4]), stod(data_each_frame[5]), stod(data_each_frame[6]), stod(data_each_frame[7]), stod(data_each_frame[8]), stod(data_each_frame[9]));
+                    robotId++;
                     break;
                 }
                 default:
