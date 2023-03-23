@@ -11,14 +11,19 @@ int main()
 	hw_compet obj;
     pid_controller **ptr;
 	obj.init();
+    // for(auto && a: obj.work_bench_cluster[3]) {
+    //     for(auto &c: a.WorkBenchVec) {
+    //         std::cerr << c.global_id <<"&"<<c.x<<"&"<<c.y<<"&"<<c.type<< std::endl;
+    //     }
+    // }
 	puts("OK");
 	fflush(stdout);
 	while (scanf("%d", &obj.frame_num) != EOF) {
-        //std::cerr<<"ok"<<std::endl;
         obj.readUntilOK();
         printf("%d\n", obj.frame_num);
         for(int i = 0; i < 4; i++)
         {
+            //if(i == 3 && obj.frame_num < 3100 && obj.frame_num > 2500)std::cerr<< obj.frame_num <<std::endl;
             double workbench_x,workbench_y;
             if(obj.robot_cluster[i].robot_goal_point.size() == 0)
             {
@@ -37,8 +42,8 @@ int main()
                 workbench_x = obj.robot_cluster[i].robot_goal_point.top().x;
                 workbench_y = obj.robot_cluster[i].robot_goal_point.top().y;
                 //判断产品状态是否为1
-                //if(i==0)
-                //    std::cerr<<workbench_x<<"  "<<workbench_y<<"   "<<obj.robot_cluster[i].robot_goal_point.top().product_status<<std::endl;
+                //if(i==3 && obj.frame_num < 3100 && obj.frame_num > 2500) std::cerr<<workbench_x<<"  "<<workbench_y<<"   "<<obj.robot_cluster[i].robot_goal_point.top().product_status<<std::endl;
+                //if(i==3 && obj.frame_num < 3100 && obj.frame_num > 2500) std::cerr << obj.robot_cluster[i].robot_goal_point.size() << std::endl;
             }
 
 			//double workbench_x = obj.robot_cluster[i].robot_goal_point.top()[0];
@@ -70,12 +75,12 @@ int main()
             double pos_x = obj.robot_cluster[robotId].robot_goal_point.top().x;
             double pos_y = obj.robot_cluster[robotId].robot_goal_point.top().y;
             double erase_num = pos_x * 100 + pos_y;
+            //if(robotId==3 && obj.frame_num < 3100 && obj.frame_num > 2500) std::cerr <<obj.frame_num <<"&" << pos_x << "&" << pos_y << std::endl;
             //注意，对于4-9的情况，这个类型里面是并不是4-9本身，而是它里面的产品格类型
             int type = obj.robot_cluster[robotId].robot_goal_point.top().type;
             if(target_id != robot_workbench_id) continue;
             else
             {
-                
                 if(obj.robot_cluster[robotId].carried_item_type != 0)
                 {
                     obj.robot_cluster[robotId].target_set.erase({erase_num, type});

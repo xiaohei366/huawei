@@ -231,7 +231,8 @@ bool hw_compet::readUntilOK() {
                 case 4:
                 {
                     flag_event--;
-                    int workstation_id = stoi(data_each_frame[0]);
+                    int workstation_id = stoi(data_each_frame[0]); 
+					//if(del_workbench_map[map_id][robot_flag].count(workstation_id) == 1) workstation_id = -1;
 					if(workstation_id != -1) workstation_id -= pre_sum[robot_flag][workstation_id];
                     robot_cluster[robot_flag].Update(workstation_id, stoi(data_each_frame[1]), stod(data_each_frame[2]), stod(data_each_frame[3]), stod(data_each_frame[4]), stod(data_each_frame[5]), stod(data_each_frame[6]), stod(data_each_frame[7]), stod(data_each_frame[8]), stod(data_each_frame[9]));
                     robot_flag++;
@@ -306,153 +307,6 @@ void hw_compet::check_map_id(string s, int i, int j, int type) {
 	if(i == 97 && j == 2 && type == 1) this->map_id = 0;
 	if(i == 97 && j == 9 && type == 1) this->map_id = 1;
 }
-
-/*
-bool hw_compet::init_1() {
-	char line[1024];
-	//地图行 i表示坐标y
-	//循环中j表示坐标x
-	int i = 99;
-    int cnt = 0;
-	struct workbench *wb;
-	struct workbench *wb_tmp;
-
-	while (fgets(line, sizeof line, stdin)) {
-		if (line[0] == 'O' && line[1] == 'K') {
-			return true;
-		}
-		else
-		{
-			std::string input(line);
-			for(int j = 0; j <= 99; ++j)
-			{
-				if (input[j] == 'A')
-				{
-					//更新机器人位置
-					Robot robot_tmp(j*0.5+0.25, i*0.5+0.25);
-					robot_cluster.push_back(robot_tmp);
-				}
-				else if (input[j] >= '1' && input[j] <= '9')
-				{
-					int type = input[j] - '0';
-					//更新工作台位置
-					work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
-				}
-			}
-			i--;
-		}
-	}
-	return false;
-}
-bool hw_compet::init_2() {
-    char line[1024];
-	//地图行 i表示坐标y
-	//循环中j表示坐标x
-	int i = 99;
-    int cnt = 0;
-	struct workbench *wb;
-	struct workbench *wb_tmp;
-
-	while (fgets(line, sizeof line, stdin)) {
-		if (line[0] == 'O' && line[1] == 'K') {
-			return true;
-		}
-		else
-		{
-			std::string input(line);
-			for(int j = 0; j <= 99; ++j)
-			{
-				if (input[j] == 'A')
-				{
-					//更新机器人位置
-					Robot robot_tmp(j*0.5+0.25, i*0.5+0.25);
-					robot_cluster.push_back(robot_tmp);
-				}
-				else if (input[j] >= '1' && input[j] <= '9')
-				{
-					int type = input[j] - '0';
-					//更新工作台位置
-					work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
-				}
-			}
-			i--;
-		}
-	}
-	return false;
-}
-bool hw_compet::init_3() {
-    char line[1024];
-	//地图行 i表示坐标y
-	//循环中j表示坐标x
-	int i = 99;
-    int cnt = 0;
-	struct workbench *wb;
-	struct workbench *wb_tmp;
-
-	while (fgets(line, sizeof line, stdin)) {
-		if (line[0] == 'O' && line[1] == 'K') {
-			return true;
-		}
-		else
-		{
-			std::string input(line);
-			for(int j = 0; j <= 99; ++j)
-			{
-				if (input[j] == 'A')
-				{
-					//更新机器人位置
-					Robot robot_tmp(j*0.5+0.25, i*0.5+0.25);
-					robot_cluster.push_back(robot_tmp);
-				}
-				else if (input[j] >= '1' && input[j] <= '9')
-				{
-					int type = input[j] - '0';
-					//更新工作台位置
-					work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
-				}
-			}
-			i--;
-		}
-	}
-	return false;
-}
-bool hw_compet::init_4() {
-    char line[1024];
-	//地图行 i表示坐标y
-	//循环中j表示坐标x
-	int i = 99;
-    int cnt = 0;
-	struct workbench *wb;
-	struct workbench *wb_tmp;
-
-	while (fgets(line, sizeof line, stdin)) {
-		if (line[0] == 'O' && line[1] == 'K') {
-			return true;
-		}
-		else
-		{
-			std::string input(line);
-			for(int j = 0; j <= 99; ++j)
-			{
-				if (input[j] == 'A')
-				{
-					//更新机器人位置
-					Robot robot_tmp(j*0.5+0.25, i*0.5+0.25);
-					robot_cluster.push_back(robot_tmp);
-				}
-				else if (input[j] >= '1' && input[j] <= '9')
-				{
-					int type = input[j] - '0';
-					//更新工作台位置
-					work_bench_cluster[type].Add(cnt++,(double)j*0.5+0.25, (double)i*0.5+0.25);
-				}
-			}
-			i--;
-		}
-	}
-	return false;
-}
-*/
 //初始化一个机器人的工作台位置数组并获得机器人的目标
 WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
 	//先清空机器人的工作台数组
@@ -467,9 +321,9 @@ WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
 	}
 	//随后得到改机器人的目标
     WorkBenchNodeForRobot target;
-	if(this->map_id == 0) target = robot.GetTarget1();
-	else if(this->map_id == 1) target = robot.GetTarget2();
-	else if(this->map_id == 2) target = robot.GetTarget3();
-	else target = robot.GetTarget4();
+	if(this->map_id == 0) target = robot.GetTarget1(robotId);
+	else if(this->map_id == 1) target = robot.GetTarget2(robotId);
+	else if(this->map_id == 2) target = robot.GetTarget3(robotId);
+	else target = robot.GetTarget4(robotId);
 	return target;
 }
