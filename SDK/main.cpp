@@ -23,6 +23,7 @@ int main()
         printf("%d\n", obj.frame_num);
         for(int i = 0; i < 4; i++)
         {
+            if(i == 1 && obj.map_id == 0 && obj.frame_num < 62) continue;
             //if(i == 3 && obj.frame_num < 3100 && obj.frame_num > 2500)std::cerr<< obj.frame_num <<std::endl;
             double workbench_x,workbench_y;
             if(obj.robot_cluster[i].robot_goal_point.size() == 0)
@@ -91,7 +92,7 @@ int main()
                 else if(obj.robot_cluster[robotId].carried_item_type == 0 && obj.work_bench_cluster[robotId][type].GetProductStatus(pos_x, pos_y) == 1) 
                 {
                     //快结束就别买啦--最后4s
-                    if(obj.frame_num > 8800) continue;
+                    if(obj.frame_num > 8850) continue;
                     obj.robot_cluster[robotId].target_set.erase({erase_num, type});
                     obj.robot_cluster[robotId].robot_goal_point.pop();
                     printf("buy %d\n", robotId);
