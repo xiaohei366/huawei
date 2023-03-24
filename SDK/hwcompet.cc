@@ -235,7 +235,6 @@ bool hw_compet::readUntilOK() {
                 {
 				    flag_event--;
                     int workstation_id = stoi(data_each_frame[0]);
-					if(robotId == 0) cerr << data_each_frame[0] << endl; 
 					if(workstation_id != -1) workstation_id -= pre_sum[robotId][workstation_id + 1];	
 					if(workstation_id < -1) workstation_id = -1;					
                     robot_cluster[robotId].Update(workstation_id, stoi(data_each_frame[1]), stod(data_each_frame[2]), stod(data_each_frame[3]), stod(data_each_frame[4]), stod(data_each_frame[5]), stod(data_each_frame[6]), stod(data_each_frame[7]), stod(data_each_frame[8]), stod(data_each_frame[9]));
@@ -309,7 +308,7 @@ void hw_compet::check_map_id(string s, int i, int j, int type) {
 	if(i == 92 && j == 49 && type == 7) this->map_id = 3;
 	if(i == 98 && j == 46 && type == 3) this->map_id = 2;
 	if(i == 98 && j == 49 && type == 1) this->map_id = 0;
-	if(i == 98 && j == 49 && type == 5) this->map_id = 1;
+	if(i == 98 && j == 1 && type == 6) this->map_id = 1;
 }
 //初始化一个机器人的工作台位置数组并获得机器人的目标
 WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {

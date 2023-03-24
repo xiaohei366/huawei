@@ -96,7 +96,7 @@ WorkBenchNodeForRobot Robot::GetTarget3(int robotID) {
         for(auto &v: vec) {
             pq.push(v);
             if(i >= 4 && v.product_status == 1) {
-                if(i == 7 && v.dis > 2) continue;
+                if(v.dis > 2) continue;
                 pq2.push(v);
                 ++cnt;
             }
@@ -126,7 +126,7 @@ WorkBenchNodeForRobot Robot::GetTarget4(int robotID) {
         for(auto &v: vec) {
             pq.push(v);
             if(i >= 4 && v.product_status == 1) {
-                if(i == 7 && v.dis > 2) continue;
+                if(v.dis > 2) continue;
                 pq2.push(v);
                 ++cnt;
             }
@@ -135,6 +135,7 @@ WorkBenchNodeForRobot Robot::GetTarget4(int robotID) {
         greater_level_queue.push_back(pq2);
     }
     WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
+    if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
     
