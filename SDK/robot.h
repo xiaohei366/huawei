@@ -105,6 +105,10 @@ class Robot {
         WorkBenchNodeForRobot Num456(int robotID, WorkBenchNodeForRobot &default_node, 
         std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
         
+        WorkBenchNodeForRobot Num456OnlyFor4(int robotID, WorkBenchNodeForRobot &default_node, 
+        std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
+
+
         WorkBenchNodeForRobot Num456WithoutSet(int robotID, WorkBenchNodeForRobot &default_node, 
         std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
 
@@ -162,7 +166,8 @@ class Robot {
 
         static std::unordered_set<std::pair<double, int>, PairHash, PairEqual> target_set;
 
-        const std::vector<int> CircularArray{6, 5, 4};  
+        const std::vector<int> CircularArray{6, 5, 4};
+        const std::vector<int> CircularArray_only_map4{4, 6, 5};
         int CircularArrayPtr = 0;
               
 };

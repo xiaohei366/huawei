@@ -137,7 +137,7 @@ WorkBenchNodeForRobot Robot::GetTarget4(int robotID) {
     WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
-    if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
+    if(robot_goal_point.empty()) ans =  Num456OnlyFor4(robotID, default_node, robot_target_queue);
     
     return ans;
 }
@@ -558,6 +558,74 @@ WorkBenchNodeForRobot Robot::Num456WithoutSet(int robotID, WorkBenchNodeForRobot
     return default_node;
 }
 
+WorkBenchNodeForRobot Robot::Num456OnlyFor4(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue) { 
+     //具体的策略
+    //先去将123都放在优先队列里
+    std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule> target123_queue;
+    for(int i = 1; i <= 3; ++i) {
+        while(!robot_target_queue[i].empty()) {
+            target123_queue.push(robot_target_queue[i].top());
+            robot_target_queue[i].pop();
+        }
+    }
+    //随后把123能卖的工作台整体加入一个候选队列，这样是为了同一类型的工作台遍历方便
+    //但是候选队列只能选当前的循环里面
+    int idx = 0;//当前应该选哪个了？
+
+    for(int k = 0 ;k <= 2;++k)
+    {
+        std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule> target123_queue_tem(target123_queue);
+        int num_circular_array = CircularArray_only_map4.size();
+        idx = CircularArray_only_map4[(k + CircularArrayPtr + num_circular_array) % num_circular_array];
+        std::vector<std::vector<WorkBenchNodeForRobot>> target_for_sell{{},{},{},{}};
+        while(!robot_target_queue[idx].empty()) {
+            for(auto &&j: WorkBenchIdForSell[idx]) {
+                target_for_sell[j].push_back(robot_target_queue[idx].top());
+            }
+            robot_target_queue[idx].pop();  
+        }
+        //std::cerr<<target123_queue_tem.size()<<std::endl;
+        //然后先从大候选队列里面找到一个可以的买和卖的目标点
+        while(!target123_queue_tem.empty()) {
+            auto m = target123_queue_tem.top();
+            target123_queue_tem.pop();
+            double coordinate_x = m.x;
+            double coordinate_y = m.y;
+            int type = m.type;
+            //买的点不准重复
+            if(target_set.count({coordinate_x*100+coordinate_y, type})) continue;
+            //找到这个买的点能卖的离着最近的点（这个卖的候选，肯定要和买的位置相联动,直接遍历找那个离着最近的点）
+            double min_dis = DBL_MAX;
+            WorkBenchNodeForRobot ans_for_sell;
+            //先找能买的工作台，然后将其挨个加入优先队列
+            for(auto &workbench: target_for_sell[type]) {
+                double workbench_location_x = workbench.x;
+                double workbench_location_y = workbench.y;
+                //卖的能卖且不可以被重复选择
+                if(workbench.bag.count(type) || target_set.count({workbench_location_x*100+workbench_location_y, type})) continue;
+                double distance = sqrt(pow(coordinate_x - workbench_location_x,2)+pow(coordinate_y - workbench_location_y,2));
+                if(distance > min_dis) continue;
+                min_dis = distance;
+                ans_for_sell = workbench;
+            }
+            //是否找到能卖并且离着买最近的工作台？
+            if(min_dis == DBL_MAX) continue;
+            //同时修改循环数组的指针
+            CircularArrayPtr++;
+            if(CircularArrayPtr >= CircularArray_only_map4.size()) CircularArrayPtr = 0;
+
+            ans_for_sell.type = type;
+            robot_goal_point.push(ans_for_sell);
+            target_set.insert({ans_for_sell.x*100+ans_for_sell.y, type});
+            robot_goal_point.push(m);
+            target_set.insert({coordinate_x*100+coordinate_y, type});
+            //std::cerr << ans_for_sell.type << "&" << m.type << std::endl;
+            break;
+        }
+        if(robot_goal_point.size() == 2) break;
+    } 
+    return default_node;
+}
 
 
 
