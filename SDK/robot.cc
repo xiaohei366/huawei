@@ -47,7 +47,6 @@ WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456WithoutSet(robotID, default_node, robot_target_queue);
-
     
     return ans;
 }

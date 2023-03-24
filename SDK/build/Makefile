@@ -23,6 +23,9 @@ SUFFIXES =
 .SUFFIXES: .hpux_make_needs_suffix_list
 
 
+# Command-line flag to silence nested $(MAKE).
+$(VERBOSE)MAKESILENT = -s
+
 # Suppress display of executed commands.
 $(VERBOSE).SILENT:
 
@@ -39,19 +42,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/bin/cmake
+CMAKE_COMMAND = /usr/local/bin/cmake
 
 # The command to remove a file.
-RM = /usr/bin/cmake -E remove -f
+RM = /usr/local/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/angryhei/code/huawei/LinuxRelease/SDK
+CMAKE_SOURCE_DIR = /home/cx/Desktop/hw/huawei/SDK
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/angryhei/code/huawei/LinuxRelease/SDK/build
+CMAKE_BINARY_DIR = /home/cx/Desktop/hw/huawei/SDK/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +62,7 @@ CMAKE_BINARY_DIR = /home/angryhei/code/huawei/LinuxRelease/SDK/build
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/local/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -70,7 +73,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/usr/local/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -80,14 +83,14 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles /home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles/progress.marks
-	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/angryhei/code/huawei/LinuxRelease/SDK/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/cx/Desktop/hw/huawei/SDK/build/CMakeFiles /home/cx/Desktop/hw/huawei/SDK/build/CMakeFiles/progress.marks
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/cx/Desktop/hw/huawei/SDK/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) -f CMakeFiles/Makefile2 clean
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 clean
 .PHONY : clean
 
 # The main clean target
@@ -97,12 +100,12 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
 .PHONY : preinstall/fast
 
 # clear depends
@@ -115,12 +118,12 @@ depend:
 
 # Build rule for target.
 main: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 main
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main
 .PHONY : main
 
 # fast build rule for target.
 main/fast:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
 hwcompet.o: hwcompet.cc.o
@@ -129,7 +132,7 @@ hwcompet.o: hwcompet.cc.o
 
 # target to build an object file
 hwcompet.cc.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/hwcompet.cc.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/hwcompet.cc.o
 .PHONY : hwcompet.cc.o
 
 hwcompet.i: hwcompet.cc.i
@@ -138,7 +141,7 @@ hwcompet.i: hwcompet.cc.i
 
 # target to preprocess a source file
 hwcompet.cc.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/hwcompet.cc.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/hwcompet.cc.i
 .PHONY : hwcompet.cc.i
 
 hwcompet.s: hwcompet.cc.s
@@ -147,7 +150,7 @@ hwcompet.s: hwcompet.cc.s
 
 # target to generate assembly for a file
 hwcompet.cc.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/hwcompet.cc.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/hwcompet.cc.s
 .PHONY : hwcompet.cc.s
 
 main.o: main.cpp.o
@@ -156,7 +159,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -165,7 +168,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -174,7 +177,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 pid.o: pid.cpp.o
@@ -183,7 +186,7 @@ pid.o: pid.cpp.o
 
 # target to build an object file
 pid.cpp.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/pid.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/pid.cpp.o
 .PHONY : pid.cpp.o
 
 pid.i: pid.cpp.i
@@ -192,7 +195,7 @@ pid.i: pid.cpp.i
 
 # target to preprocess a source file
 pid.cpp.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/pid.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/pid.cpp.i
 .PHONY : pid.cpp.i
 
 pid.s: pid.cpp.s
@@ -201,7 +204,7 @@ pid.s: pid.cpp.s
 
 # target to generate assembly for a file
 pid.cpp.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/pid.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/pid.cpp.s
 .PHONY : pid.cpp.s
 
 robot.o: robot.cc.o
@@ -210,7 +213,7 @@ robot.o: robot.cc.o
 
 # target to build an object file
 robot.cc.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/robot.cc.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/robot.cc.o
 .PHONY : robot.cc.o
 
 robot.i: robot.cc.i
@@ -219,7 +222,7 @@ robot.i: robot.cc.i
 
 # target to preprocess a source file
 robot.cc.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/robot.cc.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/robot.cc.i
 .PHONY : robot.cc.i
 
 robot.s: robot.cc.s
@@ -228,7 +231,7 @@ robot.s: robot.cc.s
 
 # target to generate assembly for a file
 robot.cc.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/robot.cc.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/robot.cc.s
 .PHONY : robot.cc.s
 
 workbench.o: workbench.cc.o
@@ -237,7 +240,7 @@ workbench.o: workbench.cc.o
 
 # target to build an object file
 workbench.cc.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/workbench.cc.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/workbench.cc.o
 .PHONY : workbench.cc.o
 
 workbench.i: workbench.cc.i
@@ -246,7 +249,7 @@ workbench.i: workbench.cc.i
 
 # target to preprocess a source file
 workbench.cc.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/workbench.cc.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/workbench.cc.i
 .PHONY : workbench.cc.i
 
 workbench.s: workbench.cc.s
@@ -255,7 +258,7 @@ workbench.s: workbench.cc.s
 
 # target to generate assembly for a file
 workbench.cc.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/workbench.cc.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/workbench.cc.s
 .PHONY : workbench.cc.s
 
 # Help Target
