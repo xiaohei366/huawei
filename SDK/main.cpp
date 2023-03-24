@@ -75,9 +75,10 @@ int main()
             double pos_x = obj.robot_cluster[robotId].robot_goal_point.top().x;
             double pos_y = obj.robot_cluster[robotId].robot_goal_point.top().y;
             double erase_num = pos_x * 100 + pos_y;
-            //if(robotId==3 && obj.frame_num < 3100 && obj.frame_num > 2500) std::cerr <<obj.frame_num <<"&" << pos_x << "&" << pos_y << std::endl;
+            if(robotId==1 && obj.frame_num < 3100 && obj.frame_num > 2500) std::cerr <<obj.frame_num <<"&" << pos_x << "&" << pos_y << std::endl;
             //注意，对于4-9的情况，这个类型里面是并不是4-9本身，而是它里面的产品格类型
             int type = obj.robot_cluster[robotId].robot_goal_point.top().type;
+            //if(robotId==0) std::cerr <<obj.frame_num <<"&" << target_id << "&" << robot_workbench_id << std::endl;
             if(target_id != robot_workbench_id) continue;
             else
             {
