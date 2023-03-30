@@ -763,11 +763,6 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
 			}
 		}
 	}
-    std::ofstream out("./log.txt");
-    std::ofstream out_pre("./log_pre.txt");
-
-    if(out.fail()) std::cout<<"error\n";
-    if(out_pre.fail()) std::cout<<"error\n";
 
     WorkBenchNodeForRobot point;
     WorkBenchNodeForRobot pre_point;
@@ -788,18 +783,15 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
 
             
 
-            out_pre<<p->coordinate_x<<" "<<p->coordinate_y<<std::endl;
-            std::cerr<<"point.x = "<<p->x<<"point.y = "<<p->y<<std::endl;
+
             if((pre_point.x != point.x)&&(pre_point.y != point.y))
             {
                 if(pre_point.x != 0)
                 {
                     robot_execute_points.push(pre_point);
-                    out<<pre_point.x<<" "<<pre_point.y<<std::endl;
                 }
                 
                 robot_execute_points.push(point);
-                out<<point.x<<" "<<point.y<<std::endl;
             }
             
                 
@@ -809,8 +801,5 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
             p = p->parent;
 		}
     }
-    out.close();
-    out_pre.close();
-
     return true;
 }
