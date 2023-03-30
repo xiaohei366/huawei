@@ -23,7 +23,6 @@ int main()
         printf("%d\n", obj.frame_num);
         for(int i = 0; i < 4; i++)
         {
-            if(i == 1 && obj.map_id == 0 && obj.frame_num < 62) continue;
             //if(i == 3 && obj.frame_num < 3100 && obj.frame_num > 2500)std::cerr<< obj.frame_num <<std::endl;
             double workbench_x,workbench_y;
             if(obj.robot_cluster[i].robot_goal_point.size() == 0)
@@ -46,7 +45,6 @@ int main()
                 //if(i==3 && obj.frame_num < 3100 && obj.frame_num > 2500) std::cerr<<workbench_x<<"  "<<workbench_y<<"   "<<obj.robot_cluster[i].robot_goal_point.top().product_status<<std::endl;
                 //if(i==3 && obj.frame_num < 3100 && obj.frame_num > 2500) std::cerr << obj.robot_cluster[i].robot_goal_point.size() << std::endl;
             }
-
 			//double workbench_x = obj.robot_cluster[i].robot_goal_point.top()[0];
 			//double workbench_y = obj.robot_cluster[i].robot_goal_point.top()[1];
             
@@ -54,6 +52,7 @@ int main()
             ptr = obj.control_ptr;
             obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);	
             ptr++;
+            obj.Deal_Clash(i);
             printf("forward %d %f\n", i, obj.linear_speed);
             printf("rotate %d %f\n", i, obj.angular_speed);
         }
