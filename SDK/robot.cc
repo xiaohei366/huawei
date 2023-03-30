@@ -408,3 +408,110 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
     } 
     return default_node;
 }
+
+bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
+{	
+    all_node = fixed_all_node;   
+    auto distance = [](sNode* a, sNode* b) // For convenience
+	{
+        return abs((a->x - b->x))+abs((a->y - b->y));
+		//return sqrtf((a->x - b->x)*(a->x - b->x) + (a->y - b->y)*(a->y - b->y));
+	};
+
+    auto heuristic = [distance](sNode* a, sNode* b) // So we can experiment with heuristic
+	{
+		return distance(a, b);
+	};
+
+
+    sNode *nodeCurrent = nodeStart;
+	nodeStart->fLocalGoal = 0.0f;
+	nodeStart->fGlobalGoal = heuristic(nodeStart, nodeEnd);
+
+	std::list<sNode*> listNotTestedNodes;
+	listNotTestedNodes.push_back(nodeStart);
+
+	while(!listNotTestedNodes.empty() && nodeCurrent != nodeEnd)
+	{
+		//排序
+		listNotTestedNodes.sort([](const sNode* lhs, const sNode* rhs){ return lhs->fGlobalGoal < rhs->fGlobalGoal; } );
+
+		//pop被check过的
+		while(!listNotTestedNodes.empty() && listNotTestedNodes.front()->bVisited)
+				listNotTestedNodes.pop_front();
+
+        if (listNotTestedNodes.empty())
+				break;
+
+		//取代价最小
+		nodeCurrent = listNotTestedNodes.front();
+		nodeCurrent->bVisited = true;
+        
+        
+
+		//遍历neighbor
+		for (auto nodeNeighbour : nodeCurrent->vecNeighbours)
+		{
+            //std::cerr << "nodeNeighbour is "<< nodeNeighbour->x<< ","<< nodeNeighbour->y<< std::endl;
+			//如果没被遍历且不是墙 加入待测
+			if (!nodeNeighbour->bVisited && nodeNeighbour->bObstacle == 0)
+			{
+				listNotTestedNodes.push_back(nodeNeighbour);
+			}
+
+			//计算当前已耗费+估计还会耗费
+			float fPossiblyLowerGoal = nodeCurrent->fLocalGoal + distance(nodeCurrent, nodeNeighbour);
+
+			//替换s
+            //std::cerr << "fPossiblyLowerGoal"<< fPossiblyLowerGoal << std::endl;
+            //std::cerr << "nodeNeighbour->fLocalGoal"<< nodeNeighbour->fLocalGoal << std::endl;
+			if (fPossiblyLowerGoal < nodeNeighbour->fLocalGoal)
+			{
+				nodeNeighbour->parent = nodeCurrent;
+                //std::cerr << "nodeCurrent is "<< nodeCurrent->x<< ","<< nodeCurrent->y<< std::endl;
+				nodeNeighbour->fLocalGoal = fPossiblyLowerGoal;
+
+				nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + heuristic(nodeNeighbour, nodeEnd);
+			}
+		}
+	}
+
+    WorkBenchNodeForRobot point;
+    WorkBenchNodeForRobot pre_point;
+    point.x = 0;
+    point.y = 0;
+
+    if (nodeEnd != nullptr)
+	{
+	    sNode *p = nodeEnd;
+		while (p->parent != nullptr)
+		{
+            std::string str;
+            
+            pre_point = point;
+
+            point.x = p -> coordinate_x;
+            point.y = p -> coordinate_y;
+
+            
+
+
+            if((pre_point.x != point.x)&&(pre_point.y != point.y))
+            {
+                if(pre_point.x != 0)
+                {
+                    robot_execute_points.push(pre_point);
+                }
+                
+                robot_execute_points.push(point);
+            }
+            
+                
+            //robot_execute_points.push(point);
+
+            // Set next node to this node's parent
+            p = p->parent;
+		}
+    }
+    return true;
+}
