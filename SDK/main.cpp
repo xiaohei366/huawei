@@ -32,7 +32,7 @@ int main()
                 //start point == robot point
                 obj.robot_cluster[i].node_tmp[0].y = (int)((obj.robot_cluster[i].location_y + 0.25)/0.5 - 1);
                 obj.robot_cluster[i].node_tmp[0].x = (int)((obj.robot_cluster[i].location_x + 0.25)/0.5 - 1);
-                cerr<<obj.robot_cluster[i].node_tmp[0].x<<" &&&&&  "<<obj.robot_cluster[i].node_tmp[0].y<<endl;
+                //cerr<<obj.robot_cluster[i].node_tmp[0].x<<" &&&&&  "<<obj.robot_cluster[i].node_tmp[0].y<<endl;
                 int start_node_num = obj.robot_cluster[i].node_tmp[0].y * 100 + obj.robot_cluster[i].node_tmp[0].x;
                 
                 
@@ -42,11 +42,11 @@ int main()
                 //std::cerr << obj.robot_cluster[i].robot_goal_point.top().x << "  ^^^^^^  " << obj.robot_cluster[i].robot_goal_point.top().y <<"  " << obj.robot_cluster[i].robot_goal_point.top().type <<endl;
                 int end_node_num = obj.robot_cluster[i].node_tmp[1].y * 100 + obj.robot_cluster[i].node_tmp[1].x;
                 
-                std::cerr << start_node_num << "  " << end_node_num << endl;
+                //std::cerr << start_node_num << "  " << end_node_num << endl;
                 //cerr<<" ******* "<<obj.robot_cluster[i].node_tmp[0].coordinate_x<<endl;
                 bool res = obj.robot_cluster[i].astar(&obj.robot_cluster[i].all_node[start_node_num],&obj.robot_cluster[i].all_node[end_node_num]);
                 //cerr<<obj.robot_cluster[i].robot_goal_point.top().x<<"  "<<obj.robot_cluster[i].robot_goal_point.top().y<<endl;
-                std::cerr<<"**************** "<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
+                //std::cerr<<"**************** "<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
                 //cerr<<"***************************"<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
                 workbench_x = obj.robot_cluster[i].robot_execute_points.top().x;
                 workbench_y = obj.robot_cluster[i].robot_execute_points.top().y;
@@ -60,6 +60,7 @@ int main()
             ptr = obj.control_ptr;
             obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);	
             ptr++;
+            obj.Deal_Clash(i);
             printf("forward %d %f\n", i, obj.linear_speed);
             printf("rotate %d %f\n", i, obj.angular_speed);
 

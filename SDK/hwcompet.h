@@ -99,12 +99,13 @@ public:
     double distance_target = 0;
 	//初始化函数 读取地图
 	bool init();
-	bool init_1();
-	bool init_2();
-	bool init_3();
-	bool init_4();
 
+	//处理两个小车相撞后的冲突
+	void Deal_Clash(int RobotID);
 
+	double CalDis(const Robot robot1, const Robot robot2) {
+		return sqrt((robot1.location_x - robot2.location_x) * (robot1.location_x - robot2.location_x) + (robot1.location_y - robot2.location_y) * (robot1.location_y - robot2.location_y));
+	};
 	//与判题器进行交互的函数
 	bool readUntilOK();
 	//得到pid调节参数yaw,angle_x

@@ -376,6 +376,20 @@ bool hw_compet::init() {
 	return false;
 }
  
+//处理两个小车相撞后的逻辑
+void hw_compet::Deal_Clash(int RobotID) {
+	auto &cur_robot = robot_cluster[RobotID];
+    for(int i = 0; i < 4; ++i) {
+		if(i == RobotID) continue;
+		auto &robot_neigh = robot_cluster[i];
+		auto dis = CalDis(cur_robot, robot_neigh);
+		if (dis <= 1.5 && ((cur_robot.direction >= 0 && robot_neigh.direction < 0) || (cur_robot.direction <= 0 && robot_neigh.direction > 0))) {
+			cur_robot.direction = robot_neigh.direction;
+			linear_speed = -2;//以最大速度回退
+		}
+	}
+}
+
 
 void hw_compet::check_map_id(string s, int i, int j, int type) {
 	if(i == 92 && j == 49 && type == 7) this->map_id = 3;
@@ -404,3 +418,4 @@ WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
 	//else target = robot.GetTarget4(robotId);
 	return target;
 }
+
