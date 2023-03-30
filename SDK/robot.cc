@@ -19,8 +19,6 @@ void Robot::Update(int workstation_id, int carried_item_type, double time_value_
 }
 
 
-
-
 WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
     //默认的点--默认工作台类型为1,全局ID为-2---就是原地打圈
     WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
@@ -29,12 +27,14 @@ WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>robot_target_queue;
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>greater_level_queue;
     for(int i = 0; i <= 9; ++i) {
+        //机器人面对1-9类型工作台的参数
         auto &vec = workbench_for_robot[i];
         std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule> pq;
         std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule> pq2; //分别对应上面两个有限队列数组的临时队列
         for(auto &v: vec) {
             pq.push(v);
             if(i >= 4 && v.product_status == 1) {
+                //只有当小车距离7的距离小于2的时候，才会来取7，防止出现空车跑来取7的情况
                 if(i == 7 && v.dis > 2) continue; 
                 pq2.push(v);
                 ++cnt;
@@ -147,7 +147,6 @@ void Robot::Clear_vec() {
         workbench_for_robot[i].clear();
     }
 }
-
 
 WorkBenchNodeForRobot Robot::Num789(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
         std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
@@ -693,4 +692,125 @@ WorkBenchNodeForRobot Robot::Num456_old(int robotID, WorkBenchNodeForRobot &defa
           
     }
     return default_node;
+}
+
+
+
+
+bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
+{	
+    all_node = fixed_all_node;   
+    auto distance = [](sNode* a, sNode* b) // For convenience
+	{
+        return abs((a->x - b->x))+abs((a->y - b->y));
+		//return sqrtf((a->x - b->x)*(a->x - b->x) + (a->y - b->y)*(a->y - b->y));
+	};
+
+    auto heuristic = [distance](sNode* a, sNode* b) // So we can experiment with heuristic
+	{
+		return distance(a, b);
+	};
+
+
+    sNode *nodeCurrent = nodeStart;
+	nodeStart->fLocalGoal = 0.0f;
+	nodeStart->fGlobalGoal = heuristic(nodeStart, nodeEnd);
+
+	std::list<sNode*> listNotTestedNodes;
+	listNotTestedNodes.push_back(nodeStart);
+
+	while(!listNotTestedNodes.empty() && nodeCurrent != nodeEnd)
+	{
+		//排序
+		listNotTestedNodes.sort([](const sNode* lhs, const sNode* rhs){ return lhs->fGlobalGoal < rhs->fGlobalGoal; } );
+
+		//pop被check过的
+		while(!listNotTestedNodes.empty() && listNotTestedNodes.front()->bVisited)
+				listNotTestedNodes.pop_front();
+
+        if (listNotTestedNodes.empty())
+				break;
+
+		//取代价最小
+		nodeCurrent = listNotTestedNodes.front();
+		nodeCurrent->bVisited = true;
+        
+        
+
+		//遍历neighbor
+		for (auto nodeNeighbour : nodeCurrent->vecNeighbours)
+		{
+            //std::cerr << "nodeNeighbour is "<< nodeNeighbour->x<< ","<< nodeNeighbour->y<< std::endl;
+			//如果没被遍历且不是墙 加入待测
+			if (!nodeNeighbour->bVisited && nodeNeighbour->bObstacle == 0)
+			{
+				listNotTestedNodes.push_back(nodeNeighbour);
+			}
+
+			//计算当前已耗费+估计还会耗费
+			float fPossiblyLowerGoal = nodeCurrent->fLocalGoal + distance(nodeCurrent, nodeNeighbour);
+
+			//替换s
+            //std::cerr << "fPossiblyLowerGoal"<< fPossiblyLowerGoal << std::endl;
+            //std::cerr << "nodeNeighbour->fLocalGoal"<< nodeNeighbour->fLocalGoal << std::endl;
+			if (fPossiblyLowerGoal < nodeNeighbour->fLocalGoal)
+			{
+				nodeNeighbour->parent = nodeCurrent;
+                //std::cerr << "nodeCurrent is "<< nodeCurrent->x<< ","<< nodeCurrent->y<< std::endl;
+				nodeNeighbour->fLocalGoal = fPossiblyLowerGoal;
+
+				nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + heuristic(nodeNeighbour, nodeEnd);
+			}
+		}
+	}
+    std::ofstream out("./log.txt");
+    std::ofstream out_pre("./log_pre.txt");
+
+    if(out.fail()) std::cout<<"error\n";
+    if(out_pre.fail()) std::cout<<"error\n";
+
+    WorkBenchNodeForRobot point;
+    WorkBenchNodeForRobot pre_point;
+    point.x = 0;
+    point.y = 0;
+
+    if (nodeEnd != nullptr)
+	{
+	    sNode *p = nodeEnd;
+		while (p->parent != nullptr)
+		{
+            std::string str;
+            
+            pre_point = point;
+
+            point.x = p -> coordinate_x;
+            point.y = p -> coordinate_y;
+
+            
+
+            out_pre<<p->coordinate_x<<" "<<p->coordinate_y<<std::endl;
+            std::cerr<<"point.x = "<<p->x<<"point.y = "<<p->y<<std::endl;
+            if((pre_point.x != point.x)&&(pre_point.y != point.y))
+            {
+                if(pre_point.x != 0)
+                {
+                    robot_execute_points.push(pre_point);
+                    out<<pre_point.x<<" "<<pre_point.y<<std::endl;
+                }
+                
+                robot_execute_points.push(point);
+                out<<point.x<<" "<<point.y<<std::endl;
+            }
+            
+                
+            //robot_execute_points.push(point);
+
+            // Set next node to this node's parent
+            p = p->parent;
+		}
+    }
+    out.close();
+    out_pre.close();
+
+    return true;
 }
