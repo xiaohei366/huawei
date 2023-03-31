@@ -13,10 +13,9 @@ int main()
 	while (scanf("%d", &obj.frame_num) != EOF) {
         obj.readUntilOK();
         printf("%d\n", obj.frame_num);
-        for(int i = 0; i < 4; i++)
+        for(int i = 0; i < 1; i++)
         {
-            
-            if(i == 1 && obj.map_id == 0 && obj.frame_num < 62) continue;
+            //if(i == 1 && obj.map_id == 0 && obj.frame_num < 62) continue;
             double workbench_x = 25;
             double workbench_y = 25;
             //if(obj.robot_cluster[i].robot_execute_points.size() == 0) bool res = obj.robot_cluster[i].astar(&obj.robot_cluster[i].all_node[9790],&obj.robot_cluster[i].all_node[208]);
@@ -45,6 +44,7 @@ int main()
                 //std::cerr << start_node_num << "  " << end_node_num << endl;
                 //cerr<<" ******* "<<obj.robot_cluster[i].node_tmp[0].coordinate_x<<endl;
                 bool res = obj.robot_cluster[i].astar(&obj.robot_cluster[i].all_node[start_node_num],&obj.robot_cluster[i].all_node[end_node_num]);
+                cerr<<"***********************"<<endl;
                 //cerr<<obj.robot_cluster[i].robot_goal_point.top().x<<"  "<<obj.robot_cluster[i].robot_goal_point.top().y<<endl;
                 //std::cerr<<"**************** "<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
                 //cerr<<"***************************"<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
@@ -55,30 +55,29 @@ int main()
                 workbench_x = obj.robot_cluster[i].robot_execute_points.top().x;
                 workbench_y = obj.robot_cluster[i].robot_execute_points.top().y;
             }
-            
+            //std::cerr<<workbench_x<<"***************"<<workbench_y<<std::endl;
             obj.get_yaw_angle(obj.distance_target,obj.yaw,obj.vector_angle,workbench_x,workbench_y,obj.robot_cluster[i]);
             ptr = obj.control_ptr;
             obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);	
             ptr++;
-            obj.Deal_Clash(i);
+            //obj.Deal_Clash(i);
+            //std::cerr<<obj.linear_speed<<"  "<<obj.angular_speed<<std::endl;
             printf("forward %d %f\n", i, obj.linear_speed);
             printf("rotate %d %f\n", i, obj.angular_speed);
 
-            
             if(obj.distance_target < 0.2) {
                 obj.robot_cluster[i].robot_execute_points.pop();
             }
 
         }
+
+        
         //std::cerr<<obj.distance_target<<std::endl;
-        
-        
-        
         
         
         //购买和卖的逻辑
         
-        for(int robotId = 0; robotId < 4; robotId++)
+        for(int robotId = 0; robotId < 1; robotId++)
         {
             if(obj.robot_cluster[robotId].robot_execute_points.size() == 0){
                 if(obj.robot_cluster[robotId].robot_goal_point.size() == 0) continue;
@@ -106,7 +105,7 @@ int main()
                     else if(obj.robot_cluster[robotId].carried_item_type == 0 && obj.work_bench_cluster[robotId][type].GetProductStatus(pos_x, pos_y) == 1) 
                     {
                         //快结束就别买啦--最后4s
-                        if(obj.frame_num > 8850) continue;
+                        //if(obj.frame_num > 8850) continue;
                         obj.robot_cluster[robotId].target_set.erase({erase_num, type});
                         obj.robot_cluster[robotId].robot_goal_point.pop();
                         //cerr<<obj.robot_cluster[robotId].robot_goal_point.top().x << " %%%%%% " << obj.robot_cluster[robotId].robot_goal_point.top().y<<endl;

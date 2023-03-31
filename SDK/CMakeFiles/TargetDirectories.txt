@@ -1,0 +1,3 @@
+/home/cx/Desktop/hw/huawei/SDK/CMakeFiles/rebuild_cache.dir
+/home/cx/Desktop/hw/huawei/SDK/CMakeFiles/edit_cache.dir
+/home/cx/Desktop/hw/huawei/SDK/CMakeFiles/main.dir

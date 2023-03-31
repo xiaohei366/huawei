@@ -409,6 +409,8 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
     return default_node;
 }
 
+
+
 bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
 {	
     all_node = fixed_all_node;   
@@ -478,25 +480,42 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
 
     WorkBenchNodeForRobot point;
     WorkBenchNodeForRobot pre_point;
-    point.x = 0;
-    point.y = 0;
-
+    WorkBenchNodeForRobot next_point;
+    //std::ofstream outfile("./log.txt",std::ios::out);
+    //std::ofstream outfile2("./log_del.txt",std::ios::out);
     if (nodeEnd != nullptr)
 	{
 	    sNode *p = nodeEnd;
-		while (p->parent != nullptr)
+        point.x = p -> coordinate_x;
+        point.y = p -> coordinate_y;
+        //std::cerr<<point.x<<"  "<<point.y<<std::endl;
+        robot_execute_points.push(point);
+        //outfile<<point.x<<"  "<<point.y<<std::endl;
+        //outfile2<<point.x<<"  "<<point.y<<std::endl;
+		while (p->parent != nullptr && p -> parent -> parent != nullptr)
 		{
             std::string str;
-            
-            pre_point = point;
+            //pre_pont存放上一个点
+            pre_point.x = p -> coordinate_x;
+            pre_point.y = p -> coordinate_y;
+            std::pair<double,double> point1 = {pre_point.x, pre_point.y};
 
+            p = p -> parent;
+            ////point存放当前点
             point.x = p -> coordinate_x;
             point.y = p -> coordinate_y;
+            //outfile<<point.x<<"  "<<point.y<<std::endl;
+            std::pair<double,double> point2 = {point.x, point.y};
+            //next_pont存放下一个点
+            next_point.x = p -> parent -> coordinate_x;
+            next_point.y = p -> parent -> coordinate_y;
+            std::pair<double,double> point3 = {next_point.x, next_point.y};
 
-            
-
-
-            if((pre_point.x != point.x)&&(pre_point.y != point.y))
+            if(remove_middle_points(point1, point2, point3) == true) {
+                //outfile2<<point.x<<"  "<<point.y<<std::endl;
+                robot_execute_points.push(point);
+            }
+            /*if((pre_point.x != point.x)&&(pre_point.y != point.y))
             {
                 if(pre_point.x != 0)
                 {
@@ -504,14 +523,43 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
                 }
                 
                 robot_execute_points.push(point);
-            }
+            }*/
             
                 
             //robot_execute_points.push(point);
 
             // Set next node to this node's parent
-            p = p->parent;
+            //p = p->parent;
 		}
+        /*if(p -> parent != nullptr){
+            point.x = p -> parent -> coordinate_x;
+            point.y = p -> parent -> coordinate_y;
+            robot_execute_points.push(point);
+            outfile2<<point.x<<"  "<<point.y<<std::endl;
+            outfile<<point.x<<"  "<<point.y<<std::endl;
+        }   */
     }
+    return true;
+}
+
+
+
+bool Robot::remove_middle_points(std::pair<double,double>& point1, std::pair<double,double>& point2, std::pair<double,double>& point3) {
+    double x1 = point1.first;
+    double y1 = point1.second;
+    double x2 = point2.first;
+    double y2 = point2.second;
+    double x3 = point3.first;
+    double y3 = point3.second;
+
+    auto distance = [] (double x1, double y1, double x2, double y2){
+        return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+    };
+    
+    double d1 = distance(x1, y1, x2, y2);
+    double d2 = distance(x2, y2, x3, y3);
+    double d3 = distance(x1, y1, x3, y3);
+    if (d1 + d2 == d3) return false;
+    //std::cerr<<d1<<" "<<d2<<"  "<<d3<<std::endl;
     return true;
 }

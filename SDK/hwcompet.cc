@@ -392,10 +392,11 @@ void hw_compet::Deal_Clash(int RobotID) {
 
 
 void hw_compet::check_map_id(string s, int i, int j, int type) {
-	if(i == 92 && j == 49 && type == 7) this->map_id = 3;
-	if(i == 98 && j == 46 && type == 3) this->map_id = 2;
-	if(i == 98 && j == 49 && type == 1) this->map_id = 0;
-	if(i == 98 && j == 1 && type == 6) this->map_id = 1;
+	//if(i == 92 && j == 49 && type == 7) this->map_id = 3;
+	//if(i == 98 && j == 46 && type == 3) this->map_id = 2;
+	//if(i == 98 && j == 49 && type == 1) this->map_id = 0;
+	//if(i == 98 && j == 1 && type == 6) this->map_id = 1;
+	this -> map_id = 1;
 }
 //初始化一个机器人的工作台位置数组并获得机器人的目标
 WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
@@ -411,11 +412,11 @@ WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
 	//随后得到改机器人的目标
     WorkBenchNodeForRobot target;
 
-	target = robot.GetTarget1(robotId);
-	//if(this->map_id == 0) target = robot.GetTarget1(robotId);
-	//else if(this->map_id == 1) target = robot.GetTarget2(robotId);
-	//else if(this->map_id == 2) target = robot.GetTarget3(robotId);
-	//else target = robot.GetTarget4(robotId);
+	//target = robot.GetTarget1(robotId);
+	if(this->map_id == 0) target = robot.GetTarget1(robotId);
+	else if(this->map_id == 1) target = robot.GetTarget2(robotId);
+	else if(this->map_id == 2) target = robot.GetTarget3(robotId);
+	else target = robot.GetTarget4(robotId);
 	return target;
 }
 

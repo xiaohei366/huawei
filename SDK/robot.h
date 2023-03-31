@@ -123,6 +123,7 @@ class Robot {
         WorkBenchNodeForRobot GetTarget3(int robotID);
         WorkBenchNodeForRobot GetTarget4(int robotID);
 
+        bool remove_middle_points(std::pair<double,double>& point1, std::pair<double,double>& point2, std::pair<double,double>& point3);
         WorkBenchNodeForRobot Num123(int robotID, WorkBenchNodeForRobot &default_node, 
         std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue);
         
