@@ -266,7 +266,10 @@ bool hw_compet::init() {
 	//先读取地图
 	while (fgets(line, sizeof line, stdin)) {
 		if (line[0] == 'O' && line[1] == 'K') {
-			for(int m = 0; m < 4; m++) robot_cluster[m].fixed_all_node = robot_cluster[m].all_node;
+			for(int m = 0; m < 4; m++) robot_cluster[m].fixed_all_node_object = robot_cluster[m].all_node_object;
+			
+			
+			
 			//得到每个机器人对应的不同的代价地图
 			/*for(int robotId = 0; robotId < 4; robotId++){
 				for(int n = 0; n < add_obstacle[map_id][robotId].size(); n++){
@@ -324,47 +327,67 @@ bool hw_compet::init() {
 				for(int robotId = 0; robotId < 4; robotId++){
 					int num = i*100 + j;
 					if(input[j] == '#'){
-						robot_cluster[robotId].all_node[num].bObstacle = true;
-						robot_cluster[robotId].all_node[num].x = j;
-						robot_cluster[robotId].all_node[num].y = i;
-						robot_cluster[robotId].all_node[num].coordinate_x = j*0.5+0.25;
-						robot_cluster[robotId].all_node[num].coordinate_y = i*0.5+0.25;
-						if(j-1>=0) robot_cluster[robotId].all_node[num - 1].bObstacle = true;
-						if(j+1<=99) robot_cluster[robotId].all_node[num + 1].bObstacle = true;
-						if(i-1>=0) robot_cluster[robotId].all_node[num - 100].bObstacle = true;
-						if(i+1<=99) robot_cluster[robotId].all_node[num + 100].bObstacle = true;		
+						robot_cluster[robotId].all_node_object[num].bObstacle = true;
+						robot_cluster[robotId].all_node_object[num].node_cost = 100000;
+						//robot_cluster[robotId].all_node_object[num].fLocalGoal = 10000;
+
+						if(j-1>=0){
+							robot_cluster[robotId].all_node_object[num - 1].node_cost = 4;
+							//robot_cluster[robotId].all_node_object[num-1].fGlobalGoal = 10000;
+						}
+						if(j+1<=99){
+							robot_cluster[robotId].all_node_object[num + 1].node_cost = 4;
+							//robot_cluster[robotId].all_node_object[num + 1].fGlobalGoal = 10000;
+						}
+						if(i-1>=0){
+							robot_cluster[robotId].all_node_object[num - 100].node_cost = 4;
+							//robot_cluster[robotId].all_node_object[num - 100].fGlobalGoal = 10000;
+						}
+						if(i+1<=99){
+							robot_cluster[robotId].all_node_object[num + 100].node_cost = 4;		
+							//robot_cluster[robotId].all_node_object[num + 100].fGlobalGoal = 10000;
+						}
+						//left_up
+						if(i+1<=99 && j-1>=0){
+ 							robot_cluster[robotId].all_node_object[num + 100 - 1].node_cost = 2;
+                        }
+                        //right_up
+                        if(i+1<=99 && j+1<=99){
+                            robot_cluster[robotId].all_node_object[num + 100 + 1].node_cost = 2;
+                        }
+                        //left_down
+                        if(i-1>=0 && j-1>=0){
+                            robot_cluster[robotId].all_node_object[num - 100 - 1].node_cost = 2;
+                        }
+                        //right_down
+                        if(i-1>=0 && j+1<=99){                                                   
+                            robot_cluster[robotId].all_node_object[num - 100 + 1].node_cost = 2;
+                        }
 					}
 					else{
-						if(robot_cluster[robotId].all_node[num].bObstacle == true) 
-						{
-							robot_cluster[robotId].all_node[num].x = j;
-							robot_cluster[robotId].all_node[num].y = i;
-							robot_cluster[robotId].all_node[num].coordinate_x = j*0.5+0.25;
-							robot_cluster[robotId].all_node[num].coordinate_y = i*0.5+0.25;
-							continue;
-						}
-						robot_cluster[robotId].all_node[num].bObstacle = false;
-						robot_cluster[robotId].all_node[num].fGlobalGoal = 10000;
-						robot_cluster[robotId].all_node[num].fLocalGoal = 10000;
+						//if(robot_cluster[robotId].all_node_object[num].node_cost == 1) 
+						//robot_cluster[robotId].all_node_object[num].fLocalGoal = 10000;
+						//robot_cluster[robotId].all_node_object[num].bObstacle = false;
+						//robot_cluster[robotId].all_node_object[num].fGlobalGoal = 1000;
 						
 						int x = j;
 						int y = i;
-						robot_cluster[robotId].all_node[num].x = x;
-						robot_cluster[robotId].all_node[num].y = y;
-						robot_cluster[robotId].all_node[num].coordinate_x = j*0.5+0.25;
-						robot_cluster[robotId].all_node[num].coordinate_y = i*0.5+0.25;
-						robot_cluster[robotId].all_node[num].parent = nullptr;
+						robot_cluster[robotId].all_node_object[num].x = x;
+						robot_cluster[robotId].all_node_object[num].y = y;
+						robot_cluster[robotId].all_node_object[num].coordinate_x = j*0.5+0.25;
+						robot_cluster[robotId].all_node_object[num].coordinate_y = i*0.5+0.25;
+						robot_cluster[robotId].all_node_object[num].parent = nullptr;
 
-						if(i > 0) robot_cluster[robotId].all_node[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node[(i - 1) * 100 + (j + 0)]);
-						if(i < 99) robot_cluster[robotId].all_node[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node[(i + 1) * 100 + (j + 0)]);
-						if (j > 0) robot_cluster[robotId].all_node[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node[(i + 0) * 100 + (j - 1)]);
-						if(j < 99) robot_cluster[robotId].all_node[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node[(i + 0) * 100 + (j + 1)]);
+						if(i > 0) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i - 1) * 100 + (j + 0)]);
+						if(i < 99) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 1) * 100 + (j + 0)]);
+						if (j > 0) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 0) * 100 + (j - 1)]);
+						if(j < 99) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 0) * 100 + (j + 1)]);
 						
 						// We can also connect diagonally
-						if (i > 0 && j > 0) robot_cluster[robotId].all_node[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node[(i - 1) * 100 + (j - 1)]);
-						if (i < 99 && j > 0) robot_cluster[robotId].all_node[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node[(i + 1) * 100 + (j - 1)]);
-						if (i > 0 && j < 99) robot_cluster[robotId].all_node[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node[(i - 1) * 100 + (j + 1)]);
-						if (i < 99 && j < 99) robot_cluster[robotId].all_node[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node[(i + 1) * 100 + (j + 1)]);
+						if (i > 0 && j > 0) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i - 1) * 100 + (j - 1)]);
+						if (i < 99 && j > 0) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 1) * 100 + (j - 1)]);
+						if (i > 0 && j < 99) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i - 1) * 100 + (j + 1)]);
+						if (i < 99 && j < 99) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 1) * 100 + (j + 1)]);
 						
 					}
 				}
@@ -396,7 +419,7 @@ void hw_compet::check_map_id(string s, int i, int j, int type) {
 	//if(i == 98 && j == 46 && type == 3) this->map_id = 2;
 	//if(i == 98 && j == 49 && type == 1) this->map_id = 0;
 	//if(i == 98 && j == 1 && type == 6) this->map_id = 1;
-	this -> map_id = 1;
+	this->map_id = 2;
 }
 //初始化一个机器人的工作台位置数组并获得机器人的目标
 WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
@@ -412,11 +435,11 @@ WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
 	//随后得到改机器人的目标
     WorkBenchNodeForRobot target;
 
-	//target = robot.GetTarget1(robotId);
-	if(this->map_id == 0) target = robot.GetTarget1(robotId);
-	else if(this->map_id == 1) target = robot.GetTarget2(robotId);
-	else if(this->map_id == 2) target = robot.GetTarget3(robotId);
-	else target = robot.GetTarget4(robotId);
+	target = robot.GetTarget2(robotId);
+	//if(this->map_id == 0) target = robot.GetTarget1(robotId);
+	//else if(this->map_id == 1) target = robot.GetTarget2(robotId);
+	//else if(this->map_id == 2) target = robot.GetTarget3(robotId);
+	//else target = robot.GetTarget4(robotId);
 	return target;
 }
 

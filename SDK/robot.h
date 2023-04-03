@@ -75,25 +75,35 @@ struct cmp_rule {
 
 struct sNode
 {
-	bool bObstacle = false;			// Is the node an obstruction?
-	bool bVisited = false;			// Have we searched this node before?
-	float fGlobalGoal;				// Distance to goal so far
-	float fLocalGoal;				// Distance to goal if we took the alternative route
+	bool bObstacle;			// Is the node an obstruction?
+	bool bVisited;			// Have we searched this node before?
+    double fGlobalGoal;				// Distance to goal so far
+	double fLocalGoal;	
+    int node_cost;
 	int x;							// Nodes position in 2D space
 	int y;
     double coordinate_x;
     double coordinate_y;
+    
 	std::vector<sNode*> vecNeighbours;	// Connections to neighbours
-	sNode* parent;					// Node connecting to this node that offers shortest parent
+	
+    sNode* parent;					// Node connecting to this node that offers shortest parent
+    sNode(): bObstacle(false),bVisited(false),fGlobalGoal(100000),fLocalGoal(100000),node_cost(1),x(0),y(0),coordinate_x(25.0f),coordinate_y(25.0f),parent(nullptr){
+        //vecNeighbours.reserve(9);
+    }
 };
 
 
 class Robot {
     public:
         explicit Robot(double x, double y):location_x(x), location_y(y) {
-            all_node = std::vector<sNode>(10000);   
-            fixed_all_node = std::vector<sNode>(10000);
-            node_tmp = std::vector<sNode>(3);
+            all_node_object = std::vector<sNode>(10000);   
+            fixed_all_node_object = std::vector<sNode>(10000);
+            //all_node_empty = std::vector<sNode>(40000);
+            //fixed_all_node_empty = std::vector<sNode>(40000);
+
+            node_tmp_object = std::vector<sNode>(2);
+            //node_tmp_empty = std::vector<sNode>(2);
             for(int i = 0; i < 10; ++i) {
                 std::vector<WorkBenchNodeForRobot> tem;
                 workbench_for_robot.push_back(tem);
@@ -105,17 +115,24 @@ class Robot {
         double angular_velocity, double linear_velocity_x, double linear_velocity_y, double direction,
         double location_x, double location_y);
         
-        std::vector<sNode> node_tmp;
+        std::vector<sNode> node_tmp_object;
+        //std::vector<sNode> node_tmp_empty;
+        //携带物品
+        std::vector<sNode> all_node_object;
+        std::vector<sNode> fixed_all_node_object; 
 
-        std::vector<sNode> all_node;
-        std::vector<sNode> fixed_all_node; 
-        bool astar(struct sNode *nodeStart, struct sNode *nodeEnd);
+        //不携带物品,膨胀成200*200
+        //std::vector<sNode> all_node_empty;
+        //std::vector<sNode> fixed_all_node_empty;
+
+        bool astar(struct sNode *nodeStart, struct sNode *nodeEnd, bool carry_object);
 
         //存放每一个robot的目标点,买和卖
         std::stack<WorkBenchNodeForRobot> robot_goal_point;
-
-
+        
+        
         std::stack<WorkBenchNodeForRobot> robot_execute_points;
+
         //std::stack<WorkBenchNodeForRobot> greater_level_point;
         //得到robot要跑向的目标点 
         WorkBenchNodeForRobot GetTarget1(int robotID);

@@ -411,13 +411,14 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
 
 
 
-bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
+bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd, bool carry_object)
 {	
-    all_node = fixed_all_node;   
+    all_node_object = fixed_all_node_object;
+    //else all_node_empty = fixed_all_node_empty;
     auto distance = [](sNode* a, sNode* b) // For convenience
 	{
-        return abs((a->x - b->x))+abs((a->y - b->y));
-		//return sqrtf((a->x - b->x)*(a->x - b->x) + (a->y - b->y)*(a->y - b->y));
+        //return abs((a->x - b->x))+abs((a->y - b->y));
+		return sqrtf((a->coordinate_x - b->coordinate_x)*(a->coordinate_x - b->coordinate_x) + (a->coordinate_y - b->coordinate_y)*(a->coordinate_y - b->coordinate_y));
 	};
 
     auto heuristic = [distance](sNode* a, sNode* b) // So we can experiment with heuristic
@@ -462,7 +463,7 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
 			}
 
 			//计算当前已耗费+估计还会耗费
-			float fPossiblyLowerGoal = nodeCurrent->fLocalGoal + distance(nodeCurrent, nodeNeighbour);
+			double fPossiblyLowerGoal = nodeCurrent->fLocalGoal + nodeNeighbour -> node_cost;// * distance(nodeCurrent, nodeNeighbour);
 
 			//替换s
             //std::cerr << "fPossiblyLowerGoal"<< fPossiblyLowerGoal << std::endl;
@@ -515,21 +516,6 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd)
                 //outfile2<<point.x<<"  "<<point.y<<std::endl;
                 robot_execute_points.push(point);
             }
-            /*if((pre_point.x != point.x)&&(pre_point.y != point.y))
-            {
-                if(pre_point.x != 0)
-                {
-                    robot_execute_points.push(pre_point);
-                }
-                
-                robot_execute_points.push(point);
-            }*/
-            
-                
-            //robot_execute_points.push(point);
-
-            // Set next node to this node's parent
-            //p = p->parent;
 		}
         /*if(p -> parent != nullptr){
             point.x = p -> parent -> coordinate_x;
