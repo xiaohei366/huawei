@@ -463,7 +463,7 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd, bool carry_obj
 			}
 
 			//计算当前已耗费+估计还会耗费
-			double fPossiblyLowerGoal = nodeCurrent->fLocalGoal + nodeNeighbour -> node_cost;// * distance(nodeCurrent, nodeNeighbour);
+			double fPossiblyLowerGoal = nodeCurrent->fLocalGoal + distance(nodeCurrent, nodeNeighbour) * nodeNeighbour -> node_cost;// * distance(nodeCurrent, nodeNeighbour);
 
 			//替换s
             //std::cerr << "fPossiblyLowerGoal"<< fPossiblyLowerGoal << std::endl;
@@ -473,8 +473,9 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd, bool carry_obj
 				nodeNeighbour->parent = nodeCurrent;
                 //std::cerr << "nodeCurrent is "<< nodeCurrent->x<< ","<< nodeCurrent->y<< std::endl;
 				nodeNeighbour->fLocalGoal = fPossiblyLowerGoal;
-
-				nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + heuristic(nodeNeighbour, nodeEnd);
+                double distance_left = heuristic(nodeNeighbour, nodeEnd);
+                if(distance_left > 8) nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + 3 * heuristic(nodeNeighbour, nodeEnd);
+                else nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + 0.8 * heuristic(nodeNeighbour, nodeEnd);
 			}
 		}
 	}
@@ -486,6 +487,7 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd, bool carry_obj
     //std::ofstream outfile2("./log_del.txt",std::ios::out);
     if (nodeEnd != nullptr)
 	{
+        nodeStart->planning_point_nums++;
 	    sNode *p = nodeEnd;
         point.x = p -> coordinate_x;
         point.y = p -> coordinate_y;
@@ -495,6 +497,7 @@ bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd, bool carry_obj
         //outfile2<<point.x<<"  "<<point.y<<std::endl;
 		while (p->parent != nullptr && p -> parent -> parent != nullptr)
 		{
+
             std::string str;
             //pre_pont存放上一个点
             pre_point.x = p -> coordinate_x;

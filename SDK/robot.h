@@ -80,6 +80,7 @@ struct sNode
     double fGlobalGoal;				// Distance to goal so far
 	double fLocalGoal;	
     int node_cost;
+    int planning_point_nums;
 	int x;							// Nodes position in 2D space
 	int y;
     double coordinate_x;
@@ -88,7 +89,7 @@ struct sNode
 	std::vector<sNode*> vecNeighbours;	// Connections to neighbours
 	
     sNode* parent;					// Node connecting to this node that offers shortest parent
-    sNode(): bObstacle(false),bVisited(false),fGlobalGoal(100000),fLocalGoal(100000),node_cost(1),x(0),y(0),coordinate_x(25.0f),coordinate_y(25.0f),parent(nullptr){
+    sNode(): bObstacle(false),bVisited(false),fGlobalGoal(100000),fLocalGoal(100000),node_cost(1),planning_point_nums(1),x(0),y(0),coordinate_x(25.0f),coordinate_y(25.0f),parent(nullptr){
         //vecNeighbours.reserve(9);
     }
 };
@@ -116,6 +117,7 @@ class Robot {
         double location_x, double location_y);
         
         std::vector<sNode> node_tmp_object;
+        sNode node_hwcompet_tmp;
         //std::vector<sNode> node_tmp_empty;
         //携带物品
         std::vector<sNode> all_node_object;

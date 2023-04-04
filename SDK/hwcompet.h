@@ -46,7 +46,13 @@ struct pid_controller
 
 
 
-
+struct usable_workbench{
+	int global_id;
+	double coordinate_x;
+	double coordinate_y;
+	double distance;
+	usable_workbench():distance(0) {}
+};
 
 
 
@@ -64,6 +70,8 @@ public:
 		map_id = 0;
 		cost_map = vector<vector<int>>(100,std::vector<int>(100,0));
 		cost_map_for_robot = vector<vector<vector<int>>>(4,vector<vector<int>>(100,vector<int>(100,0)));
+		usable_workbench_for_robot = vector<vector<usable_workbench>>(4);
+		unusable_workbench_for_robot = vector<unordered_set<int>>(4);
 		//初始化pid参数
 		distance_wb.resize(10);
 		//初始化工作台集群
@@ -85,6 +93,8 @@ public:
 	//存放距离
 	vector<vector<double>> distance_wb;
 
+	vector<vector<usable_workbench>> usable_workbench_for_robot;
+	vector<unordered_set<int>> unusable_workbench_for_robot;
 
 
 
@@ -153,12 +163,12 @@ private:
 		// pid->Ki = pid_param[map_id][7];
 		// pid->Kd = pid_param[map_id][8];
 		// pid->tau = pid_param[map_id][9];
-		{0.01, 0.5, 100, 0.5, 0.5, 0.5, 10, 5, 0, 0},
+		{0.001, 0.5, 100, 2, 2.5, 0, 10, 5, 0, 0},
 		//jian shao zhuang qiang shun shi hen duo
-		{0.01, 0.5, 100, 0.5, 0.5, 0.5, 10, 5, 0, 0},
-		{0.01, 0.5, 100, 0.5, 0.2, 0.3, 10, 5, 0, 0},
+		{0.001, 0.5, 100, 2, 2.5, 0, 10, 5, 0, 0},
+		{0.001, 0.5, 100, 2, 2.5, 0, 10, 5, 0, 0},
 		//{0.1, 0.9, 100, 1, 3, 3.0, 10, 5, 0, 0}
-		{0.01, 0.5, 100, 0.5, 0.2, 0.3, 10, 5, 0, 0}
+		{0.001, 0.5, 100, 2, 2.5, 0, 10, 5, 0, 0}
 		//{0.15, 0.9, 100, 1, 3.1, 3.5, 10, 5, 0, 0}
 	};
 
