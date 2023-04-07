@@ -8,30 +8,59 @@ int main()
     pid_controller **ptr;
 	obj.init();
 	puts("OK");
-	fflush(stdout);
+	std::fflush(stdout);
+    int global_id_start;
 	while (scanf("%d", &obj.frame_num) != EOF) {
         obj.readUntilOK();
-        printf("%d\n", obj.frame_num);
-        for(int i = 0; i < 1; i++)
+        std::printf("%d\n", obj.frame_num);
+        for(int i = 0; i < 2; i++)
         {
+            //std::cerr<<"*****************     "<<obj.work_bench_cluster[0][1].WorkBenchVec[0].workbench_route_workbench.size()<<std::endl;
             //if(i == 1 && obj.map_id == 0 && obj.frame_num < 62) continue;
             double workbench_x = 25;
             double workbench_y = 25;
-            
             if(obj.robot_cluster[i].robot_goal_point.size() == 0) WorkBenchNodeForRobot target = obj.GetRobotTarget(obj.robot_cluster[i], i);
+            //cerr<<"????????????????????"<<obj.robot_cluster[i].robot_goal_point.size()<<endl;
             //start planning
             if(obj.robot_cluster[i].robot_goal_point.size() != 0 && obj.robot_cluster[i].robot_execute_points.size() == 0){
                 //start point == robot point
-                obj.robot_cluster[i].node_tmp_object[0].y = (int)((obj.robot_cluster[i].location_y + 0.25)/0.5 - 1);
-                obj.robot_cluster[i].node_tmp_object[0].x = (int)((obj.robot_cluster[i].location_x + 0.25)/0.5 - 1);
-                int start_node_num = obj.robot_cluster[i].node_tmp_object[0].y * 100 + obj.robot_cluster[i].node_tmp_object[0].x;
+                obj.robot_cluster[i].node_tmp_empty[0].y = (int)((obj.robot_cluster[i].location_y + 0.25)/0.5 - 1);
+                obj.robot_cluster[i].node_tmp_empty[0].x = (int)((obj.robot_cluster[i].location_x + 0.25)/0.5 - 1);
+                int start_node_num = obj.robot_cluster[i].node_tmp_empty[0].y * 100 + obj.robot_cluster[i].node_tmp_empty[0].x;
                 //end_point
-                obj.robot_cluster[i].node_tmp_object[1].y = (int)((obj.robot_cluster[i].robot_goal_point.top().y + 0.25)/0.5 - 1);
-                obj.robot_cluster[i].node_tmp_object[1].x = (int)((obj.robot_cluster[i].robot_goal_point.top().x + 0.25)/0.5 - 1);
-                int end_node_num = obj.robot_cluster[i].node_tmp_object[1].y * 100 + obj.robot_cluster[i].node_tmp_object[1].x;
-                
-                bool res = obj.robot_cluster[i].astar(&obj.robot_cluster[i].all_node_object[start_node_num], &obj.robot_cluster[i].all_node_object[end_node_num], 1);
-                std::cerr<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
+                obj.robot_cluster[i].node_tmp_empty[1].y = (int)((obj.robot_cluster[i].robot_goal_point.top().y + 0.25)/0.5 - 1);
+                obj.robot_cluster[i].node_tmp_empty[1].x = (int)((obj.robot_cluster[i].robot_goal_point.top().x + 0.25)/0.5 - 1);
+                int end_node_num = obj.robot_cluster[i].node_tmp_empty[1].y * 100 + obj.robot_cluster[i].node_tmp_empty[1].x;
+                if(obj.robot_cluster[i].carried_item_type == 0){
+                    cerr<<"***************"<<obj.robot_cluster[i].robot_goal_point.top().global_id<<endl;
+                    global_id_start = obj.robot_cluster[i].robot_goal_point.top().global_id;
+                    std::cerr<<"**************start "<<global_id_start<<"   "<<obj.robot_cluster[i].robot_goal_point.top().x<<"    "<<obj.robot_cluster[i].robot_goal_point.top().y<<endl;
+                    obj.astar(&obj.robot_cluster[i].all_node_empty[start_node_num], &obj.robot_cluster[i].all_node_empty[end_node_num], i, obj.robot_cluster[i].carried_item_type);
+                }
+                else{
+                    int global_id_end = obj.robot_cluster[i].robot_goal_point.top().global_id;
+                    //-------------------------
+                    if(obj.robot_cluster[i].target_route_points[global_id_start][global_id_end].size() == 0){
+                        int point_nums = obj.astar(&obj.robot_cluster[i].all_node_object[start_node_num], &obj.robot_cluster[i].all_node_object[end_node_num], i, obj.robot_cluster[i].carried_item_type);
+                    }
+                    else{
+                        int workbench_type_end_point = obj.robot_cluster[i].robot_goal_point.top().real_type;
+                        //std::cerr<<"**************end "<<obj.robot_cluster[i].robot_goal_point.top().global_id<<std::endl;
+                        for(auto &m : obj.robot_cluster[i].target_route_points[global_id_start][workbench_type_end_point]){
+                            if(m[0][1] == obj.robot_cluster[i].robot_goal_point.top().global_id){
+                                WorkBenchNodeForRobot point;
+                                for(auto &n : m){
+                                    point.x = n[2];
+                                    point.y = n[3];
+                                    obj.robot_cluster[i].robot_execute_points.push(point);
+                                }
+                            }
+                        }     
+                                                
+                    }
+                    
+                }
+                //std::cerr<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
                 workbench_x = obj.robot_cluster[i].robot_execute_points.top().x;
                 workbench_y = obj.robot_cluster[i].robot_execute_points.top().y;
             }
@@ -43,19 +72,25 @@ int main()
             ptr = obj.control_ptr;
             obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);	
             ptr++;
-            //obj.Deal_Clash(i);
+            obj.Deal_Clash(i);
+            //cerr<<i<<"   "<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
             //std::cerr<<obj.linear_speed<<"  "<<obj.angular_speed<<std::endl;
-            printf("forward %d %f\n", i, obj.linear_speed);
-            printf("rotate %d %f\n", i, obj.angular_speed);
-
-            if(obj.distance_target < 0.25) {
-                obj.robot_cluster[i].robot_execute_points.pop();
+            std::printf("forward %d %f\n", i, obj.linear_speed);
+            std::printf("rotate %d %f\n", i, obj.angular_speed);
+            if(obj.robot_cluster[i].robot_execute_points.size() > 1){
+                if(obj.distance_target < 0.7) {
+                    obj.robot_cluster[i].robot_execute_points.pop();
+                }
             }
-
+            else{
+                if(obj.distance_target < 0.25) {
+                    obj.robot_cluster[i].robot_execute_points.pop();
+                }
+            }
         }
 
         //购买和卖的逻辑
-        for(int robotId = 0; robotId < 1; robotId++)
+        for(int robotId = 0; robotId < 2; robotId++)
         {
             if(obj.robot_cluster[robotId].robot_execute_points.size() == 0){
                 if(obj.robot_cluster[robotId].robot_goal_point.size() == 0) continue;
@@ -78,22 +113,24 @@ int main()
                         //将目标点从target_set中erase，并更新robot_goal_poin队列
                         obj.robot_cluster[robotId].target_set.erase({erase_num, type});
                         obj.robot_cluster[robotId].robot_goal_point.pop();
-                        printf("sell %d\n", robotId);
+                        std::printf("sell %d\n", robotId);
                     }   
                     else if(obj.robot_cluster[robotId].carried_item_type == 0 && obj.work_bench_cluster[robotId][type].GetProductStatus(pos_x, pos_y) == 1) 
                     {
                         //快结束就别买啦--最后4s
                         //if(obj.frame_num > 8850) continue;
                         obj.robot_cluster[robotId].target_set.erase({erase_num, type});
+                        //cerr<<"global_id is    "<<obj.robot_cluster[robotId].robot_goal_point.top().global_id<<endl;
                         obj.robot_cluster[robotId].robot_goal_point.pop();
+                        //cerr<<"global_id is    "<<obj.robot_cluster[robotId].robot_goal_point.top().global_id<<endl;
                         //cerr<<obj.robot_cluster[robotId].robot_goal_point.top().x << " %%%%%% " << obj.robot_cluster[robotId].robot_goal_point.top().y<<endl;
-                        printf("buy %d\n", robotId);
+                        std::printf("buy %d\n", robotId);
                     }
                 }   
             }
         }
-		printf("OK\n");
-		fflush(stdout);
+		std::printf("OK\n");
+		std::fflush(stdout);
 	}
 	return 0;
 }

@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_set>
+#include <unordered_map>
 #include <queue>
 #include <iostream>
 #include <fstream>
@@ -15,7 +16,6 @@
 #include <cmath>
 #include <cfloat>
 #include <fstream>
-
 
 
 //能够在该类型的工作台上卖何种物品
@@ -45,17 +45,19 @@ const std::vector<std::vector<int>>ItemIdForSell{
     {}
 };
 
-
-
 struct WorkBenchNodeForRobot {
     int global_id;
     int type;
+    int real_type;
     double x, y;
     double dis;
     int product_status;
     int remain_production_time;
     std::unordered_set<int> bag;
-    WorkBenchNodeForRobot(int ID, int T, double X, double Y, double D, int ori_material_status, int ProductStatus, int remain_p_time):global_id(ID), type(T), x(X), y(Y), dis(D), product_status(ProductStatus), remain_production_time(remain_p_time){
+    std::vector<std::vector<std::vector<std::array<double,4>>>> workbench_route_workbench;
+    //std::vector<std::stack<std::pair<double,double>>> workbench_route_workbench;
+
+    WorkBenchNodeForRobot(int ID, int T, int T_, double X, double Y, double D, int ori_material_status, int ProductStatus, int remain_p_time, std::vector<std::vector<std::vector<std::array<double,4>>>> workbench_route_workbench_):global_id(ID), type(T), real_type(T_), x(X), y(Y), dis(D), product_status(ProductStatus), remain_production_time(remain_p_time), workbench_route_workbench(workbench_route_workbench_){
         for(int cnt = 0; (ori_material_status >> cnt) != 0; ++cnt) {
             if(((ori_material_status >> cnt) & 1) == 1){
                 bag.insert(cnt);
@@ -66,8 +68,10 @@ struct WorkBenchNodeForRobot {
     WorkBenchNodeForRobot(){};
 };
 
+
+
 struct cmp_rule {
-    bool operator() (const WorkBenchNodeForRobot a, const WorkBenchNodeForRobot b) {
+    bool operator() (const WorkBenchNodeForRobot& a, const WorkBenchNodeForRobot& b) {
         return a.dis > b.dis; // 按照dis从小到大排序
     }
 };
@@ -100,11 +104,12 @@ class Robot {
         explicit Robot(double x, double y):location_x(x), location_y(y) {
             all_node_object = std::vector<sNode>(10000);   
             fixed_all_node_object = std::vector<sNode>(10000);
-            //all_node_empty = std::vector<sNode>(40000);
-            //fixed_all_node_empty = std::vector<sNode>(40000);
+
+            all_node_empty = std::vector<sNode>(10000);
+            fixed_all_node_empty = std::vector<sNode>(10000);
 
             node_tmp_object = std::vector<sNode>(2);
-            //node_tmp_empty = std::vector<sNode>(2);
+            node_tmp_empty = std::vector<sNode>(2);
             for(int i = 0; i < 10; ++i) {
                 std::vector<WorkBenchNodeForRobot> tem;
                 workbench_for_robot.push_back(tem);
@@ -118,16 +123,16 @@ class Robot {
         
         std::vector<sNode> node_tmp_object;
         sNode node_hwcompet_tmp;
-        //std::vector<sNode> node_tmp_empty;
+        std::vector<sNode> node_tmp_empty;
         //携带物品
         std::vector<sNode> all_node_object;
-        std::vector<sNode> fixed_all_node_object; 
+        std::vector<sNode> fixed_all_node_object;
 
-        //不携带物品,膨胀成200*200
-        //std::vector<sNode> all_node_empty;
-        //std::vector<sNode> fixed_all_node_empty;
+        //不携带物品
+        std::vector<sNode> all_node_empty;
+        std::vector<sNode> fixed_all_node_empty;
 
-        bool astar(struct sNode *nodeStart, struct sNode *nodeEnd, bool carry_object);
+        void astar(struct sNode *nodeStart, struct sNode *nodeEnd, bool carry_object);
 
         //存放每一个robot的目标点,买和卖
         std::stack<WorkBenchNodeForRobot> robot_goal_point;
@@ -166,8 +171,8 @@ class Robot {
             target_set.clear();
         };
         //机器人面对不同类型工作台的情况
-        std::vector<std::vector<WorkBenchNodeForRobot>> workbench_for_robot;
-       
+        std::vector<std::vector<WorkBenchNodeForRobot>> workbench_for_robot;      
+        std::unordered_map<int,std::vector<std::vector<std::vector<std::array<double,4>>>>> target_route_points;
         //定义能够存储pair类型的set
         struct PairHash {
             std::size_t operator()(const std::pair<double, int>& p) const {
@@ -180,7 +185,7 @@ class Robot {
             }
         };
 
-
+        std::vector<std::vector<std::vector<double>>> workbench_tmp;
         
         //下面是机器人的属性
         int workstation_id;

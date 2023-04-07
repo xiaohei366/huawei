@@ -27,7 +27,7 @@ void Robot::Clear_vec() {
 
 WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
     //默认的点--默认工作台类型为1,全局ID为-2---就是原地打圈
-    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
+    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
     //初始化该机器人所有工作台的候补队列 以及 高优先度生产好的点
     int cnt = 0; //高优先度点的个数
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>robot_target_queue;
@@ -49,7 +49,7 @@ WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
         robot_target_queue.push_back(pq);
         greater_level_queue.push_back(pq2);
     }
-    WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
+    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
@@ -57,9 +57,13 @@ WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
     return ans;
 }
 
+
+
+
+
 WorkBenchNodeForRobot Robot::GetTarget2(int robotID) {
     //默认的点--默认工作台类型为1,全局ID为-2---就是原地打圈
-    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
+    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
     //初始化该机器人所有工作台的候补队列 以及 高优先度生产好的点
     int cnt = 0; //高优先度点的个数
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>robot_target_queue;
@@ -79,7 +83,7 @@ WorkBenchNodeForRobot Robot::GetTarget2(int robotID) {
         robot_target_queue.push_back(pq);
         greater_level_queue.push_back(pq2);
     }
-    WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
+    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
@@ -88,7 +92,7 @@ WorkBenchNodeForRobot Robot::GetTarget2(int robotID) {
 
 WorkBenchNodeForRobot Robot::GetTarget3(int robotID) {
     //默认的点--默认工作台类型为1,全局ID为-2---就是原地打圈
-    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
+    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
     //初始化该机器人所有工作台的候补队列 以及 高优先度生产好的点
     int cnt = 0; //高优先度点的个数
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>robot_target_queue;
@@ -108,7 +112,7 @@ WorkBenchNodeForRobot Robot::GetTarget3(int robotID) {
         robot_target_queue.push_back(pq);
         greater_level_queue.push_back(pq2);
     }
-    WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
+    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
@@ -118,7 +122,7 @@ WorkBenchNodeForRobot Robot::GetTarget3(int robotID) {
 
 WorkBenchNodeForRobot Robot::GetTarget4(int robotID) {
     //默认的点--默认工作台类型为1,全局ID为-2---就是原地打圈
-    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
+    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
     //初始化该机器人所有工作台的候补队列 以及 高优先度生产好的点
     int cnt = 0; //高优先度点的个数
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>robot_target_queue;
@@ -138,7 +142,7 @@ WorkBenchNodeForRobot Robot::GetTarget4(int robotID) {
         robot_target_queue.push_back(pq);
         greater_level_queue.push_back(pq2);
     }
-    WorkBenchNodeForRobot ans(-2, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX);
+    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{}}});
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
@@ -350,6 +354,7 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
             robot_target_queue[i].pop();
         }
     }
+
     //随后把123能卖的工作台整体加入一个候选队列，这样是为了同一类型的工作台遍历方便
     //但是候选队列只能选当前的循环里面
     int idx = 0;//当前应该选哪个了？
@@ -361,6 +366,8 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
         idx = CircularArray[(k + CircularArrayPtr + num_circular_array) % num_circular_array];
         std::vector<std::vector<WorkBenchNodeForRobot>> target_for_sell{{},{},{},{}};
         while(!robot_target_queue[idx].empty()) {
+            
+            //还没有把9加进去----
             for(auto &&j: WorkBenchIdForSell[idx]) {
                 target_for_sell[j].push_back(robot_target_queue[idx].top());
             }
@@ -377,21 +384,49 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
             //买的点不准重复
             if(target_set.count({coordinate_x*100+coordinate_y, type})) continue;
             //找到这个买的点能卖的离着最近的点（这个卖的候选，肯定要和买的位置相联动,直接遍历找那个离着最近的点）
-            double min_dis = DBL_MAX;
+            int min_point_nums = INT_MAX;
             WorkBenchNodeForRobot ans_for_sell;
+
+            
+
             //先找能买的工作台，然后将其挨个加入优先队列
             for(auto &workbench: target_for_sell[type]) {
+                //std::cerr<<"###############"<<target_for_sell[type].size()<<std::endl;
                 double workbench_location_x = workbench.x;
                 double workbench_location_y = workbench.y;
                 //卖的能卖且不可以被重复选择
                 if(workbench.bag.count(type) || target_set.count({workbench_location_x*100+workbench_location_y, type})) continue;
-                double distance = sqrt(pow(coordinate_x - workbench_location_x,2)+pow(coordinate_y - workbench_location_y,2));
-                if(distance > min_dis) continue;
-                min_dis = distance;
-                ans_for_sell = workbench;
+                int point_start = m.global_id;
+                int point_end = workbench.global_id;
+                double point_nums = INT_MAX;
+                std::cerr<<"***********   "<<m.workbench_route_workbench[workbench.type].size()<<std::endl;
+                for(auto &n : m.workbench_route_workbench[workbench.type]){
+                    if(n[0][1] == point_end){
+                        point_nums = n[0][0];
+                        //std::cerr<<"^^^^^^^^^^^^^^^"<<point_nums<<std::endl;
+                    }
+                }
+                if(point_nums > min_point_nums) continue;
+                min_point_nums = point_nums;
+                //std::cerr<<"min points "<<min_point_nums<<std::endl;
+                ans_for_sell = workbench; 
+
+                //min_point_nums = min(min_point_nums,point_nums);
+                
+
+                //double point_nums = workbench.workbench_route_workbench[]
+                
+                //---
+
+                //std::vector<std::array<double,4>> planning_route = m.workbench_route_workbench[point_end]
+                
+                //double distance = sqrt(pow(coordinate_x - workbench_location_x,2)+pow(coordinate_y - workbench_location_y,2));
+                //if(distance > min_dis) continue;
+                //min_dis = distance;
+                  
             }
             //是否找到能卖并且离着买最近的工作台？
-            if(min_dis == DBL_MAX) continue;
+            if(min_point_nums == INT_MAX) continue;
             //同时修改循环数组的指针
             CircularArrayPtr++;
             if(CircularArrayPtr >= CircularArray.size()) CircularArrayPtr = 0;
@@ -409,146 +444,3 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
     return default_node;
 }
 
-
-
-bool Robot::astar(struct sNode *nodeStart, struct sNode *nodeEnd, bool carry_object)
-{	
-    all_node_object = fixed_all_node_object;
-    //else all_node_empty = fixed_all_node_empty;
-    auto distance = [](sNode* a, sNode* b) // For convenience
-	{
-        //return abs((a->x - b->x))+abs((a->y - b->y));
-		return sqrtf((a->coordinate_x - b->coordinate_x)*(a->coordinate_x - b->coordinate_x) + (a->coordinate_y - b->coordinate_y)*(a->coordinate_y - b->coordinate_y));
-	};
-
-    auto heuristic = [distance](sNode* a, sNode* b) // So we can experiment with heuristic
-	{
-		return distance(a, b);
-	};
-
-
-    sNode *nodeCurrent = nodeStart;
-	nodeStart->fLocalGoal = 0.0f;
-	nodeStart->fGlobalGoal = heuristic(nodeStart, nodeEnd);
-
-	std::list<sNode*> listNotTestedNodes;
-	listNotTestedNodes.push_back(nodeStart);
-
-	while(!listNotTestedNodes.empty() && nodeCurrent != nodeEnd)
-	{
-		//排序
-		listNotTestedNodes.sort([](const sNode* lhs, const sNode* rhs){ return lhs->fGlobalGoal < rhs->fGlobalGoal; } );
-
-		//pop被check过的
-		while(!listNotTestedNodes.empty() && listNotTestedNodes.front()->bVisited)
-				listNotTestedNodes.pop_front();
-
-        if (listNotTestedNodes.empty())
-				break;
-
-		//取代价最小
-		nodeCurrent = listNotTestedNodes.front();
-		nodeCurrent->bVisited = true;
-        
-        
-
-		//遍历neighbor
-		for (auto nodeNeighbour : nodeCurrent->vecNeighbours)
-		{
-            //std::cerr << "nodeNeighbour is "<< nodeNeighbour->x<< ","<< nodeNeighbour->y<< std::endl;
-			//如果没被遍历且不是墙 加入待测
-			if (!nodeNeighbour->bVisited && nodeNeighbour->bObstacle == 0)
-			{
-				listNotTestedNodes.push_back(nodeNeighbour);
-			}
-
-			//计算当前已耗费+估计还会耗费
-			double fPossiblyLowerGoal = nodeCurrent->fLocalGoal + distance(nodeCurrent, nodeNeighbour) * nodeNeighbour -> node_cost;// * distance(nodeCurrent, nodeNeighbour);
-
-			//替换s
-            //std::cerr << "fPossiblyLowerGoal"<< fPossiblyLowerGoal << std::endl;
-            //std::cerr << "nodeNeighbour->fLocalGoal"<< nodeNeighbour->fLocalGoal << std::endl;
-			if (fPossiblyLowerGoal < nodeNeighbour->fLocalGoal)
-			{
-				nodeNeighbour->parent = nodeCurrent;
-                //std::cerr << "nodeCurrent is "<< nodeCurrent->x<< ","<< nodeCurrent->y<< std::endl;
-				nodeNeighbour->fLocalGoal = fPossiblyLowerGoal;
-                double distance_left = heuristic(nodeNeighbour, nodeEnd);
-                if(distance_left > 8) nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + 3 * heuristic(nodeNeighbour, nodeEnd);
-                else nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + 0.8 * heuristic(nodeNeighbour, nodeEnd);
-			}
-		}
-	}
-
-    WorkBenchNodeForRobot point;
-    WorkBenchNodeForRobot pre_point;
-    WorkBenchNodeForRobot next_point;
-    //std::ofstream outfile("./log.txt",std::ios::out);
-    //std::ofstream outfile2("./log_del.txt",std::ios::out);
-    if (nodeEnd != nullptr)
-	{
-        nodeStart->planning_point_nums++;
-	    sNode *p = nodeEnd;
-        point.x = p -> coordinate_x;
-        point.y = p -> coordinate_y;
-        //std::cerr<<point.x<<"  "<<point.y<<std::endl;
-        robot_execute_points.push(point);
-        //outfile<<point.x<<"  "<<point.y<<std::endl;
-        //outfile2<<point.x<<"  "<<point.y<<std::endl;
-		while (p->parent != nullptr && p -> parent -> parent != nullptr)
-		{
-
-            std::string str;
-            //pre_pont存放上一个点
-            pre_point.x = p -> coordinate_x;
-            pre_point.y = p -> coordinate_y;
-            std::pair<double,double> point1 = {pre_point.x, pre_point.y};
-
-            p = p -> parent;
-            ////point存放当前点
-            point.x = p -> coordinate_x;
-            point.y = p -> coordinate_y;
-            //outfile<<point.x<<"  "<<point.y<<std::endl;
-            std::pair<double,double> point2 = {point.x, point.y};
-            //next_pont存放下一个点
-            next_point.x = p -> parent -> coordinate_x;
-            next_point.y = p -> parent -> coordinate_y;
-            std::pair<double,double> point3 = {next_point.x, next_point.y};
-
-            if(remove_middle_points(point1, point2, point3) == true) {
-                //outfile2<<point.x<<"  "<<point.y<<std::endl;
-                robot_execute_points.push(point);
-            }
-		}
-        /*if(p -> parent != nullptr){
-            point.x = p -> parent -> coordinate_x;
-            point.y = p -> parent -> coordinate_y;
-            robot_execute_points.push(point);
-            outfile2<<point.x<<"  "<<point.y<<std::endl;
-            outfile<<point.x<<"  "<<point.y<<std::endl;
-        }   */
-    }
-    return true;
-}
-
-
-
-bool Robot::remove_middle_points(std::pair<double,double>& point1, std::pair<double,double>& point2, std::pair<double,double>& point3) {
-    double x1 = point1.first;
-    double y1 = point1.second;
-    double x2 = point2.first;
-    double y2 = point2.second;
-    double x3 = point3.first;
-    double y3 = point3.second;
-
-    auto distance = [] (double x1, double y1, double x2, double y2){
-        return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
-    };
-    
-    double d1 = distance(x1, y1, x2, y2);
-    double d2 = distance(x2, y2, x3, y3);
-    double d3 = distance(x1, y1, x3, y3);
-    if (d1 + d2 == d3) return false;
-    //std::cerr<<d1<<" "<<d2<<"  "<<d3<<std::endl;
-    return true;
-}
