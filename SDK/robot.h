@@ -81,6 +81,7 @@ struct sNode
 {
 	bool bObstacle;			// Is the node an obstruction?
 	bool bVisited;			// Have we searched this node before?
+    bool fake_obstacle;
     double fGlobalGoal;				// Distance to goal so far
 	double fLocalGoal;	
     int node_cost;
@@ -93,7 +94,7 @@ struct sNode
 	std::vector<sNode*> vecNeighbours;	// Connections to neighbours
 	
     sNode* parent;					// Node connecting to this node that offers shortest parent
-    sNode(): bObstacle(false),bVisited(false),fGlobalGoal(100000),fLocalGoal(100000),node_cost(1),planning_point_nums(1),x(0),y(0),coordinate_x(25.0f),coordinate_y(25.0f),parent(nullptr){
+    sNode(): bObstacle(false),bVisited(false), fake_obstacle(false), fGlobalGoal(100000),fLocalGoal(100000),node_cost(1),planning_point_nums(1),x(0),y(0),coordinate_x(25.0f),coordinate_y(25.0f),parent(nullptr){
         //vecNeighbours.reserve(9);
     }
 };

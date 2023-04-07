@@ -385,12 +385,22 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
             if(target_set.count({coordinate_x*100+coordinate_y, type})) continue;
             //找到这个买的点能卖的离着最近的点（这个卖的候选，肯定要和买的位置相联动,直接遍历找那个离着最近的点）
             int min_point_nums = INT_MAX;
+            double min_dis = DBL_MAX;
             WorkBenchNodeForRobot ans_for_sell;
 
-            
+            for(auto &workbench: target_for_sell[type]) {
+                double workbench_location_x = workbench.x;
+                double workbench_location_y = workbench.y;
+                //卖的能卖且不可以被重复选择
+                if(workbench.bag.count(type) || target_set.count({workbench_location_x*100+workbench_location_y, type})) continue;
+                double distance = sqrt(pow(coordinate_x - workbench_location_x,2)+pow(coordinate_y - workbench_location_y,2));
+                if(distance > min_dis) continue;
+                min_dis = distance;
+                ans_for_sell = workbench;
+            }
 
             //先找能买的工作台，然后将其挨个加入优先队列
-            for(auto &workbench: target_for_sell[type]) {
+            /*for(auto &workbench: target_for_sell[type]) {
                 //std::cerr<<"###############"<<target_for_sell[type].size()<<std::endl;
                 double workbench_location_x = workbench.x;
                 double workbench_location_y = workbench.y;
@@ -399,7 +409,6 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
                 int point_start = m.global_id;
                 int point_end = workbench.global_id;
                 double point_nums = INT_MAX;
-                //std::cerr<<"***********   "<<m.workbench_route_workbench[workbench.type].size()<<std::endl;
                 for(auto &n : m.workbench_route_workbench[workbench.type]){
                     if(n[0][1] == point_end){
                         point_nums = n[0][0];
@@ -408,25 +417,13 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
                 }
                 if(point_nums > min_point_nums) continue;
                 min_point_nums = point_nums;
-                //std::cerr<<"min points "<<min_point_nums<<std::endl;
                 ans_for_sell = workbench; 
-
-                //min_point_nums = min(min_point_nums,point_nums);
-                
-
-                //double point_nums = workbench.workbench_route_workbench[]
-                
-                //---
-
-                //std::vector<std::array<double,4>> planning_route = m.workbench_route_workbench[point_end]
-                
-                //double distance = sqrt(pow(coordinate_x - workbench_location_x,2)+pow(coordinate_y - workbench_location_y,2));
-                //if(distance > min_dis) continue;
-                //min_dis = distance;
-                  
             }
+            
             //是否找到能卖并且离着买最近的工作台？
             if(min_point_nums == INT_MAX) continue;
+            */
+            if(min_dis = DBL_MAX) continue;
             //同时修改循环数组的指针
             CircularArrayPtr++;
             if(CircularArrayPtr >= CircularArray.size()) CircularArrayPtr = 0;
