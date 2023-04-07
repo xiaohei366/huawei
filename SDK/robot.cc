@@ -86,7 +86,7 @@ WorkBenchNodeForRobot Robot::GetTarget2(int robotID) {
     WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
-    if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
+    if(robot_goal_point.empty()) ans =  Num123(robotID, default_node, robot_target_queue);
     return ans;
 }
 
@@ -399,7 +399,7 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
                 int point_start = m.global_id;
                 int point_end = workbench.global_id;
                 double point_nums = INT_MAX;
-                std::cerr<<"***********   "<<m.workbench_route_workbench[workbench.type].size()<<std::endl;
+                //std::cerr<<"***********   "<<m.workbench_route_workbench[workbench.type].size()<<std::endl;
                 for(auto &n : m.workbench_route_workbench[workbench.type]){
                     if(n[0][1] == point_end){
                         point_nums = n[0][0];

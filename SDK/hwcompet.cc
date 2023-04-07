@@ -224,7 +224,7 @@ bool hw_compet::readUntilOK() {
                     	}
                     	else
                     	{
-							std::cerr<<"del workbench "<<workbenchId<<"    "<<workbench_row<<"      "<<workbench_col<<std::endl;
+							//std::cerr<<"del workbench "<<workbenchId<<"    "<<workbench_row<<"      "<<workbench_col<<std::endl;
                         	del_sum[i]++;
 							pre_sum[i][workbenchId] = 53;
                     	}
@@ -281,10 +281,42 @@ bool hw_compet::init() {
 	//先读取地图
 	while (fgets(line, sizeof line, stdin)) {
 		if (line[0] == 'O' && line[1] == 'K') {
-			//遍历机器人
+			
+
 			for(int robotId = 0; robotId < 4; robotId++){
+				for(int i=0; i<10000; i++)
+				{
+					if(robot_cluster[robotId].all_node_empty[i].bObstacle == true && robot_cluster[robotId].all_node_empty[i+100].bObstacle == false && robot_cluster[robotId].all_node_empty[i+200].bObstacle == false)
+					{
+						robot_cluster[robotId].all_node_empty[i+100].coordinate_x = (robot_cluster[robotId].all_node_empty[i+100].coordinate_x + robot_cluster[robotId].all_node_empty[i+200].coordinate_x)/2;
+						robot_cluster[robotId].all_node_empty[i+200].coordinate_x = (robot_cluster[robotId].all_node_empty[i+100].coordinate_x + robot_cluster[robotId].all_node_empty[i+200].coordinate_x)/2;
+						robot_cluster[robotId].all_node_empty[i+100].coordinate_y = (robot_cluster[robotId].all_node_empty[i+100].coordinate_y + robot_cluster[robotId].all_node_empty[i+200].coordinate_y)/2;
+						robot_cluster[robotId].all_node_empty[i+200].coordinate_y = (robot_cluster[robotId].all_node_empty[i+100].coordinate_y + robot_cluster[robotId].all_node_empty[i+200].coordinate_y)/2;
+
+					}
+					else if(robot_cluster[robotId].all_node_empty[i].bObstacle == true && robot_cluster[robotId].all_node_empty[i+100].bObstacle == false && robot_cluster[robotId].all_node_empty[i+200].bObstacle == true)
+					{
+						robot_cluster[robotId].all_node_empty[i+100].bObstacle = true;
+					}
+
+					if(robot_cluster[robotId].all_node_empty[i].bObstacle == true && robot_cluster[robotId].all_node_empty[i-1].bObstacle == false && robot_cluster[robotId].all_node_empty[i-2].bObstacle == false)
+					{
+						robot_cluster[robotId].all_node_empty[i-1].coordinate_x = (robot_cluster[robotId].all_node_empty[i-1].coordinate_x + robot_cluster[robotId].all_node_empty[i-2].coordinate_x)/2;
+						robot_cluster[robotId].all_node_empty[i-2].coordinate_x = (robot_cluster[robotId].all_node_empty[i-1].coordinate_x + robot_cluster[robotId].all_node_empty[i-2].coordinate_x)/2;
+						robot_cluster[robotId].all_node_empty[i-1].coordinate_y = (robot_cluster[robotId].all_node_empty[i-1].coordinate_y + robot_cluster[robotId].all_node_empty[i-2].coordinate_y)/2;
+						robot_cluster[robotId].all_node_empty[i-2].coordinate_y = (robot_cluster[robotId].all_node_empty[i-1].coordinate_y + robot_cluster[robotId].all_node_empty[i-2].coordinate_y)/2;
+
+					}
+					else if(robot_cluster[robotId].all_node_empty[i].bObstacle == true && robot_cluster[robotId].all_node_empty[i-1].bObstacle == false && robot_cluster[robotId].all_node_empty[i-2].bObstacle == true)
+					{
+						robot_cluster[robotId].all_node_empty[i-1].bObstacle = true;
+					}
+				}
 				robot_cluster[robotId].fixed_all_node_empty = robot_cluster[robotId].all_node_empty;
 				robot_cluster[robotId].fixed_all_node_object = robot_cluster[robotId].all_node_object;
+			}
+			//遍历机器人
+			/*for(int robotId = 0; robotId < 4; robotId++){
 				//遍历1到9号工作台
 				for(int wb_num = 1; wb_num < work_bench_cluster[robotId].size(); wb_num++){
 					//std::cerr<<"task numbers is "<< work_bench_cluster[robotId].size() <<std::endl;
@@ -315,7 +347,7 @@ bool hw_compet::init() {
 					}
 				}
 			}
-			
+			*/
 			
 			for(int robotId = 0; robotId < 1;robotId++){
 				int cnt_tmp=0;
@@ -336,6 +368,7 @@ bool hw_compet::init() {
 					int point_nums = astar(&robot_cluster[robotId].all_node_object[start_node_num], &robot_cluster[robotId].all_node_object[end_node_num], robotId, 1);
 					//std::cerr<<"*************** "<<point_nums<<std::endl;
 					if(point_nums <= 1){
+						//std::cerr<<workbench_tmp.global_id<<std::endl;
 						if(workbench_tmp.type == 1 || workbench_tmp.type == 2 || workbench_tmp.type == 3){
 							Robot::target_set.insert({workbench_tmp.coordinate_x * 100 + workbench_tmp.coordinate_y, workbench_tmp.type});
 						}
@@ -418,50 +451,50 @@ bool hw_compet::init() {
 					int num = i*100 + j;
 					if(input[j] == '#'){
 						robot_cluster[robotId].all_node_empty[num].bObstacle = true;
-						robot_cluster[robotId].all_node_empty[num].node_cost = 10000;
+						//robot_cluster[robotId].all_node_empty[num].node_cost = 10000;
 						robot_cluster[robotId].all_node_object[num].bObstacle = true;
-						robot_cluster[robotId].all_node_object[num].node_cost = 10000;
+						//robot_cluster[robotId].all_node_object[num].node_cost = 10000;
 
 						if(j-1>=0){
-							robot_cluster[robotId].all_node_empty[num - 1].node_cost = 5;
+							robot_cluster[robotId].all_node_empty[num - 1].node_cost += 5;
 							robot_cluster[robotId].all_node_object[num - 1].bObstacle = true;
-							robot_cluster[robotId].all_node_object[num - 1].node_cost = 10000;
+							//robot_cluster[robotId].all_node_object[num - 1].node_cost = 10000;
 						}
 						if(j+1<=99){
-							robot_cluster[robotId].all_node_empty[num + 1].node_cost = 5;
+							robot_cluster[robotId].all_node_empty[num + 1].node_cost += 5;
 							robot_cluster[robotId].all_node_object[num + 1].bObstacle = true;
-							robot_cluster[robotId].all_node_object[num + 1].node_cost = 10000;
+							//robot_cluster[robotId].all_node_object[num + 1].node_cost = 10000;
 						}
 						if(i-1>=0){
-							robot_cluster[robotId].all_node_empty[num - 100].node_cost = 5;
+							robot_cluster[robotId].all_node_empty[num - 100].node_cost += 5;
 							robot_cluster[robotId].all_node_object[num - 100].bObstacle = true;
-							robot_cluster[robotId].all_node_object[num - 100].node_cost = 10000;
+							//robot_cluster[robotId].all_node_object[num - 100].node_cost = 10000;
 						}
 						if(i+1<=99){
-							robot_cluster[robotId].all_node_empty[num + 100].node_cost = 5;		
+							robot_cluster[robotId].all_node_empty[num + 100].node_cost += 5;		
 							robot_cluster[robotId].all_node_object[num + 100].bObstacle = true;
-							robot_cluster[robotId].all_node_object[num + 100].node_cost = 10000;
+							//robot_cluster[robotId].all_node_object[num + 100].node_cost = 10000;
 						}
 						//left_up
 						if(i+1<=99 && j-1>=0){
-							robot_cluster[robotId].all_node_empty[num + 100 - 1].node_cost = 4;
-							if(robot_cluster[robotId].all_node_object[num + 100 - 1].node_cost != 3) robot_cluster[robotId].all_node_object[num + 100 - 1].node_cost = 500;
+							robot_cluster[robotId].all_node_empty[num + 100 - 1].node_cost += 4;
+							robot_cluster[robotId].all_node_object[num + 100 - 1].node_cost = 5;
 						}
 						//right_up
                         if(i+1<=99 && j+1<=99){
-							robot_cluster[robotId].all_node_empty[num + 100 + 1].node_cost = 4;
-							if(robot_cluster[robotId].all_node_object[num + 100 + 1].node_cost != 3) robot_cluster[robotId].all_node_object[num + 100 + 1].bObstacle = true;
+							robot_cluster[robotId].all_node_empty[num + 100 + 1].node_cost += 4;
+							robot_cluster[robotId].all_node_object[num + 100 + 1].bObstacle = true;
 						}
 						//left_down
                         if(i-1>=0 && j-1>=0){
-							robot_cluster[robotId].all_node_empty[num - 100 - 1].node_cost = 4;
+							robot_cluster[robotId].all_node_empty[num - 100 - 1].node_cost += 4;
 							//robot_cluster[robotId].all_node_object[num - 100 - 1].bObstacle = true;
 							//robot_cluster[robotId].all_node_object[num - 100 - 1].node_cost = 10000;
-							if(robot_cluster[robotId].all_node_object[num - 100 - 1].node_cost != 3) robot_cluster[robotId].all_node_object[num - 100 - 1].node_cost = 500;
+							if(robot_cluster[robotId].all_node_object[num - 100 - 1].node_cost != 3) robot_cluster[robotId].all_node_object[num - 100 - 1].node_cost = 5;
 						}
 						//right_down
                         if(i-1>=0 && j+1<=99){
-							robot_cluster[robotId].all_node_empty[num - 100 + 1].node_cost = 4;
+							robot_cluster[robotId].all_node_empty[num - 100 + 1].node_cost += 4;
 							//robot_cluster[robotId].all_node_object[num - 100 + 1].bObstacle = true;
 							if(robot_cluster[robotId].all_node_object[num - 100 + 1].node_cost != 3) robot_cluster[robotId].all_node_object[num - 100 + 1].bObstacle = true;
 						}
@@ -682,11 +715,11 @@ bool hw_compet::remove_middle_points(std::pair<double,double>& point1, std::pair
 
 
 void hw_compet::check_map_id(string s, int i, int j, int type) {
-	//if(i == 92 && j == 49 && type == 7) this->map_id = 3;
-	//if(i == 98 && j == 46 && type == 3) this->map_id = 2;
-	//if(i == 98 && j == 49 && type == 1) this->map_id = 0;
-	//if(i == 98 && j == 1 && type == 6) this->map_id = 1;
-	this->map_id = 0;
+	if(i == 97 && j == 3 && type == 6) this->map_id = 3;
+	if(i == 60 && j == 43 && type == 1) this->map_id = 2;
+	if(i == 94 && j == 47 && type == 5) this->map_id = 0;
+	if(i == 74 && j == 50 && type == 6) this->map_id = 1;
+	//this->map_id = 0;
 }
 //初始化一个机器人的工作台位置数组并获得机器人的目标
 WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
@@ -700,7 +733,14 @@ WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
 			//if(i == 1 && wb.workbench_route_workbench.size() > 1) std::cerr<<"&&&&&&&&&&  "<<wb.workbench_route_workbench[0][0][0]<<"   "<<wb.workbench_route_workbench[1][0][0]<<std::endl;
 			robot.workbench_for_robot[i].push_back(WorkBenchNodeForRobot(wb.global_id, i, i, wb.x,wb.y, dis, wb.ori_material_status, wb.product_status, wb.remain_production_time, wb.workbench_route_workbench));
 			//std::cerr<<"^^^^^^^^^^^^^^  "<<wb.workbench_route_workbench.size()<<std::endl;
-			robot_cluster[robotId].target_route_points[wb.global_id] = wb.workbench_route_workbench;
+			/*for(int m = 1; m <=9; m++)
+			{
+				if(wb.workbench_route_workbench[m].size() != 0){
+					//std::cerr<<wb.global_id<<"    "<<wb.workbench_route_workbench.size()<<std::endl;
+					robot_cluster[robotId].target_route_points[wb.global_id] = wb.workbench_route_workbench;
+					break;
+				}
+			}*/
 		}
 		
 	}
@@ -826,6 +866,8 @@ void hw_compet::astar_init_using(sNode *nodeStart, sNode *nodeEnd, int robotId, 
 		//std::cerr<<"^^^^^^^^^^^^^^^  "<<workbench_route_start.workbench_route_workbench.size()<<std::endl;
 		//std::sort(workbench_route_start.workbench_route_workbench.begin(), workbench_route_start.workbench_route_workbench.end());
 		//for(int n = 0; n < workbench_route_start.workbench_route_workbench.size(); n++) std::cerr<<workbench_route_start.workbench_route_workbench.size()<<std::endl;
+	robot_cluster[robotId].all_node_object = robot_cluster[robotId].fixed_all_node_object;
+
 }
 
 

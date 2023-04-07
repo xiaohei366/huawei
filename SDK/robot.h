@@ -108,8 +108,8 @@ class Robot {
             all_node_empty = std::vector<sNode>(10000);
             fixed_all_node_empty = std::vector<sNode>(10000);
 
-            node_tmp_object = std::vector<sNode>(2);
-            node_tmp_empty = std::vector<sNode>(2);
+            node_tmp_object = std::vector<sNode>(10);
+            node_tmp_empty = std::vector<sNode>(10);
             for(int i = 0; i < 10; ++i) {
                 std::vector<WorkBenchNodeForRobot> tem;
                 workbench_for_robot.push_back(tem);

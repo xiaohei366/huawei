@@ -9,7 +9,7 @@
 
 class ThreadPool {
 public:
-    explicit ThreadPool(size_t threadCount = 1) {
+    explicit ThreadPool(size_t threadCount = 3) {
             for(size_t i = 0; i < threadCount; ++i) {
                 //在创建对象的同时把线程池执行的任务用lambda写好
                 std::thread([this] {
