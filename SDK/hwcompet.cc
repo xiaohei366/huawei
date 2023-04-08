@@ -332,9 +332,9 @@ bool hw_compet::init() {
 				else std::cerr << robot_cluster[0].all_node_object[n].symbol;
 				cnt++;
 			}
-
+/*
 			//遍历机器人
-			/*for(int robotId = 0; robotId < 4; robotId++){
+			for(int robotId = 0; robotId < 1; robotId++){
 				//遍历1到9号工作台
 				for(int wb_num = 1; wb_num < work_bench_cluster[robotId].size(); wb_num++){
 					//std::cerr<<"task numbers is "<< work_bench_cluster[robotId].size() <<std::endl;
@@ -365,8 +365,7 @@ bool hw_compet::init() {
 					}
 				}
 			}
-			*/
-			
+	*/		
 			for(int robotId = 0; robotId < 1;robotId++){
 				int cnt_tmp=0;
 				robot_cluster[robotId].node_tmp_object[0].x = (robot_cluster[robotId].location_x - 0.25)/0.5;
@@ -377,7 +376,7 @@ bool hw_compet::init() {
 					robot_cluster[robotId].node_tmp_object[1].x = workbench_tmp.x;
 					robot_cluster[robotId].node_tmp_object[1].y = workbench_tmp.y;
 					int end_node_num = robot_cluster[robotId].node_tmp_object[1].y * 100 + robot_cluster[robotId].node_tmp_object[1].x;
-					int point_nums = astar(&robot_cluster[robotId].all_node_object[start_node_num], &robot_cluster[robotId].all_node_object[end_node_num], robotId, 1);
+					int point_nums = astar(&robot_cluster[robotId].all_node_object[end_node_num], &robot_cluster[robotId].all_node_object[start_node_num], robotId, 1);
 					if(point_nums <= 1){
 						if(workbench_tmp.type == 1 || workbench_tmp.type == 2 || workbench_tmp.type == 3){
 							Robot::target_set.insert({workbench_tmp.coordinate_x * 100 + workbench_tmp.coordinate_y, workbench_tmp.type});
@@ -573,7 +572,7 @@ bool hw_compet::init() {
 	return false;
 }
  
-//处理两个小车相撞后的逻辑
+ /*
 void hw_compet::Deal_Clash(int RobotID) {
 	auto &cur_robot = robot_cluster[RobotID];
     for(int i = 0; i < 4; ++i) {
@@ -586,8 +585,26 @@ void hw_compet::Deal_Clash(int RobotID) {
 			angular_speed = ((rand() & 1) ? 1 : -1) * 3.1415926;
 		}
 	}
-}
+}*/
 
+bool hw_compet::Deal_Clash(int RobotID, int ptr_flag) {
+    auto &cur_robot = robot_cluster[RobotID];
+    for(int i = RobotID; i < 4; ++i) {
+        if(i == RobotID) continue;
+        auto &robot_neigh = robot_cluster[i];
+        auto dis = CalDis(cur_robot, robot_neigh);
+        if (ptr_flag == 0 && dis <= 1.3){ //&& ((cur_robot.direction >= 0 && robot_neigh.direction <= 0) || (cur_robot.direction <= 0 && robot_neigh.direction >= 0))) {
+            return true;
+            //cur_robot.direction = robot_neigh.direction;
+            //linear_speed = -2;//以最大速度回退
+            //angular_speed = ((rand() & 1) ? 1 : -1) * 3.1415926;
+        }
+        else if(ptr_flag == 1 && dis <= 1.2){
+        	return true;
+        }
+    }
+    return false;
+}
 
 
 

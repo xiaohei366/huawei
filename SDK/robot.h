@@ -191,6 +191,11 @@ class Robot {
         std::vector<std::vector<std::vector<double>>> workbench_tmp;
         
         //下面是机器人的属性
+        int ptr_flag = 0;
+        int clash_cnt = 0;
+
+
+
         int workstation_id;
         int carried_item_type;
         double time_value_coefficient;

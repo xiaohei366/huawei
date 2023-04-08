@@ -1,4 +1,4 @@
-# Install script for directory: /home/cx/Desktop/hw/huawei/SDK
+# Install script for directory: /home/cx/Desktop/huawei_competion/huawei/SDK
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/cx/Desktop/hw/huawei/SDK/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/cx/Desktop/huawei_competion/huawei/SDK/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

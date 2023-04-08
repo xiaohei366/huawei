@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/cx/Desktop/hw/huawei/SDK/hwcompet.cc
+/home/cx/Desktop/huawei_competion/huawei/SDK/hwcompet.cc
 hwcompet.h
-/home/cx/Desktop/hw/huawei/SDK/hwcompet.h
+/home/cx/Desktop/huawei_competion/huawei/SDK/hwcompet.h
 
-/home/cx/Desktop/hw/huawei/SDK/hwcompet.h
+/home/cx/Desktop/huawei_competion/huawei/SDK/hwcompet.h
 iostream
 -
 fstream
@@ -34,9 +34,9 @@ cstdio
 type_traits
 -
 robot.h
-/home/cx/Desktop/hw/huawei/SDK/robot.h
+/home/cx/Desktop/huawei_competion/huawei/SDK/robot.h
 workbench.h
-/home/cx/Desktop/hw/huawei/SDK/workbench.h
+/home/cx/Desktop/huawei_competion/huawei/SDK/workbench.h
 stack
 -
 utility
@@ -54,13 +54,9 @@ queue
 thread
 -
 threadpool.h
-/home/cx/Desktop/hw/huawei/SDK/threadpool.h
+/home/cx/Desktop/huawei_competion/huawei/SDK/threadpool.h
 
-/home/cx/Desktop/hw/huawei/SDK/main.cpp
-hwcompet.h
-/home/cx/Desktop/hw/huawei/SDK/hwcompet.h
-
-/home/cx/Desktop/hw/huawei/SDK/robot.h
+/home/cx/Desktop/huawei_competion/huawei/SDK/robot.h
 list
 -
 limits.h
@@ -92,7 +88,7 @@ cfloat
 fstream
 -
 
-/home/cx/Desktop/hw/huawei/SDK/threadpool.h
+/home/cx/Desktop/huawei_competion/huawei/SDK/threadpool.h
 mutex
 -
 condition_variable
@@ -106,7 +102,7 @@ functional
 iostream
 -
 
-/home/cx/Desktop/hw/huawei/SDK/workbench.h
+/home/cx/Desktop/huawei_competion/huawei/SDK/workbench.h
 unordered_map
 -
 vector

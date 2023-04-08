@@ -121,7 +121,7 @@ public:
 	bool init();
 
 	//处理两个小车相撞后的冲突
-	void Deal_Clash(int RobotID);
+	bool Deal_Clash(int RobotID, int ptr_flag);
 
 	double CalDis(const Robot& robot1, const Robot& robot2) {
 		return sqrt((robot1.location_x - robot2.location_x) * (robot1.location_x - robot2.location_x) + (robot1.location_y - robot2.location_y) * (robot1.location_y - robot2.location_y));

@@ -79,12 +79,25 @@ int main()
             ptr = obj.control_ptr;
             obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);	
             ptr++;
-            obj.Deal_Clash(i);
+            
+            if(obj.Deal_Clash(i, obj.robot_cluster[i].ptr_flag)){
+                obj.robot_cluster[i].ptr_flag = 1;
+                if(obj.robot_cluster[i].clash_cnt == 0){
+                    obj.robot_cluster[i].clash_cnt = 1;
+                    obj.robot_cluster[i].robot_exe_pts_ptr--;
+                }
+            }
+            else{
+                obj.robot_cluster[i].ptr_flag = 0;
+                obj.robot_cluster[i].clash_cnt = 0;
+            }
+            
             std::printf("forward %d %f\n", i, obj.linear_speed);
             std::printf("rotate %d %f\n", i, obj.angular_speed);
             if(obj.robot_cluster[i].robot_exe_pts_ptr != obj.robot_cluster[i].robot_execute_points.size() - 1){
                 if(obj.distance_target < 0.8) {
-                   obj.robot_cluster[i].robot_exe_pts_ptr++;
+                    if(obj.robot_cluster[i].ptr_flag == 1) obj.robot_cluster[i].robot_exe_pts_ptr--;
+                    else obj.robot_cluster[i].robot_exe_pts_ptr++;
                 }
             }
             else if(obj.robot_cluster[i].robot_exe_pts_ptr == obj.robot_cluster[i].robot_execute_points.size() -1){
