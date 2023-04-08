@@ -54,10 +54,12 @@ struct WorkBenchNodeForRobot {
     int product_status;
     int remain_production_time;
     std::unordered_set<int> bag;
+
+    bool is_task_over;
     std::vector<std::vector<std::vector<std::array<double,4>>>> workbench_route_workbench;
     //std::vector<std::stack<std::pair<double,double>>> workbench_route_workbench;
 
-    WorkBenchNodeForRobot(int ID, int T, int T_, double X, double Y, double D, int ori_material_status, int ProductStatus, int remain_p_time, std::vector<std::vector<std::vector<std::array<double,4>>>> workbench_route_workbench_):global_id(ID), type(T), real_type(T_), x(X), y(Y), dis(D), product_status(ProductStatus), remain_production_time(remain_p_time), workbench_route_workbench(workbench_route_workbench_){
+    WorkBenchNodeForRobot(int ID, int T, int T_, double X, double Y, double D, int ori_material_status, int ProductStatus, int remain_p_time, bool is_execute_over_, std::vector<std::vector<std::vector<std::array<double,4>>>> workbench_route_workbench_):global_id(ID), type(T), real_type(T_), x(X), y(Y), dis(D), product_status(ProductStatus), remain_production_time(remain_p_time), is_task_over(is_execute_over_), workbench_route_workbench(workbench_route_workbench_){
         for(int cnt = 0; (ori_material_status >> cnt) != 0; ++cnt) {
             if(((ori_material_status >> cnt) & 1) == 1){
                 bag.insert(cnt);

@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/cx/Desktop/huawei_competion/huawei/SDK/hwcompet.cc
-hwcompet.h
-/home/cx/Desktop/huawei_competion/huawei/SDK/hwcompet.h
-
 /home/cx/Desktop/huawei_competion/huawei/SDK/hwcompet.h
 iostream
 -
@@ -55,6 +51,10 @@ thread
 -
 threadpool.h
 /home/cx/Desktop/huawei_competion/huawei/SDK/threadpool.h
+
+/home/cx/Desktop/huawei_competion/huawei/SDK/main.cpp
+hwcompet.h
+/home/cx/Desktop/huawei_competion/huawei/SDK/hwcompet.h
 
 /home/cx/Desktop/huawei_competion/huawei/SDK/robot.h
 list
@@ -112,5 +112,7 @@ iostream
 stack
 -
 array
+-
+limits.h
 -
 

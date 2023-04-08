@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stack>
 #include <array>
+#include <limits.h>
 
 struct WorkBenchNode {
     int global_id;
@@ -15,6 +16,10 @@ struct WorkBenchNode {
     int remain_production_time;
     int ori_material_status;
     int product_status;
+
+    int task_cnt = INT_MAX;
+    int execute_task_cnt = 0;
+    bool is_execute_over = false;
     std::vector<std::vector<std::vector<std::array<double,4>>>> workbench_route_workbench;
 
     WorkBenchNode(int g_id, int Id, int Type, double X, double Y):global_id(g_id), id(Id), type(Type), x(X), y(Y),remain_production_time(0),ori_material_status(0),product_status(0){

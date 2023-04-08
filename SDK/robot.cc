@@ -27,7 +27,7 @@ void Robot::Clear_vec() {
 
 WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
     //默认的点--默认工作台类型为1,全局ID为-2---就是原地打圈
-    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
+    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, false, {{{{}}}});
     //初始化该机器人所有工作台的候补队列 以及 高优先度生产好的点
     int cnt = 0; //高优先度点的个数
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>robot_target_queue;
@@ -49,7 +49,7 @@ WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
         robot_target_queue.push_back(pq);
         greater_level_queue.push_back(pq2);
     }
-    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
+    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, false, {{{{}}}});
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
@@ -63,7 +63,7 @@ WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
 
 WorkBenchNodeForRobot Robot::GetTarget2(int robotID) {
     //默认的点--默认工作台类型为1,全局ID为-2---就是原地打圈
-    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
+    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, false, {{{{}}}});
     //初始化该机器人所有工作台的候补队列 以及 高优先度生产好的点
     int cnt = 0; //高优先度点的个数
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>robot_target_queue;
@@ -83,7 +83,7 @@ WorkBenchNodeForRobot Robot::GetTarget2(int robotID) {
         robot_target_queue.push_back(pq);
         greater_level_queue.push_back(pq2);
     }
-    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
+    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, false, {{{{}}}});
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
@@ -92,7 +92,7 @@ WorkBenchNodeForRobot Robot::GetTarget2(int robotID) {
 
 WorkBenchNodeForRobot Robot::GetTarget3(int robotID) {
     //默认的点--默认工作台类型为1,全局ID为-2---就是原地打圈
-    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
+    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, false, {{{{}}}});
     //初始化该机器人所有工作台的候补队列 以及 高优先度生产好的点
     int cnt = 0; //高优先度点的个数
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>robot_target_queue;
@@ -112,7 +112,7 @@ WorkBenchNodeForRobot Robot::GetTarget3(int robotID) {
         robot_target_queue.push_back(pq);
         greater_level_queue.push_back(pq2);
     }
-    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
+    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, false, {{{{}}}});
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
@@ -122,7 +122,7 @@ WorkBenchNodeForRobot Robot::GetTarget3(int robotID) {
 
 WorkBenchNodeForRobot Robot::GetTarget4(int robotID) {
     //默认的点--默认工作台类型为1,全局ID为-2---就是原地打圈
-    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{{}}}});
+    WorkBenchNodeForRobot default_node =  WorkBenchNodeForRobot(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, false, {{{{}}}});
     //初始化该机器人所有工作台的候补队列 以及 高优先度生产好的点
     int cnt = 0; //高优先度点的个数
     std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>>robot_target_queue;
@@ -142,7 +142,7 @@ WorkBenchNodeForRobot Robot::GetTarget4(int robotID) {
         robot_target_queue.push_back(pq);
         greater_level_queue.push_back(pq2);
     }
-    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, {{{}}});
+    WorkBenchNodeForRobot ans(-2, 1, 1, this->location_x, this->location_y, 0.5, 0, 0, INT_MAX, false, {{{}}});
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
@@ -341,7 +341,7 @@ WorkBenchNodeForRobot Robot::Num123(int robotID, WorkBenchNodeForRobot &default_
     } 
     return default_node;
 }
-
+/*
 WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue) {
      //具体的策略
     //先去将123都放在优先队列里
@@ -411,16 +411,9 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
     return default_node;
 }
 
+*/
 
 
-
-
-
-
-
-
-
-/*
 WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue) { 
      //具体的策略
     //先去将123都放在优先队列里
@@ -473,15 +466,18 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
                 int point_start = m.global_id;
                 int point_end = workbench.global_id;
                 double point_nums = INT_MAX;
-                for(auto &n : m.workbench_route_workbench[workbench.type]){
-                    if(n[0][1] == point_end){
-                        point_nums = n[0][0];
-                        //std::cerr<<"^^^^^^^^^^^^^^^"<<point_nums<<std::endl;
+                //if(target_route_points[point_start] )
+                if(m.is_task_over == true){
+                    for(auto &n : m.workbench_route_workbench[workbench.type]){
+                        if(n[0][1] == point_end){
+                            point_nums = n[0][0];
+                            //std::cerr<<"^^^^^^^^^^^^^^^"<<point_nums<<std::endl;
+                        }
                     }
-                }
-                if(point_nums > min_point_nums) continue;
-                min_point_nums = point_nums;
-                ans_for_sell = workbench; 
+                    if(point_nums > min_point_nums) continue;
+                    min_point_nums = point_nums;
+                    ans_for_sell = workbench; 
+                } 
             }
             
             //是否找到能卖并且离着买最近的工作台？
@@ -502,6 +498,4 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
     } 
     return default_node;
 }
-
-*/
 
