@@ -10,26 +10,20 @@ int main()
 	puts("OK");
 	std::fflush(stdout);
     int global_id_start;
+    pair<double,double> start_point;
 	while (scanf("%d", &obj.frame_num) != EOF) {
         obj.readUntilOK();
         std::printf("%d\n", obj.frame_num);
         for(int i = 0; i < 4; i++)
         {
-            //std::cerr<<"*****************     "<<obj.work_bench_cluster[0][1].WorkBenchVec[0].workbench_route_workbench.size()<<std::endl;
-            //if(i == 1 && obj.map_id == 0 && obj.frame_num < 62) continue;
             double workbench_x = 25;
             double workbench_y = 25;
             if(obj.robot_cluster[i].robot_goal_point.size() == 0){
                 WorkBenchNodeForRobot target = obj.GetRobotTarget(obj.robot_cluster[i], i);
-                /*if(obj.robot_cluster[i].robot_goal_point.size() == 0){
-                    cerr<<i<<"  66666 "<<workbench_x<<"    "<<workbench_y<<endl;
-                    workbench_x = obj.robot_cluster[i].location_x;
-                    workbench_y = obj.robot_cluster[i].location_y;
-                }*/
             }
-            //cerr<<"????????????????????"<<obj.robot_cluster[i].robot_goal_point.size()<<endl;
             //start planning
             if(obj.robot_cluster[i].robot_goal_point.size() != 0 && obj.robot_cluster[i].robot_execute_points.size() == 0){
+                obj.robot_cluster[i].robot_exe_pts_ptr = 0;
                 //start point == robot point
                 obj.robot_cluster[i].node_tmp_empty[0].y = (int)((obj.robot_cluster[i].location_y + 0.25)/0.5 - 1);
                 obj.robot_cluster[i].node_tmp_empty[0].x = (int)((obj.robot_cluster[i].location_x + 0.25)/0.5 - 1);
@@ -38,24 +32,17 @@ int main()
                 obj.robot_cluster[i].node_tmp_empty[1].y = (int)((obj.robot_cluster[i].robot_goal_point.top().y + 0.25)/0.5 - 1);
                 obj.robot_cluster[i].node_tmp_empty[1].x = (int)((obj.robot_cluster[i].robot_goal_point.top().x + 0.25)/0.5 - 1);
                 int end_node_num = obj.robot_cluster[i].node_tmp_empty[1].y * 100 + obj.robot_cluster[i].node_tmp_empty[1].x;
-                /*if(i == 2){
-                    cerr<<start_node_num<<" $$$$$$$$$$$$$$$$  "<<end_node_num<<endl;
-                    cerr<<"obj.robot_cluster[i].carried_item_type is " <<obj.robot_cluster[i].carried_item_type <<endl;
-                }*/
                 if(obj.robot_cluster[i].carried_item_type == 0){
-                    //cerr<<"***************"<<obj.robot_cluster[i].robot_goal_point.top().global_id<<endl;
-                    //if(i == 2) cerr<<" %%%%%%%%%%%%%%%%%%% "<<global_id_start<<endl;
-                    global_id_start = obj.robot_cluster[i].robot_goal_point.top().global_id;
-                    //std::cerr<<"**************start "<<global_id_start<<"   "<<obj.robot_cluster[i].robot_goal_point.top().x<<"    "<<obj.robot_cluster[i].robot_goal_point.top().y<<endl;
-                    
+                    global_id_start = obj.robot_cluster[i].robot_goal_point.top().global_id;                    
                     int point_nums = obj.astar(&obj.robot_cluster[i].all_node_empty[start_node_num], &obj.robot_cluster[i].all_node_empty[end_node_num], i, obj.robot_cluster[i].carried_item_type);
-                    //if(i == 2) cerr<<"**********************  "<<point_nums<<endl;
                 }
                 else
                 {
-                    //if(i == 2 ) cerr<<"%%%%%%%%%%%%%%%%%%%global_id_start "<<global_id_start<<endl;
+                    obj.robot_cluster[i].node_tmp_empty[0].y = (int)((start_point.second + 0.25)/0.5 - 1);
+                    obj.robot_cluster[i].node_tmp_empty[0].x = (int)((start_point.first + 0.25)/0.5 - 1);
+                    int start_node_num = obj.robot_cluster[i].node_tmp_empty[0].y * 100 + obj.robot_cluster[i].node_tmp_empty[0].x;
                     int point_nums = obj.astar(&obj.robot_cluster[i].all_node_object[start_node_num], &obj.robot_cluster[i].all_node_object[end_node_num], i, obj.robot_cluster[i].carried_item_type);
-                    //cerr<<"^^^^^^^^^^^^^^^^^  "<<point_nums<<endl;
+                    if(point_nums <= 2) cerr<<"planning failed !!!!!!!!!!!!!!!!! "<<"robot_id = "<<i<<endl;
                 }
                 /*else{
                     int global_id_end = obj.robot_cluster[i].robot_goal_point.top().global_id;
@@ -81,34 +68,31 @@ int main()
                     
                 }*/
                 //std::cerr<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
-                workbench_x = obj.robot_cluster[i].robot_execute_points.top().x;
-                workbench_y = obj.robot_cluster[i].robot_execute_points.top().y;
+                workbench_x = obj.robot_cluster[i].robot_execute_points[obj.robot_cluster[i].robot_exe_pts_ptr].x;
+                workbench_y = obj.robot_cluster[i].robot_execute_points[obj.robot_cluster[i].robot_exe_pts_ptr].y;
             }
             else if(obj.robot_cluster[i].robot_execute_points.size() != 0){
-                workbench_x = obj.robot_cluster[i].robot_execute_points.top().x;
-                workbench_y = obj.robot_cluster[i].robot_execute_points.top().y;
+                workbench_x = obj.robot_cluster[i].robot_execute_points[obj.robot_cluster[i].robot_exe_pts_ptr].x;
+                workbench_y = obj.robot_cluster[i].robot_execute_points[obj.robot_cluster[i].robot_exe_pts_ptr].y;
             }
-            //else{
-            //   workbench_x = obj.robot_cluster[i].location_x;
-            //    workbench_y = obj.robot_cluster[i].location_y;
-            //}
             obj.get_yaw_angle(obj.distance_target,obj.yaw,obj.vector_angle,workbench_x,workbench_y,obj.robot_cluster[i]);
             ptr = obj.control_ptr;
             obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);	
             ptr++;
             obj.Deal_Clash(i);
-            //cerr<<i<<"   "<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
-            //std::cerr<<obj.linear_speed<<"  "<<obj.angular_speed<<std::endl;
             std::printf("forward %d %f\n", i, obj.linear_speed);
             std::printf("rotate %d %f\n", i, obj.angular_speed);
-            if(obj.robot_cluster[i].robot_execute_points.size() > 1){
+            if(obj.robot_cluster[i].robot_exe_pts_ptr != obj.robot_cluster[i].robot_execute_points.size() - 1){
                 if(obj.distance_target < 0.8) {
-                    obj.robot_cluster[i].robot_execute_points.pop();
+                   obj.robot_cluster[i].robot_exe_pts_ptr++;
                 }
             }
-            else if(obj.robot_cluster[i].robot_execute_points.size() == 1){
+            else if(obj.robot_cluster[i].robot_exe_pts_ptr == obj.robot_cluster[i].robot_execute_points.size() -1){
                 if(obj.distance_target < 0.2) {
-                    obj.robot_cluster[i].robot_execute_points.pop();
+                    start_point.first = obj.robot_cluster[i].robot_execute_points[obj.robot_cluster[i].robot_exe_pts_ptr].x;
+                    start_point.second = obj.robot_cluster[i].robot_execute_points[obj.robot_cluster[i].robot_exe_pts_ptr].y;
+                    obj.robot_cluster[i].robot_execute_points.clear();
+                    obj.robot_cluster[i].robot_exe_pts_ptr = 0;
                 }
             }
         }

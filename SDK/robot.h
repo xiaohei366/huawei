@@ -81,7 +81,7 @@ struct sNode
 {
 	bool bObstacle;			// Is the node an obstruction?
 	bool bVisited;			// Have we searched this node before?
-    bool fake_obstacle;
+    char symbol;
     double fGlobalGoal;				// Distance to goal so far
 	double fLocalGoal;	
     int node_cost;
@@ -94,7 +94,7 @@ struct sNode
 	std::vector<sNode*> vecNeighbours;	// Connections to neighbours
 	
     sNode* parent;					// Node connecting to this node that offers shortest parent
-    sNode(): bObstacle(false),bVisited(false), fake_obstacle(false), fGlobalGoal(100000),fLocalGoal(100000),node_cost(1),planning_point_nums(1),x(0),y(0),coordinate_x(25.0f),coordinate_y(25.0f),parent(nullptr){
+    sNode(): bObstacle(false),bVisited(false), symbol('.'), fGlobalGoal(100000),fLocalGoal(100000),node_cost(1),planning_point_nums(1),x(0),y(0),coordinate_x(25.0f),coordinate_y(25.0f),parent(nullptr){
         //vecNeighbours.reserve(9);
     }
 };
@@ -111,6 +111,8 @@ class Robot {
 
             node_tmp_object = std::vector<sNode>(10);
             node_tmp_empty = std::vector<sNode>(10);
+
+            robot_exe_pts_ptr = 0;
             for(int i = 0; i < 10; ++i) {
                 std::vector<WorkBenchNodeForRobot> tem;
                 workbench_for_robot.push_back(tem);
@@ -139,8 +141,8 @@ class Robot {
         std::stack<WorkBenchNodeForRobot> robot_goal_point;
         
         
-        std::stack<WorkBenchNodeForRobot> robot_execute_points;
-
+        std::vector<WorkBenchNodeForRobot> robot_execute_points;
+        int robot_exe_pts_ptr;
         //std::stack<WorkBenchNodeForRobot> greater_level_point;
         //得到robot要跑向的目标点 
         WorkBenchNodeForRobot GetTarget1(int robotID);

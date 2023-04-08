@@ -21,8 +21,6 @@ public:
                             //这一步解锁，是为了线程在执行工作时，其他线程也能接取任务
                             lock.unlock();
                             task();
-                            //std::cerr<<"*****************     "<<work_bench_cluster[0][1].WorkBenchVec[0].workbench_route_workbench.size()<<std::endl;
-                            //std::cerr<<cnt++<<" ******************** "<<std::endl;
                             //因为初始加锁在循环外面，因此应再次上锁，以模拟取任务之前的上锁操作。
                             lock.lock();
                         } 
