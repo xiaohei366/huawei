@@ -42,7 +42,7 @@ int main()
                     obj.robot_cluster[i].node_tmp_empty[0].x = (int)((start_point.first + 0.25)/0.5 - 1);
                     int start_node_num = obj.robot_cluster[i].node_tmp_empty[0].y * 100 + obj.robot_cluster[i].node_tmp_empty[0].x;
                     int point_nums = obj.astar(&obj.robot_cluster[i].all_node_object[start_node_num], &obj.robot_cluster[i].all_node_object[end_node_num], i, obj.robot_cluster[i].carried_item_type);
-                    if(point_nums <= 2) cerr<<"planning failed !!!!!!!!!!!!!!!!! "<<"robot_id = "<<i<<endl;
+                    //if(point_nums <= 2) cerr<<"planning failed !!!!!!!!!!!!!!!!! "<<"robot_id = "<<i<<endl;
                 }
                 /*else{
                     int global_id_end = obj.robot_cluster[i].robot_goal_point.top().global_id;
@@ -79,18 +79,33 @@ int main()
             ptr = obj.control_ptr;
             obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);
             ptr++;
-
-            if(obj.Deal_Clash(i, obj.robot_cluster[i].ptr_flag)){
-                obj.robot_cluster[i].ptr_flag = 1;
-                if(obj.robot_cluster[i].clash_cnt == 0){
-                    obj.robot_cluster[i].clash_cnt = 1;
-                    obj.robot_cluster[i].robot_exe_pts_ptr--;
+            if(obj.map_id == 0) {
+                if(obj.Deal_Clash_1(i, obj.robot_cluster[i].ptr_flag)){
+                    obj.robot_cluster[i].ptr_flag = 1;
+                    if(obj.robot_cluster[i].clash_cnt == 0){
+                        obj.robot_cluster[i].clash_cnt = 1;
+                        obj.robot_cluster[i].robot_exe_pts_ptr--;
+                    }
+                }
+                else{
+                    obj.robot_cluster[i].ptr_flag = 0;
+                    obj.robot_cluster[i].clash_cnt = 0;
                 }
             }
-            else{
-                obj.robot_cluster[i].ptr_flag = 0;
-                obj.robot_cluster[i].clash_cnt = 0;
+            else if(obj.map_id == 1) {
+                if(obj.Deal_Clash_2(i, obj.robot_cluster[i].ptr_flag)){
+                    obj.robot_cluster[i].ptr_flag = 1;
+                    if(obj.robot_cluster[i].clash_cnt == 0){
+                        obj.robot_cluster[i].clash_cnt = 1;
+                        obj.robot_cluster[i].robot_exe_pts_ptr--;
+                    }
+                }
+                else{
+                    obj.robot_cluster[i].ptr_flag = 0;
+                    obj.robot_cluster[i].clash_cnt = 0;
+                }
             }
+
 
             std::printf("forward %d %f\n", i, obj.linear_speed);
             std::printf("rotate %d %f\n", i, obj.angular_speed);

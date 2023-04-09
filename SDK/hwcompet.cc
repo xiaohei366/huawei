@@ -318,20 +318,20 @@ bool hw_compet::init() {
 				robot_cluster[robotId].fixed_all_node_object = robot_cluster[robotId].all_node_object;
 			}
 
-			int cnt = 0;
-			for(int n=9999; n>=0;n--)
-			{
+			// int cnt = 0;
+			// for(int n=9999; n>=0;n--)
+			// {
 
-				if(cnt == 100)
-				{
-					cnt = 0;
-					std::cerr << " "<< std::endl;
-				}
-				if(robot_cluster[0].all_node_empty[n].bObstacle==true)
-					std::cerr << "#";
-				else std::cerr << robot_cluster[0].all_node_object[n].symbol;
-				cnt++;
-			}
+			// 	if(cnt == 100)
+			// 	{
+			// 		cnt = 0;
+			// 		std::cerr << " "<< std::endl;
+			// 	}
+			// 	if(robot_cluster[0].all_node_empty[n].bObstacle==true)
+			// 		std::cerr << "#";
+			// 	else std::cerr << robot_cluster[0].all_node_object[n].symbol;
+			// 	cnt++;
+			// }
 /*
 			//遍历机器人
 			for(int robotId = 0; robotId < 1; robotId++){
@@ -366,7 +366,7 @@ bool hw_compet::init() {
 				}
 			}
 	*/
-			for(int robotId = 0; robotId < 1;robotId++){
+			for(int robotId = 3; robotId < 4;robotId++){
 				int cnt_tmp=0;
 				robot_cluster[robotId].node_tmp_object[0].x = (robot_cluster[robotId].location_x - 0.25)/0.5;
 				robot_cluster[robotId].node_tmp_object[0].y = (robot_cluster[robotId].location_y - 0.25)/0.5;
@@ -444,8 +444,8 @@ bool hw_compet::init() {
 				else if(input[j] == '#')
 				{
 					int type = input[j] - '0';
-					//判断地图的id
-					check_map_id(input, i, j, type);
+					// //判断地图的id
+					// check_map_id(input, i, j, type);
 					cost_map[j][i] = INT_MAX;
 					for(int m = 0; m < 4; m++) cost_map_for_robot[m][j][i] = INT_MAX;
 				}
@@ -573,7 +573,7 @@ bool hw_compet::init() {
 }
 
 
-bool hw_compet::Deal_Clash(int RobotID, int ptr_flag) {
+bool hw_compet::Deal_Clash_1(int RobotID, int ptr_flag) {
 	auto &cur_robot = robot_cluster[RobotID];
     for(int i = 0; i < 4; ++i) {
 		if(i == RobotID) continue;
@@ -593,8 +593,8 @@ bool hw_compet::Deal_Clash(int RobotID, int ptr_flag) {
 	return false;
 }
 
-/*
-bool hw_compet::Deal_Clash(int RobotID, int ptr_flag) {
+
+bool hw_compet::Deal_Clash_2(int RobotID, int ptr_flag) {
     auto &cur_robot = robot_cluster[RobotID];
     for(int i = RobotID; i < 4; ++i) {
         if(i == RobotID) continue;
@@ -612,7 +612,7 @@ bool hw_compet::Deal_Clash(int RobotID, int ptr_flag) {
     }
     return false;
 }
-*/
+
 
 
 int hw_compet::astar(sNode *nodeStart, sNode *nodeEnd, int robotId, int carry_empty_type)
@@ -765,11 +765,10 @@ bool hw_compet::remove_middle_points(std::pair<double,double>& point1, std::pair
 
 
 void hw_compet::check_map_id(string s, int i, int j, int type) {
-	if(i == 97 && j == 3 && type == 6) this->map_id = 3;
-	if(i == 60 && j == 43 && type == 1) this->map_id = 2;
-	if(i == 94 && j == 47 && type == 5) this->map_id = 0;
-	if(i == 74 && j == 50 && type == 6) this->map_id = 1;
-	//this->map_id = 0;
+	if(i == 98 && j == 50 && type == 2) this->map_id = 0;
+	else if(i == 97 && j == 2 && type == 8) this->map_id = 1;
+	else if(this->map_id == -1)  this->map_id = 2;
+	cerr << this->map_id << endl;
 }
 //初始化一个机器人的工作台位置数组并获得机器人的目标
 WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {

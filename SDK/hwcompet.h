@@ -77,7 +77,7 @@ public:
 	hw_compet()
 	{
 		//初始化地图编号
-		map_id = 0;
+		map_id = -1;
 		cost_map = vector<vector<int>>(100,std::vector<int>(100,0));
 		cost_map_for_robot = vector<vector<vector<int>>>(4,vector<vector<int>>(100,vector<int>(100,0)));
 		usable_workbench_for_robot = vector<vector<usable_workbench>>(4);
@@ -121,8 +121,8 @@ public:
 	bool init();
 
 	//处理两个小车相撞后的冲突
-	bool Deal_Clash(int RobotID, int ptr_flag);
-
+	bool Deal_Clash_1(int RobotID, int ptr_flag);
+	bool Deal_Clash_2(int RobotID, int ptr_flag);
 	double CalDis(const Robot& robot1, const Robot& robot2) {
 		return sqrt((robot1.location_x - robot2.location_x) * (robot1.location_x - robot2.location_x) + (robot1.location_y - robot2.location_y) * (robot1.location_y - robot2.location_y));
 	};
