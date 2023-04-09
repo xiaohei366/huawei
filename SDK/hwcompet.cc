@@ -443,6 +443,7 @@ bool hw_compet::init() {
 				}
 				else if(input[j] == '#')
 				{
+					obstacle_nums++;
 					int type = input[j] - '0';
 					// //判断地图的id
 					// check_map_id(input, i, j, type);

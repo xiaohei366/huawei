@@ -120,6 +120,7 @@ public:
 	//初始化函数 读取地图
 	bool init();
 
+
 	//处理两个小车相撞后的冲突
 	bool Deal_Clash_1(int RobotID, int ptr_flag);
 	bool Deal_Clash_2(int RobotID, int ptr_flag);
@@ -157,7 +158,7 @@ public:
 
 	int map_id;
 
-
+	int obstacle_nums = 0;
 
 
 	 //下面是一个模板函数

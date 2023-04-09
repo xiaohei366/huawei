@@ -16,6 +16,10 @@ int main()
         std::printf("%d\n", obj.frame_num);
         int robot_data = 0;
         if(obj.map_id == 0) robot_data = 3;
+        //else if(obj.map_id == -1) robot_data = 2;
+        if(obj.obstacle_nums != 44 && obj.obstacle_nums != 2485 && obj.obstacle_nums > 1000){
+            robot_data = 1;
+        }
         for(int i = robot_data; i < 4; i++)
         {
             double workbench_x = 25;
