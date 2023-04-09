@@ -33,7 +33,7 @@ int main()
                 obj.robot_cluster[i].node_tmp_empty[1].x = (int)((obj.robot_cluster[i].robot_goal_point.top().x + 0.25)/0.5 - 1);
                 int end_node_num = obj.robot_cluster[i].node_tmp_empty[1].y * 100 + obj.robot_cluster[i].node_tmp_empty[1].x;
                 if(obj.robot_cluster[i].carried_item_type == 0){
-                    global_id_start = obj.robot_cluster[i].robot_goal_point.top().global_id;                    
+                    global_id_start = obj.robot_cluster[i].robot_goal_point.top().global_id;
                     int point_nums = obj.astar(&obj.robot_cluster[i].all_node_empty[start_node_num], &obj.robot_cluster[i].all_node_empty[end_node_num], i, obj.robot_cluster[i].carried_item_type);
                 }
                 else
@@ -62,10 +62,10 @@ int main()
                                     obj.robot_cluster[i].robot_execute_points.push(point);
                                 }
                             }
-                        }     
-                                                
+                        }
+
                     }
-                    
+
                 }*/
                 //std::cerr<<obj.robot_cluster[i].robot_execute_points.size()<<endl;
                 workbench_x = obj.robot_cluster[i].robot_execute_points[obj.robot_cluster[i].robot_exe_pts_ptr].x;
@@ -77,9 +77,9 @@ int main()
             }
             obj.get_yaw_angle(obj.distance_target,obj.yaw,obj.vector_angle,workbench_x,workbench_y,obj.robot_cluster[i]);
             ptr = obj.control_ptr;
-            obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);	
+            obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);
             ptr++;
-            
+
             if(obj.Deal_Clash(i, obj.robot_cluster[i].ptr_flag)){
                 obj.robot_cluster[i].ptr_flag = 1;
                 if(obj.robot_cluster[i].clash_cnt == 0){
@@ -91,7 +91,7 @@ int main()
                 obj.robot_cluster[i].ptr_flag = 0;
                 obj.robot_cluster[i].clash_cnt = 0;
             }
-            
+
             std::printf("forward %d %f\n", i, obj.linear_speed);
             std::printf("rotate %d %f\n", i, obj.angular_speed);
             if(obj.robot_cluster[i].robot_exe_pts_ptr != obj.robot_cluster[i].robot_execute_points.size() - 1){
@@ -135,8 +135,8 @@ int main()
                         obj.robot_cluster[robotId].target_set.erase({erase_num, type});
                         obj.robot_cluster[robotId].robot_goal_point.pop();
                         std::printf("sell %d\n", robotId);
-                    }   
-                    else if(obj.robot_cluster[robotId].carried_item_type == 0 && obj.work_bench_cluster[robotId][type].GetProductStatus(pos_x, pos_y) == 1) 
+                    }
+                    else if(obj.robot_cluster[robotId].carried_item_type == 0 && obj.work_bench_cluster[robotId][type].GetProductStatus(pos_x, pos_y) == 1)
                     {
                         //快结束就别买啦--最后4s
                         //if(obj.frame_num > 8850) continue;
@@ -147,7 +147,7 @@ int main()
                         //cerr<<obj.robot_cluster[robotId].robot_goal_point.top().x << " %%%%%% " << obj.robot_cluster[robotId].robot_goal_point.top().y<<endl;
                         std::printf("buy %d\n", robotId);
                     }
-                }   
+                }
             }
         }
 		std::printf("OK\n");
@@ -156,5 +156,4 @@ int main()
 	return 0;
 }
 
-                             
 

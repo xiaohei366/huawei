@@ -3,7 +3,7 @@
 
 
 std::unordered_set<std::pair<double, int>, Robot::PairHash, Robot::PairEqual> Robot::target_set;
-void Robot::Update(int workstation_id, int carried_item_type, double time_value_coefficient, double collision_value_coefficient, 
+void Robot::Update(int workstation_id, int carried_item_type, double time_value_coefficient, double collision_value_coefficient,
         double angular_velocity, double linear_velocity_x, double linear_velocity_y, double direction,
         double location_x, double location_y) {
     this->workstation_id = workstation_id;
@@ -41,7 +41,7 @@ WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
             pq.push(v);
             if(i >= 4 && v.product_status == 1) {
                 //只有当小车距离7的距离小于2的时候，才会来取7，防止出现空车跑来取7的情况
-                if(i == 7 && v.dis > 2) continue; 
+                if(i == 7 && v.dis > 2) continue;
                 pq2.push(v);
                 ++cnt;
             }
@@ -53,7 +53,7 @@ WorkBenchNodeForRobot Robot::GetTarget1(int robotID) {
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
-    
+
     return ans;
 }
 
@@ -75,7 +75,7 @@ WorkBenchNodeForRobot Robot::GetTarget2(int robotID) {
         for(auto &v: vec) {
             pq.push(v);
             if(i >= 4 && v.product_status == 1) {
-                if(v.dis > 2) continue; 
+                if(v.dis > 2) continue;
                 pq2.push(v);
                 ++cnt;
             }
@@ -116,7 +116,7 @@ WorkBenchNodeForRobot Robot::GetTarget3(int robotID) {
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0 && robot_goal_point.empty()) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
-    
+
     return ans;
 }
 
@@ -146,13 +146,13 @@ WorkBenchNodeForRobot Robot::GetTarget4(int robotID) {
     if(cnt != 0) ans =  Num89(robotID, default_node, robot_target_queue, greater_level_queue);
     if(cnt != 0) ans =  Num789(robotID, default_node, robot_target_queue, greater_level_queue);
     if(robot_goal_point.empty()) ans =  Num456(robotID, default_node, robot_target_queue);
-    
+
     return ans;
 }
 
 
-WorkBenchNodeForRobot Robot::Num789(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
-        std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+WorkBenchNodeForRobot Robot::Num789(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot,
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue, std::vector<std::priority_queue<WorkBenchNodeForRobot,
         std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
 ) {
     //具体的策略
@@ -166,12 +166,12 @@ WorkBenchNodeForRobot Robot::Num789(int robotID, WorkBenchNodeForRobot &default_
     }
     //随后把456能卖的工作台整体加入一个候选队列，这样是为了同一类型的工作台遍历方便
     std::vector<std::vector<WorkBenchNodeForRobot>> target_for_sell{{},{},{},{},{},{},{},{},{},{}};
-    for(int i = 7; i <= 9; ++i) {
+    for(int i = 7; i <= 7; ++i) {
         while(!robot_target_queue[i].empty()) {
             for(auto &&j: WorkBenchIdForSell[i]) {
                 target_for_sell[j].push_back(robot_target_queue[i].top());
             }
-            robot_target_queue[i].pop();  
+            robot_target_queue[i].pop();
         }
     }
     //然后先从大候选队列里面找到一个可以的买和卖的目标点
@@ -217,13 +217,13 @@ WorkBenchNodeForRobot Robot::Num789(int robotID, WorkBenchNodeForRobot &default_
         target_set.insert({coordinate_x*100+coordinate_y, type});
         //std::cerr << ans_for_sell.type << "&" << m.type << std::endl;
         break;
-    } 
+    }
     return default_node;
 }
 
 
-WorkBenchNodeForRobot Robot::Num89(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
-        std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue, std::vector<std::priority_queue<WorkBenchNodeForRobot, 
+WorkBenchNodeForRobot Robot::Num89(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot,
+        std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue, std::vector<std::priority_queue<WorkBenchNodeForRobot,
         std::vector<WorkBenchNodeForRobot>, cmp_rule>> greater_level_queue
 ) {
     //具体的策略
@@ -242,7 +242,7 @@ WorkBenchNodeForRobot Robot::Num89(int robotID, WorkBenchNodeForRobot &default_n
             for(auto &&j: WorkBenchIdForSell[i]) {
                 target_for_sell[j].push_back(robot_target_queue[i].top());
             }
-            robot_target_queue[i].pop();  
+            robot_target_queue[i].pop();
         }
     }
     //然后先从大候选队列里面找到一个可以的买和卖的目标点
@@ -281,12 +281,12 @@ WorkBenchNodeForRobot Robot::Num89(int robotID, WorkBenchNodeForRobot &default_n
         target_set.insert({coordinate_x*100+coordinate_y, type});
         //std::cerr << ans_for_sell.type << "&" << m.type << std::endl;
         break;
-    } 
+    }
     return default_node;
 }
 
 
-WorkBenchNodeForRobot Robot::Num123(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue) { 
+WorkBenchNodeForRobot Robot::Num123(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue) {
     //具体的策略
     //先去将123都放在优先队列里
     std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule> target123_queue;
@@ -303,7 +303,7 @@ WorkBenchNodeForRobot Robot::Num123(int robotID, WorkBenchNodeForRobot &default_
             for(auto &&j: WorkBenchIdForSell[i]) {
                 target_for_sell[j].push_back(robot_target_queue[i].top());
             }
-            robot_target_queue[i].pop();  
+            robot_target_queue[i].pop();
         }
     }
     //然后先从大候选队列里面找到一个可以的买和卖的目标点
@@ -338,7 +338,7 @@ WorkBenchNodeForRobot Robot::Num123(int robotID, WorkBenchNodeForRobot &default_
         target_set.insert({coordinate_x*100+coordinate_y, type});
         //std::cerr << ans_for_sell.type << "&" << m.type << std::endl;
         break;
-    } 
+    }
     return default_node;
 }
 
@@ -421,7 +421,7 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
 
 
 /*
-WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue) { 
+WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_node, std::vector<std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule>> robot_target_queue) {
      //具体的策略
     //先去将123都放在优先队列里
     std::priority_queue<WorkBenchNodeForRobot, std::vector<WorkBenchNodeForRobot>, cmp_rule> target123_queue;
@@ -443,12 +443,12 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
         idx = CircularArray[(k + CircularArrayPtr + num_circular_array) % num_circular_array];
         std::vector<std::vector<WorkBenchNodeForRobot>> target_for_sell{{},{},{},{}};
         while(!robot_target_queue[idx].empty()) {
-            
+
             //还没有把9加进去----
             for(auto &&j: WorkBenchIdForSell[idx]) {
                 target_for_sell[j].push_back(robot_target_queue[idx].top());
             }
-            robot_target_queue[idx].pop();  
+            robot_target_queue[idx].pop();
         }
         //std::cerr<<target123_queue_tem.size()<<std::endl;
         //然后先从大候选队列里面找到一个可以的买和卖的目标点
@@ -481,9 +481,9 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
                 }
                 if(point_nums > min_point_nums) continue;
                 min_point_nums = point_nums;
-                ans_for_sell = workbench; 
+                ans_for_sell = workbench;
             }
-            
+
             //是否找到能卖并且离着买最近的工作台？
             if(min_point_nums == INT_MAX) continue;
             //同时修改循环数组的指针
@@ -499,9 +499,8 @@ WorkBenchNodeForRobot Robot::Num456(int robotID, WorkBenchNodeForRobot &default_
             break;
         }
         if(robot_goal_point.size() == 2) break;
-    } 
+    }
     return default_node;
 }
 
 */
-

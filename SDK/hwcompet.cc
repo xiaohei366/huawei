@@ -9,7 +9,7 @@ void hw_compet::get_yaw_angle(double& distance_target,double& yaw ,double& vecto
 
 	double delta_x = workbench_x - car_x;
 	double delta_y = workbench_y - car_y;
-    distance_target = sqrt(pow(delta_x,2)+pow(delta_y,2)); 
+    distance_target = sqrt(pow(delta_x,2)+pow(delta_y,2));
 	vector<double> vec1 = { delta_x,delta_y };
 	vector<double> vec2 = { 1,0 };
 
@@ -80,7 +80,7 @@ void hw_compet::vel_cmd_out(pid_controller **pid, double &aS, double &lS, double
 //pid初始化
 void hw_compet::pid_init(pid_controller *pid, int map_id)
 {
-    
+
 	pid->integrator = 0.0f;
 	pid->differentiator = 0.0f;
 	pid->pre_err = 0.0f;
@@ -108,7 +108,7 @@ double hw_compet::pid_update(pid_controller *pid, double setpoint, double measur
 		err =-(2*3.1415926-err);
 	}
 
-	
+
 	//P
 	double proportional = pid->Kp * err;
 
@@ -151,7 +151,7 @@ double hw_compet::pid_update(pid_controller *pid, double setpoint, double measur
 
 	//SUM
 	pid->out = proportional + pid->integrator + pid->differentiator;
-	
+
 	if(pid->out > pid->lim_max)
 	{
 		pid->out = pid->lim_max;
@@ -188,7 +188,7 @@ bool hw_compet::readUntilOK() {
 			string input(line);
 			std::stringstream ss(input);
 			string one_str;
-			while (std::getline(ss, one_str, ' ')) 
+			while (std::getline(ss, one_str, ' '))
 			{
 				data_each_frame.push_back(one_str);
 			}
@@ -220,7 +220,7 @@ bool hw_compet::readUntilOK() {
                     	{
                         	pre_sum[i][workbenchId] = del_sum[i];
                         	//工作台的编号1--9
-                        	work_bench_cluster[i][stoi(data_each_frame[0])].Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5])); 
+                        	work_bench_cluster[i][stoi(data_each_frame[0])].Update(workbench_row,workbench_col,stoi(data_each_frame[3]),stoi(data_each_frame[4]),stoi(data_each_frame[5]));
                     	}
                     	else
                     	{
@@ -236,8 +236,8 @@ bool hw_compet::readUntilOK() {
                 {
 				    flag_event--;
                     int workstation_id = stoi(data_each_frame[0]);
-					if(workstation_id != -1) workstation_id -= pre_sum[robotId][workstation_id + 1];	
-					if(workstation_id < -1) workstation_id = -1;					
+					if(workstation_id != -1) workstation_id -= pre_sum[robotId][workstation_id + 1];
+					if(workstation_id < -1) workstation_id = -1;
                     robot_cluster[robotId].Update(workstation_id, stoi(data_each_frame[1]), stod(data_each_frame[2]), stod(data_each_frame[3]), stod(data_each_frame[4]), stod(data_each_frame[5]), stod(data_each_frame[6]), stod(data_each_frame[7]), stod(data_each_frame[8]), stod(data_each_frame[9]));
                     robotId++;
                     break;
@@ -277,21 +277,21 @@ bool hw_compet::init() {
 		{},
 		{}
 	};
-	
+
 	//先读取地图
 	while (fgets(line, sizeof line, stdin)) {
 		if (line[0] == 'O' && line[1] == 'K') {
 			for(int robotId = 0; robotId < 4; robotId++){
 				for(int i=0; i<10000; i++)
 				{
-					if(robot_cluster[robotId].all_node_empty[i].bObstacle == true && robot_cluster[robotId].all_node_empty[i].symbol == '#' 
-					&& robot_cluster[robotId].all_node_empty[i+100].bObstacle == true && robot_cluster[robotId].all_node_empty[i+100].symbol == '.' 
-					&& robot_cluster[robotId].all_node_empty[i+200].bObstacle == true && robot_cluster[robotId].all_node_empty[i+200].symbol == '.' 
+					if(robot_cluster[robotId].all_node_empty[i].bObstacle == true && robot_cluster[robotId].all_node_empty[i].symbol == '#'
+					&& robot_cluster[robotId].all_node_empty[i+100].bObstacle == true && robot_cluster[robotId].all_node_empty[i+100].symbol == '.'
+					&& robot_cluster[robotId].all_node_empty[i+200].bObstacle == true && robot_cluster[robotId].all_node_empty[i+200].symbol == '.'
 					&& robot_cluster[robotId].all_node_empty[i+300].bObstacle == true && robot_cluster[robotId].all_node_empty[i+300].symbol == '#')
 					{
 						//std::cerr<<"***************"<<std::endl;
 						robot_cluster[robotId].all_node_empty[i+100].bObstacle  = false;
-						robot_cluster[robotId].all_node_empty[i+200].bObstacle = false; 
+						robot_cluster[robotId].all_node_empty[i+200].bObstacle = false;
 						robot_cluster[robotId].all_node_empty[i+100].coordinate_x = (robot_cluster[robotId].all_node_empty[i+100].coordinate_x + robot_cluster[robotId].all_node_empty[i+200].coordinate_x)/2;
 						robot_cluster[robotId].all_node_empty[i+200].coordinate_x = (robot_cluster[robotId].all_node_empty[i+100].coordinate_x + robot_cluster[robotId].all_node_empty[i+200].coordinate_x)/2;
 						robot_cluster[robotId].all_node_empty[i+100].coordinate_y = (robot_cluster[robotId].all_node_empty[i+100].coordinate_y + robot_cluster[robotId].all_node_empty[i+200].coordinate_y)/2;
@@ -300,9 +300,9 @@ bool hw_compet::init() {
 					}
 
 
-					if(robot_cluster[robotId].all_node_empty[i].bObstacle == true && robot_cluster[robotId].all_node_empty[i].symbol == '#' 
-					&& robot_cluster[robotId].all_node_empty[i-1].bObstacle == true && robot_cluster[robotId].all_node_empty[i-1].symbol == '.' 
-					&& robot_cluster[robotId].all_node_empty[i-2].bObstacle == true && robot_cluster[robotId].all_node_empty[i-2].symbol == '.' 
+					if(robot_cluster[robotId].all_node_empty[i].bObstacle == true && robot_cluster[robotId].all_node_empty[i].symbol == '#'
+					&& robot_cluster[robotId].all_node_empty[i-1].bObstacle == true && robot_cluster[robotId].all_node_empty[i-1].symbol == '.'
+					&& robot_cluster[robotId].all_node_empty[i-2].bObstacle == true && robot_cluster[robotId].all_node_empty[i-2].symbol == '.'
 					&& robot_cluster[robotId].all_node_empty[i-3].bObstacle == true && robot_cluster[robotId].all_node_empty[i-3].symbol == '#')
 					{
 						robot_cluster[robotId].all_node_empty[i-1].bObstacle = false;
@@ -321,7 +321,7 @@ bool hw_compet::init() {
 			int cnt = 0;
 			for(int n=9999; n>=0;n--)
 			{
-				
+
 				if(cnt == 100)
 				{
 					cnt = 0;
@@ -365,7 +365,7 @@ bool hw_compet::init() {
 					}
 				}
 			}
-	*/		
+	*/
 			for(int robotId = 0; robotId < 1;robotId++){
 				int cnt_tmp=0;
 				robot_cluster[robotId].node_tmp_object[0].x = (robot_cluster[robotId].location_x - 0.25)/0.5;
@@ -390,14 +390,14 @@ bool hw_compet::init() {
 					std::vector<WorkBenchNodeForRobot> st_tmp_empty;
 					robot_cluster[robotId].robot_execute_points = st_tmp_empty;
 				}
-			}		
+			}
 
 
 
 			//for(auto &m : del_workbench_map[0][0]){
 			//	std::cerr<<"del global_id "<<m<<std::endl;
 			//}
-			
+
 			//同时进行pid的初始化
 			for(int n=0; n<4; n++)
 			{
@@ -417,7 +417,7 @@ bool hw_compet::init() {
 					robot_cluster[robot_nums].location_x = j*0.5+0.25;
 					robot_cluster[robot_nums].location_y = i*0.5+0.25;
 					//std::cerr<<robot_cluster[robot_nums].location_x<<"  "<<j<<"    "<<robot_cluster[robot_nums].location_y<<"    "<<i<<std::endl;
-					robot_nums++;	
+					robot_nums++;
 				}
 				else if (input[j] >= '1' && input[j] <= '9')
 				{
@@ -477,7 +477,7 @@ bool hw_compet::init() {
 							//robot_cluster[robotId].all_node_object[num - 100].node_cost = 10000;
 						}
 						if(i+1<=99){
-							robot_cluster[robotId].all_node_empty[num + 100].bObstacle = true;		
+							robot_cluster[robotId].all_node_empty[num + 100].bObstacle = true;
 							robot_cluster[robotId].all_node_object[num + 100].bObstacle = true;
 							//robot_cluster[robotId].all_node_object[num + 100].node_cost = 10000;
 						}
@@ -519,7 +519,7 @@ bool hw_compet::init() {
 									for(auto &h : WorkBenchIdForSell[type]){
 									Robot::target_set.insert({(j*0.5+0.25) * 100 +i*0.5+0.25, h});
 									}
-								}		
+								}
 							}
 						}
 
@@ -535,7 +535,7 @@ bool hw_compet::init() {
 						if(i < 99) robot_cluster[robotId].all_node_empty[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_empty[(i + 1) * 100 + (j + 0)]);
 						if (j > 0) robot_cluster[robotId].all_node_empty[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_empty[(i + 0) * 100 + (j - 1)]);
 						if(j < 99) robot_cluster[robotId].all_node_empty[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_empty[(i + 0) * 100 + (j + 1)]);
-						
+
 						// We can also connect diagonally
 						if (i > 0 && j > 0) robot_cluster[robotId].all_node_empty[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_empty[(i - 1) * 100 + (j - 1)]);
 						if (i < 99 && j > 0) robot_cluster[robotId].all_node_empty[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_empty[(i + 1) * 100 + (j - 1)]);
@@ -556,12 +556,12 @@ bool hw_compet::init() {
 						if(i < 99) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 1) * 100 + (j + 0)]);
 						if (j > 0) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 0) * 100 + (j - 1)]);
 						if(j < 99) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 0) * 100 + (j + 1)]);
-						
+
 						// We can also connect diagonally
 						if (i > 0 && j > 0) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i - 1) * 100 + (j - 1)]);
 						if (i < 99 && j > 0) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 1) * 100 + (j - 1)]);
 						if (i > 0 && j < 99) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i - 1) * 100 + (j + 1)]);
-						if (i < 99 && j < 99) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 1) * 100 + (j + 1)]);	
+						if (i < 99 && j < 99) robot_cluster[robotId].all_node_object[num].vecNeighbours.push_back(&robot_cluster[robotId].all_node_object[(i + 1) * 100 + (j + 1)]);
 					}
 				}
 
@@ -571,22 +571,29 @@ bool hw_compet::init() {
 	}
 	return false;
 }
- 
- /*
-void hw_compet::Deal_Clash(int RobotID) {
+
+
+bool hw_compet::Deal_Clash(int RobotID, int ptr_flag) {
 	auto &cur_robot = robot_cluster[RobotID];
     for(int i = 0; i < 4; ++i) {
 		if(i == RobotID) continue;
 		auto &robot_neigh = robot_cluster[i];
 		auto dis = CalDis(cur_robot, robot_neigh);
 		if (dis <= 1.5 && ((cur_robot.direction >= 0 && robot_neigh.direction < 0) || (cur_robot.direction <= 0 && robot_neigh.direction > 0))) {
+			if(robot_cluster[i].carried_item_type > cur_robot.carried_item_type)
+			{
+
 			cur_robot.direction = robot_neigh.direction;
 			linear_speed = -2;//以最大速度回退
-			angular_speed = ((rand() & 1) ? 1 : -1) * 3.1415926;
+			angular_speed = -0.1;
+
+			}
 		}
 	}
-}*/
+	return false;
+}
 
+/*
 bool hw_compet::Deal_Clash(int RobotID, int ptr_flag) {
     auto &cur_robot = robot_cluster[RobotID];
     for(int i = RobotID; i < 4; ++i) {
@@ -605,7 +612,7 @@ bool hw_compet::Deal_Clash(int RobotID, int ptr_flag) {
     }
     return false;
 }
-
+*/
 
 
 int hw_compet::astar(sNode *nodeStart, sNode *nodeEnd, int robotId, int carry_empty_type)
@@ -648,8 +655,8 @@ int hw_compet::astar(sNode *nodeStart, sNode *nodeEnd, int robotId, int carry_em
 		//取代价最小
 		nodeCurrent = listNotTestedNodes.front();
 		nodeCurrent->bVisited = true;
-        
-        
+
+
 
 		//遍历neighbor
 		for (auto nodeNeighbour : nodeCurrent->vecNeighbours)
@@ -744,7 +751,7 @@ bool hw_compet::remove_middle_points(std::pair<double,double>& point1, std::pair
     auto distance = [] (double x1, double y1, double x2, double y2){
         return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
     };
-    
+
     double d1 = distance(x1, y1, x2, y2);
     double d2 = distance(x2, y2, x3, y3);
     double d3 = distance(x1, y1, x3, y3);
@@ -785,7 +792,7 @@ WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {
 				}
 			}*/
 		}
-		
+
 	}
 	//随后得到改机器人的目标
     WorkBenchNodeForRobot target;
@@ -806,7 +813,7 @@ void hw_compet::astar_init_using(sNode *nodeStart, sNode *nodeEnd, int robotId, 
 	//outfile<<nodeStart->coordinate_x<<" "<<nodeStart->coordinate_y<<"  "<<nodeEnd->coordinate_x<<"  "<<nodeEnd->coordinate_y<<std::endl;
 	int cnt_points = 1;
 	//std::cerr<<"@@@@@@@@@@@@@@@@@@@@@   "<<std::endl;
-	std::vector<std::array<double,4>> startwb_to_endwb_route; 	
+	std::vector<std::array<double,4>> startwb_to_endwb_route;
     robot_cluster[robotId].all_node_object = robot_cluster[robotId].fixed_all_node_object;
     auto distance = [](sNode* a, sNode* b) // For convenience
 	{
@@ -912,5 +919,3 @@ void hw_compet::astar_init_using(sNode *nodeStart, sNode *nodeEnd, int robotId, 
 	robot_cluster[robotId].all_node_object = robot_cluster[robotId].fixed_all_node_object;
 
 }
-
-
