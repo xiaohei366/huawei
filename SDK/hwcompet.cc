@@ -768,7 +768,7 @@ void hw_compet::check_map_id(string s, int i, int j, int type) {
 	if(i == 98 && j == 50 && type == 2) this->map_id = 0;
 	else if(i == 97 && j == 2 && type == 8) this->map_id = 1;
 	else if(this->map_id == -1)  this->map_id = 2;
-	cerr << this->map_id << endl;
+	//cerr << this->map_id << endl;
 }
 //初始化一个机器人的工作台位置数组并获得机器人的目标
 WorkBenchNodeForRobot hw_compet::GetRobotTarget(Robot& robot,int robotId) {

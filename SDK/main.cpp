@@ -14,7 +14,9 @@ int main()
 	while (scanf("%d", &obj.frame_num) != EOF) {
         obj.readUntilOK();
         std::printf("%d\n", obj.frame_num);
-        for(int i = 0; i < 4; i++)
+        int robot_data = 0;
+        if(obj.map_id == 0) robot_data = 3;
+        for(int i = robot_data; i < 4; i++)
         {
             double workbench_x = 25;
             double workbench_y = 25;
@@ -79,7 +81,7 @@ int main()
             ptr = obj.control_ptr;
             obj.vel_cmd_out(ptr,obj.angular_speed,obj.linear_speed,obj.yaw,obj.vector_angle,obj.distance_target, obj.map_id);
             ptr++;
-            if(obj.map_id == 0) {
+            if(obj.map_id == 1) {
                 if(obj.Deal_Clash_1(i, obj.robot_cluster[i].ptr_flag)){
                     obj.robot_cluster[i].ptr_flag = 1;
                     if(obj.robot_cluster[i].clash_cnt == 0){
@@ -92,8 +94,21 @@ int main()
                     obj.robot_cluster[i].clash_cnt = 0;
                 }
             }
-            else if(obj.map_id == 1) {
+            else if(obj.map_id == 0) {
                 if(obj.Deal_Clash_2(i, obj.robot_cluster[i].ptr_flag)){
+                    obj.robot_cluster[i].ptr_flag = 1;
+                    if(obj.robot_cluster[i].clash_cnt == 0){
+                        obj.robot_cluster[i].clash_cnt = 1;
+                        obj.robot_cluster[i].robot_exe_pts_ptr--;
+                    }
+                }
+                else{
+                    obj.robot_cluster[i].ptr_flag = 0;
+                    obj.robot_cluster[i].clash_cnt = 0;
+                }
+            }
+            else{
+                 if(obj.Deal_Clash_1(i, obj.robot_cluster[i].ptr_flag)){
                     obj.robot_cluster[i].ptr_flag = 1;
                     if(obj.robot_cluster[i].clash_cnt == 0){
                         obj.robot_cluster[i].clash_cnt = 1;
@@ -154,7 +169,7 @@ int main()
                     else if(obj.robot_cluster[robotId].carried_item_type == 0 && obj.work_bench_cluster[robotId][type].GetProductStatus(pos_x, pos_y) == 1)
                     {
                         //快结束就别买啦--最后4s
-                        //if(obj.frame_num > 8850) continue;
+                        if(obj.frame_num > 14500) continue;
                         obj.robot_cluster[robotId].target_set.erase({erase_num, type});
                         //cerr<<"global_id is    "<<obj.robot_cluster[robotId].robot_goal_point.top().global_id<<endl;
                         obj.robot_cluster[robotId].robot_goal_point.pop();
